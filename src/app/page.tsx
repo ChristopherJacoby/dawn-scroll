@@ -7,6 +7,7 @@ import { Modal, ModalBody, ModalFooter } from "@/components/ui/Modal";
 import { Drawer, DrawerBody, DrawerFooter } from "@/components/ui/Drawer";
 import { useReadingMode } from "@/context/reading-mode";
 import { useToast } from "@/context/toast";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 export default function Home() {
     const { mode, setMode } = useReadingMode();
@@ -55,6 +56,25 @@ export default function Home() {
                 <div className="flex flex-wrap gap-3">
                     <Button loading>Loading</Button>
                     <Button disabled>Disabled</Button>
+                </div>
+            </div>
+
+            {/* Skeleton demos */}
+            <div className="flex w-full max-w-2xl flex-col gap-4">
+                {/* verse card skeleton */}
+                <div className="flex flex-col gap-2 rounded-2xl border border-reading-border p-4">
+                    <Skeleton className="h-3 w-24" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-5/6" />
+                    <Skeleton className="h-4 w-4/6" />
+                </div>
+                {/* profile row skeleton */}
+                <div className="flex items-center gap-3">
+                    <Skeleton className="h-10 w-10 rounded-full" />
+                    <div className="flex flex-col gap-1.5">
+                        <Skeleton className="h-3 w-32" />
+                        <Skeleton className="h-3 w-20" />
+                    </div>
                 </div>
             </div>
 
