@@ -1,17 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Card, CardBody, CardFooter, CardHeader } from "@/components/ui/Card";
-
-type ReadingMode = "light" | "dark" | "sepia";
+import { Modal, ModalBody, ModalFooter } from "@/components/ui/Modal";
+import { Drawer, DrawerBody, DrawerFooter } from "@/components/ui/Drawer";
+import { useReadingMode } from "@/context/reading-mode";
 
 export default function Home() {
-    const [mode, setMode] = useState<ReadingMode>("light");
-
-    useEffect(() => {
-        document.body.dataset.readingMode = mode;
-    }, [mode]);
+    const { mode, setMode } = useReadingMode();
+    const [modalOpen, setModalOpen] = useState(false);
+    const [drawerOpen, setDrawerOpen] = useState(false);
 
     return (
         <div className="flex flex-1 flex-col items-center justify-center gap-12 px-8 py-16">
@@ -26,11 +25,12 @@ export default function Home() {
 
             {/* Reading mode toggle */}
             <div className="flex gap-3">
-                {(["light", "dark", "sepia"] as ReadingMode[]).map((m) => (
+                {(["light", "dark", "sepia"] as const).map((m) => (
                     <button
                         key={m}
                         onClick={() => setMode(m)}
-                        className="rounded-full border border-reading-border px-4 py-1 text-sm capitalize text-reading-text transition-colors hover:bg-reading-bg-subtle"
+                        className="rounded-full border border-reading-border px-4 py-1 text-sm capitalize text-reading-text transition-colors hover:bg-reading-bg-subtle aria-pressed:bg-reading-bg-subtle"
+                        aria-pressed={mode === m}
                     >
                         {m}
                     </button>
@@ -58,7 +58,6 @@ export default function Home() {
 
             {/* Card variants */}
             <div className="grid w-full max-w-2xl gap-6">
-                {/* All slots */}
                 <Card>
                     <CardHeader>
                         <p className="font-sans font-medium text-reading-text">
@@ -75,20 +74,77 @@ export default function Home() {
                     </CardFooter>
                 </Card>
 
-                {/* Body only */}
                 <Card padding="md">
                     <p className="text-sm text-reading-text-muted">
                         Card with padding, no slots.
                     </p>
                 </Card>
 
-                {/* No border, medium shadow */}
                 <Card border={false} shadow="md" padding="md">
                     <p className="text-sm text-reading-text-muted">
                         No border, shadow only.
                     </p>
                 </Card>
             </div>
+
+            {/* Modal and Drawer demos */}
+            <div className="flex gap-3">
+                <Button variant="secondary" onClick={() => setModalOpen(true)}>
+                    Open Modal
+                </Button>
+                <Button variant="secondary" onClick={() => setDrawerOpen(true)}>
+                    Open Drawer
+                </Button>
+            </div>
+
+            <Modal
+                open={modalOpen}
+                onOpenChange={setModalOpen}
+                title="Confirm action"
+                description="This is an optional description for the modal."
+            >
+                <ModalBody>
+                    <p className="text-sm text-reading-text-muted">
+                        Modal content goes here. Focus is trapped inside, Escape
+                        closes it, and clicking the backdrop closes it too.
+                    </p>
+                </ModalBody>
+                <ModalFooter>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setModalOpen(false)}
+                    >
+                        Cancel
+                    </Button>
+                    <Button size="sm" onClick={() => setModalOpen(false)}>
+                        Confirm
+                    </Button>
+                </ModalFooter>
+            </Modal>
+
+            <Drawer
+                open={drawerOpen}
+                onOpenChange={setDrawerOpen}
+                title="Bottom drawer"
+                description="Slides up from the bottom on mobile."
+            >
+                <DrawerBody>
+                    <p className="text-sm text-reading-text-muted">
+                        Drawer content goes here. Same Radix Dialog primitives
+                        as the modal, styled as a bottom sheet.
+                    </p>
+                </DrawerBody>
+                <DrawerFooter>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setDrawerOpen(false)}
+                    >
+                        Dismiss
+                    </Button>
+                </DrawerFooter>
+            </Drawer>
         </div>
     );
 }
