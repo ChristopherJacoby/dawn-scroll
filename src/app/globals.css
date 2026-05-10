@@ -13,11 +13,13 @@
     /* Brand palette */
     --color-stone-night: #2c2016;
     --color-dark-clay: #5c4a2a;
+    --color-clay-mid: #7a5e38;
     --color-bronze: #a07840;
     --color-sand: #c9a96e;
     --color-parchment: #edd9a3;
     --color-linen: #f7f0df;
     --color-sage: #4a5e4a;
+    --color-rust: #8b4a2a;
 
     /* Fonts */
     --font-sans: var(--font-geist-sans);
