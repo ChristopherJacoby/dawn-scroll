@@ -43,17 +43,30 @@
     --color-sage: #4a5e4a;
     --color-rust: #8b4a2a;
 
-    /* Reading mode tokens exposed as Tailwind colors */
-    --color-reading-bg: var(--reading-bg);
-    --color-reading-bg-subtle: var(--reading-bg-subtle);
-    --color-reading-text: var(--reading-text);
-    --color-reading-text-muted: var(--reading-text-muted);
-    --color-reading-border: var(--reading-border);
-
     /* Fonts */
     --font-sans: var(--font-geist-sans);
     --font-mono: var(--font-geist-mono);
     --font-serif: var(--font-eb-garamond);
+}
+
+/* ─── Reading mode utility classes ───────────────────────────────────────── */
+/*     Written directly so var() stays live at runtime (not resolved by Tailwind) */
+@layer utilities {
+    .text-reading-text {
+        color: var(--reading-text);
+    }
+    .text-reading-text-muted {
+        color: var(--reading-text-muted);
+    }
+    .bg-reading-bg {
+        background-color: var(--reading-bg);
+    }
+    .bg-reading-bg-subtle {
+        background-color: var(--reading-bg-subtle);
+    }
+    .border-reading-border {
+        border-color: var(--reading-border);
+    }
 }
 
 /* ─── Base styles ─────────────────────────────────────────────────────────── */
