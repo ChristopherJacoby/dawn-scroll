@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { Card, CardBody, CardFooter, CardHeader } from "@/components/ui/Card";
 
 type ReadingMode = "light" | "dark" | "sepia";
 
@@ -13,7 +14,7 @@ export default function Home() {
     }, [mode]);
 
     return (
-        <div className="flex flex-1 flex-col items-center justify-center gap-12 px-8">
+        <div className="flex flex-1 flex-col items-center justify-center gap-12 px-8 py-16">
             <div className="text-center">
                 <h1 className="font-serif text-4xl text-reading-text">
                     Dawnscroll
@@ -37,7 +38,7 @@ export default function Home() {
             </div>
 
             {/* Button variants */}
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
                 <div className="flex flex-wrap gap-3">
                     <Button variant="primary">Primary</Button>
                     <Button variant="secondary">Secondary</Button>
@@ -53,6 +54,40 @@ export default function Home() {
                     <Button loading>Loading</Button>
                     <Button disabled>Disabled</Button>
                 </div>
+            </div>
+
+            {/* Card variants */}
+            <div className="grid w-full max-w-2xl gap-6">
+                {/* All slots */}
+                <Card>
+                    <CardHeader>
+                        <p className="font-sans font-medium text-reading-text">
+                            Card with all slots
+                        </p>
+                    </CardHeader>
+                    <CardBody>
+                        <p className="text-sm text-reading-text-muted">
+                            Body content goes here.
+                        </p>
+                    </CardBody>
+                    <CardFooter>
+                        <Button size="sm">Action</Button>
+                    </CardFooter>
+                </Card>
+
+                {/* Body only */}
+                <Card padding="md">
+                    <p className="text-sm text-reading-text-muted">
+                        Card with padding, no slots.
+                    </p>
+                </Card>
+
+                {/* No border, medium shadow */}
+                <Card border={false} shadow="md" padding="md">
+                    <p className="text-sm text-reading-text-muted">
+                        No border, shadow only.
+                    </p>
+                </Card>
             </div>
         </div>
     );
