@@ -6,9 +6,11 @@ import { Card, CardBody, CardFooter, CardHeader } from "@/components/ui/Card";
 import { Modal, ModalBody, ModalFooter } from "@/components/ui/Modal";
 import { Drawer, DrawerBody, DrawerFooter } from "@/components/ui/Drawer";
 import { useReadingMode } from "@/context/reading-mode";
+import { useToast } from "@/context/toast";
 
 export default function Home() {
     const { mode, setMode } = useReadingMode();
+    const toast = useToast();
     const [modalOpen, setModalOpen] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -54,6 +56,31 @@ export default function Home() {
                     <Button loading>Loading</Button>
                     <Button disabled>Disabled</Button>
                 </div>
+            </div>
+
+            {/* Toast demos */}
+            <div className="flex gap-3">
+                <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => toast.success("Changes saved successfully.")}
+                >
+                    Success toast
+                </Button>
+                <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => toast.error("Something went wrong.")}
+                >
+                    Error toast
+                </Button>
+                <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => toast.info("New passage available.")}
+                >
+                    Info toast
+                </Button>
             </div>
 
             {/* Card variants */}
