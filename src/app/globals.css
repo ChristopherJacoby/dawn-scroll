@@ -1,10 +1,32 @@
 @import "tailwindcss";
 
-:root {
-    --background: #ffffff;
-    --foreground: #171717;
+/* ─── Reading mode tokens ─────────────────────────────────────────────────── */
+:root,
+[data-reading-mode="light"] {
+    --reading-bg: #f7f0df;
+    --reading-bg-subtle: #edd9a3;
+    --reading-text: #2c2016;
+    --reading-text-muted: #5c4a2a;
+    --reading-border: #c9a96e;
 }
 
+[data-reading-mode="dark"] {
+    --reading-bg: #2c2016;
+    --reading-bg-subtle: #3d2e1e;
+    --reading-text: #f7f0df;
+    --reading-text-muted: #c9a96e;
+    --reading-border: #5c4a2a;
+}
+
+[data-reading-mode="sepia"] {
+    --reading-bg: #edd9a3;
+    --reading-bg-subtle: #e0c980;
+    --reading-text: #3d2610;
+    --reading-text-muted: #7a5e38;
+    --reading-border: #a07840;
+}
+
+/* ─── Tailwind theme ──────────────────────────────────────────────────────── */
 @theme inline {
     /* Background / foreground */
     --color-background: var(--background);
@@ -27,15 +49,32 @@
     --font-serif: var(--font-eb-garamond);
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
+/* ─── Reading mode utility classes ───────────────────────────────────────── */
+/*     Written directly so var() stays live at runtime (not resolved by Tailwind) */
+@layer utilities {
+    .text-reading-text {
+        color: var(--reading-text);
+    }
+    .text-reading-text-muted {
+        color: var(--reading-text-muted);
+    }
+    .bg-reading-bg {
+        background-color: var(--reading-bg);
+    }
+    .bg-reading-bg-subtle {
+        background-color: var(--reading-bg-subtle);
+    }
+    .border-reading-border {
+        border-color: var(--reading-border);
     }
 }
 
+/* ─── Base styles ─────────────────────────────────────────────────────────── */
 body {
-    background: var(--background);
-    color: var(--foreground);
+    background: var(--reading-bg);
+    color: var(--reading-text);
     font-family: var(--font-sans);
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
 }
