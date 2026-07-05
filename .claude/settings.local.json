@@ -1,7 +1,43 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:www.crunchbase.com)",
+      "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:techcrunch.com)",
+      "WebFetch(domain:www.google.com)",
+      "WebFetch(domain:www.forbes.com)",
+      "WebFetch(domain:www.statista.com)",
+      "WebFetch(domain:sensortower.com)",
+      "WebFetch(domain:www.olivetree.com)",
+      "WebFetch(domain:www.glorify.com)",
+      "WebFetch(domain:www.glorifyfaith.com)",
+      "WebFetch(domain:apps.apple.com)",
+      "WebFetch(domain:www.similarweb.com)",
+      "WebFetch(domain:www.logos.com)",
+      "WebFetch(domain:www.glo.bible)",
+      "WebFetch(domain:www.globible.com)",
+      "WebFetch(domain:www.grandviewresearch.com)",
+      "WebFetch(domain:www.futuremarketinsights.com)",
+      "WebFetch(domain:www.data.ai)",
+      "WebFetch(domain:www.alliedmarketresearch.com)",
+      "WebFetch(domain:www.christianitytoday.com)",
+      "WebFetch(domain:9to5mac.com)",
+      "WebFetch(domain:faithlife.com)",
+      "WebFetch(domain:pitchbook.com)",
+      "WebFetch(domain:tracxn.com)",
+      "WebFetch(domain:www.cbinsights.com)",
+      "WebFetch(domain:venturebeat.com)",
+      "WebFetch(domain:www.reuters.com)",
+      "WebFetch(domain:www.cnbc.com)",
+      "WebFetch(domain:apnews.com)",
+      "WebFetch(domain:news.crunchbase.com)",
+      "WebFetch(domain:www.marketresearchfuture.com)",
+      "WebFetch(domain:www.mordorintelligence.com)",
+      "WebFetch(domain:www.globenewswire.com)",
+      "WebFetch(domain:incfact.com)",
+      "WebFetch(domain:www.owler.com)",
+      "Bash(python3 -c \"import sys,json; print\\(json.loads\\('\\\\\"' + sys.stdin.read\\(\\).rstrip\\(\\).rstrip\\('\\\\\"'\\) + '\\\\\"'\\)\\)\")"
     ]
   }
 }
