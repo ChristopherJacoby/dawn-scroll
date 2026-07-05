@@ -59,16 +59,16 @@ Sourcing:
 
 ---
 
-### 3. AI Chat + Apostle Mode (V1)
+### 3. AI Chat + Apostle Mode (V4 — last feature)
 
-Scholar mode (V1):
+Scholar mode:
 - Historical customs, laws, and traditions of biblical eras
 - Passage-aware — knows what the user is currently reading
 - Bible-first, historical record second
 - Cites specific passages and sources
 - Educational, not denominational
 
-Apostle mode (V1):
+Apostle mode:
 - Available figures: Peter, Andrew, James, John, Philip, Bartholomew, Matthew, Thomas, James son of Alphaeus, Thaddaeus, Simon the Zealot, Paul
 - Strictly within their own timeline and knowledge — no awareness of the modern world
 - They do not know their letters become scripture
@@ -76,9 +76,9 @@ Apostle mode (V1):
 - Blocked: Jesus, God, Holy Spirit — treated with reverence, never roleplayed
 
 AI chat phasing:
-- V1: Historical and cultural context only
-- V2: Faith and theological questions
-- V3: Prophecy and doctrine discussion
+- V4 Phase 1: Historical and cultural context only
+- V4 Phase 2: Faith and theological questions
+- V4 Phase 3: Prophecy and doctrine discussion
 
 ---
 
@@ -243,7 +243,7 @@ Premium tier — Dawnscroll:
 - Bible Shorts feed (V2)
 - Offline access
 
-Pricing: TBD — range under consideration $7.99-$9.99/month or $59.99-$79.99/year
+Pricing: $7.99/month or $64.99/year (~32% annual discount)
 
 7-day free trial on premium recommended.
 
@@ -264,17 +264,22 @@ Pricing: TBD — range under consideration $7.99-$9.99/month or $59.99-$79.99/ye
 
 ## Version Roadmap
 
-| Feature           | V1              | V2                  | V3               |
-|-------------------|-----------------|---------------------|------------------|
-| Bible reader      | Core            | Side-by-side, audio | —                |
-| Archaeology       | Inline triggers | Full hub + video    | 3D models, AR    |
-| AI Scholar chat   | History only    | + Theology          | + Prophecy       |
-| Apostle mode      | 12 + Paul       | Save history, share | —                |
-| Original language | Word tap        | Interlinear, roots  | Dead Sea Scrolls |
-| Roots             | Full            | —                   | —                |
-| Hard Questions    | Full            | —                   | —                |
-| Bible Shorts      | —               | Full feed           | Series, playlists|
-| Story Time        | —               | —                   | Premium          |
+| Feature           | V1 (Sep 2026)   | V2                  | V3               | V4 (last)            |
+|-------------------|-----------------|---------------------|------------------|----------------------|
+| Bible reader      | Core            | Side-by-side, audio | —                | —                    |
+| Original language | Word tap        | Interlinear, roots  | Dead Sea Scrolls | —                    |
+| Roots             | Full            | —                   | —                | —                    |
+| Hard Questions    | Full            | —                   | —                | —                    |
+| Archaeology       | Inline triggers | Full hub + video    | 3D models, AR    | —                    |
+| Mobile (Capacitor)| —               | iOS + Android       | —                | —                    |
+| Bible Shorts      | —               | —                   | Full feed        | Series, playlists    |
+| Story Time        | —               | —                   | —                | Premium              |
+| AI Scholar chat   | —               | —                   | —                | History → Theology → Prophecy |
+| Apostle mode      | —               | —                   | —                | 12 + Paul, save/share|
+
+### Launch Strategy
+
+AI Chat and Apostle Mode are intentionally held until V4 — the last major feature set. The app needs to establish credibility and a large user base on uncontroversial, evidence-based content before introducing AI-generated character interactions that will attract theological criticism. This is a safety-first decision: let the reputation form, let the content library mature, and let the community grow — then ship the controversial features from a position of strength with established trust.
 
 ---
 
