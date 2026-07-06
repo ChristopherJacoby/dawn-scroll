@@ -51,20 +51,25 @@
 ### Stories
 
 **DS-201: Create design token system from brand palette**
-- Implement Tailwind theme with Stone Night, Dark Clay, Bronze, Sand, Parchment, Linen, Sage
-- Define typography scale (serif for scripture, clean sans for UI)
-- Set up dark/light reading mode foundations
-- *Acceptance Criteria:* All brand colors available as Tailwind utilities, typography renders correctly
+- Implement Tailwind theme with Stone Night, Dark Clay, Bronze, Sand, Parchment, Linen, Sage, and Rust
+- Define semantic reader tokens for surfaces, strong borders, accent contrast, links, focus, selection, highlights, notes, and citations
+- Define typography scale: EB Garamond for scripture/brand moments, clean sans for UI controls
+- Set up dark/light/sepia reading mode foundations
+- Avoid low-contrast pairings such as bronze-on-linen, linen-on-bronze, and sand text on light backgrounds
+- *Acceptance Criteria:* Brand colors and semantic reader tokens are available, typography renders correctly, and primary action/text pairings meet contrast requirements
 
 **DS-202: Build core UI component library**
 - Button, Card, Modal, Drawer, Toast, Navigation components
-- Consistent with ancient/parchment aesthetic
+- Consistent with ancient, readable, authoritative, quiet aesthetic
+- Buttons use restrained radius (`rounded-md` or `rounded-lg`) and high-contrast primary action colors
+- Cards/modals/drawers use restrained radius and quiet borders; shadows are reserved for overlays/elevated surfaces
 - Responsive across mobile, tablet, desktop
 - *Acceptance Criteria:* Components documented, used across at least 2 pages
 
 **DS-203: Design and implement app navigation structure**
-- Bottom tab navigation for mobile (Reader, Explore, Chat, Profile)
+- Bottom tab navigation for mobile (Reader, Explore, Library/Profile)
 - Sidebar navigation for desktop
+- No Chat navigation item in V1 while public AI chat is deferred
 - Responsive breakpoints
 - *Acceptance Criteria:* Navigation works on all breakpoints, active states visible
 

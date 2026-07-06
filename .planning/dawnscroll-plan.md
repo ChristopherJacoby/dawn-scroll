@@ -155,15 +155,65 @@ Tone: Confident, evidence-first, never defensive. Cite credentialed scientists a
 ## Branding
 
 ### Color Palette
-| Name        | Hex     | Use                          |
-|-------------|---------|------------------------------|
-| Stone night | #2C2016 | Primary dark — icon background |
-| Dark clay   | #5C4A2A | Secondary dark               |
-| Bronze      | #A07840 | Accent mid                   |
-| Sand        | #C9A96E | Icon symbol, highlights      |
-| Parchment   | #EDD9A3 | Light accent                 |
-| Linen       | #F7F0DF | Reading backgrounds          |
-| Sage        | #4A5E4A | Secondary colorway background |
+
+Design-agent verdict: keep the ancient manuscript palette, but treat it as a brand foundation rather than a complete UI system. V1 needs semantic reader tokens before the reader UI expands.
+
+| Name        | Hex     | Primary use |
+|-------------|---------|-------------|
+| Stone night | #2C2016 | Primary authority color, headers, nav, icon background, dark-mode base |
+| Dark clay   | #5C4A2A | Muted text on light surfaces, secondary authority |
+| Bronze      | #A07840 | Accent, emphasis, debated/evaluative status — not normal body text |
+| Sand        | #C9A96E | Icon detail, decorative linework, subtle highlight — not normal body text |
+| Parchment   | #EDD9A3 | Secondary reading/content panels, selected surfaces |
+| Linen       | #F7F0DF | Main reading background |
+| Sage        | #4A5E4A | Trust, citations, source badges, evidence status, secondary UI system |
+| Rust        | #8B4A2A | Caution, speculative/disputed claims, destructive/warning states |
+
+Recommended semantic roles:
+
+| Role | Color direction |
+|------|-----------------|
+| Main reader surface | Linen |
+| Primary text | Stone night |
+| Muted text | Dark clay |
+| Source/citation/trust indicators | Sage |
+| Established evidence | Sage |
+| Debated evidence | Bronze |
+| Speculative/caution state | Rust |
+| Reader highlight | Parchment/Sand family |
+| Primary action contrast | Dark clay or stone night, not bronze |
+
+Accessibility notes:
+- Core body text contrast is strong in light, dark, and sepia modes.
+- Bronze on linen and linen on bronze are too low-contrast for normal text/buttons and should be avoided for primary actions.
+- Sand should be decorative only on light backgrounds.
+- Borders that define controls need a stronger border token than the decorative sand/bronze dividers.
+- Sepia muted text should be darkened from the current clay-mid value.
+
+Semantic reader tokens to add before building the V1 reader:
+
+```css
+--reading-surface
+--reading-surface-raised
+--reading-divider
+--reading-border-strong
+--reading-accent
+--reading-accent-contrast
+--reading-link
+--reading-focus
+--reading-selection
+--reading-highlight
+--reading-note
+--reading-citation
+```
+
+Component style direction:
+- Ancient + readable + authoritative + quiet.
+- Buttons should use `rounded-md` or `rounded-lg`, not pill-shaped `rounded-full`.
+- Cards, modals, and drawers should use restrained radius (`rounded-lg` range), not overly soft `rounded-2xl`.
+- Prefer borders and quiet surfaces over shadows; reserve shadows for overlays.
+- Use EB Garamond for scripture and brand moments, Geist for UI controls.
+- V1 navigation should not include Chat while public AI chat is deferred.
 
 ### Icon
 - Primary: Dark stone (#2C2016) + Ayin in sand/bronze (#C9A96E)

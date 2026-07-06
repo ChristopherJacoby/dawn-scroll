@@ -96,16 +96,16 @@ Install `@capacitor/core`, `@capacitor/cli`, `@capacitor/ios`, `@capacitor/andro
 ### Feature 2.1: Design Tokens
 
 **DS-010** | Priority: 1 | ~80 lines
-**Extend Tailwind theme with Dawnscroll brand palette**
-Add all brand colors to `tailwind.config.ts`: Stone Night `#2C2016`, Dark Clay `#5C4A2A`, Bronze `#A07840`, Sand `#C9A96E`, Parchment `#EDD9A3`, Linen `#F7F0DF`, Sage `#4A5E4A`. Add custom font families (serif for scripture, sans for UI).
-*Shippable when:* `bg-stone-night` and `text-sand` apply correctly in any component.
+**Extend Tailwind theme with Dawnscroll brand palette and semantic reader tokens**
+Add all brand colors to the theme: Stone Night `#2C2016`, Dark Clay `#5C4A2A`, Bronze `#A07840`, Sand `#C9A96E`, Parchment `#EDD9A3`, Linen `#F7F0DF`, Sage `#4A5E4A`, Rust `#8B4A2A`. Add semantic reader tokens for surfaces, strong borders, accent contrast, links, focus, selection, highlights, notes, and citations. Add custom font families (EB Garamond for scripture/brand, Geist for UI).
+*Shippable when:* brand colors and semantic reader tokens are available, and primary action/text pairings meet contrast requirements.
 
 ---
 
 **DS-011** | Priority: 1 | ~60 lines
 **Define global CSS base styles and reading mode variables**
-Add CSS custom properties for light, dark, and sepia reading modes. Apply base body styles. Define transitions for mode switching.
-*Shippable when:* Toggling a `data-reading-mode` attribute on `<body>` shifts background and text colors.
+Add CSS custom properties for light, dark, and sepia reading modes. Include semantic tokens: `--reading-surface`, `--reading-surface-raised`, `--reading-divider`, `--reading-border-strong`, `--reading-accent`, `--reading-accent-contrast`, `--reading-link`, `--reading-focus`, `--reading-selection`, `--reading-highlight`, `--reading-note`, and `--reading-citation`. Apply base body styles and define transitions for mode switching.
+*Shippable when:* Toggling a `data-reading-mode` attribute on `<body>` shifts background, text, surface, border, focus, selection, and highlight colors.
 
 ---
 
@@ -114,20 +114,23 @@ Add CSS custom properties for light, dark, and sepia reading modes. Apply base b
 **DS-012** | Priority: 2 | ~80 lines
 **Build Button component with variants**
 Variants: `primary`, `secondary`, `ghost`, `destructive`. Sizes: `sm`, `md`, `lg`. Handles loading and disabled states.
-*Shippable when:* All variants render correctly with correct hover/focus/disabled states.
+Primary actions must use a high-contrast dark clay/stone pairing, not bronze-on-linen or linen-on-bronze. Buttons should use restrained radius (`rounded-md` or `rounded-lg`), not pill-shaped `rounded-full`.
+*Shippable when:* All variants render correctly with correct hover/focus/disabled states and accessible contrast.
 
 ---
 
 **DS-013** | Priority: 2 | ~60 lines
 **Build Card component**
 Supports header, body, and footer slots. Optional border, shadow, and padding variants. Used across Archaeology, Roots, and Hard Questions.
-*Shippable when:* Card renders with all slot combinations without layout breaking.
+Use restrained radius (`rounded-lg` range) and quiet borders. Shadows should be optional and reserved for actual overlays or elevated surfaces, not default page structure.
+*Shippable when:* Card renders with all slot combinations without layout breaking and matches the ancient, readable, authoritative, quiet visual direction.
 
 ---
 
 **DS-014** | Priority: 2 | ~100 lines
 **Build Modal and Drawer components**
 Modal for desktop overlays, Drawer (bottom sheet) for mobile. Handles open/close state, backdrop, focus trap, and `Escape` key dismissal.
+Use restrained radius and accessible focus states. Overlays may use shadow, but the content surface should still align with the reader token system.
 *Shippable when:* Modal opens, traps focus, closes on Escape and backdrop click.
 
 ---
@@ -141,7 +144,7 @@ Types: `success`, `error`, `info`. Auto-dismisses after 4 seconds. Stackable. Tr
 
 **DS-016** | Priority: 2 | ~120 lines
 **Build Navigation component (mobile bottom tab + desktop sidebar)**
-Mobile: fixed bottom tab bar with icons for Reader, Explore, Chat, Profile.
+Mobile: fixed bottom tab bar with icons for Reader, Explore, Library/Profile. Do not include Chat in V1 navigation while public AI chat is deferred.
 Desktop: collapsible left sidebar with same destinations.
 *Shippable when:* Navigation renders correctly at mobile and desktop breakpoints, active tab is highlighted.
 
