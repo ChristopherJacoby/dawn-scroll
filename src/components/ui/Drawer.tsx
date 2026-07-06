@@ -35,7 +35,7 @@ export function Drawer({
                     className={cn(
                         "fixed bottom-0 left-0 right-0 z-50",
                         "max-h-[85dvh] flex flex-col",
-                        "rounded-t-2xl bg-reading-bg border-t border-x border-reading-border shadow-lg",
+                        "rounded-t-lg bg-reading-surface-raised border-t border-x border-reading-border-strong shadow-lg",
                         "transition-transform duration-300 ease-out",
                         "data-[state=open]:translate-y-0 data-[state=closed]:translate-y-full",
                         "focus:outline-none",
@@ -44,11 +44,11 @@ export function Drawer({
                 >
                     {/* Drag handle */}
                     <div className="flex justify-center pt-3 pb-1">
-                        <div className="h-1 w-10 rounded-full bg-reading-border" />
+                        <div className="h-1 w-10 rounded-full bg-reading-divider" />
                     </div>
 
                     {/* Header */}
-                    <div className="flex items-start justify-between border-b border-reading-border px-6 py-4">
+                    <div className="flex items-start justify-between border-b border-reading-divider px-6 py-4">
                         <div>
                             <Dialog.Title className="font-sans text-base font-medium text-reading-text">
                                 {title}
@@ -60,7 +60,7 @@ export function Drawer({
                             )}
                         </div>
                         <Dialog.Close
-                            className="ml-4 rounded p-1 text-reading-text-muted transition-colors hover:bg-reading-bg-subtle hover:text-reading-text focus:outline-none focus-visible:ring-2 focus-visible:ring-dark-clay"
+                            className="ml-4 rounded p-1 text-reading-text-muted transition-colors hover:bg-reading-bg-subtle hover:text-reading-text focus:outline-none focus-visible:ring-2 focus-visible:ring-reading-focus"
                             aria-label="Close"
                         >
                             <svg
@@ -108,7 +108,7 @@ export function DrawerFooter({
     return (
         <div
             className={cn(
-                "flex justify-end gap-3 border-t border-reading-border px-6 py-4",
+                "flex justify-end gap-3 border-t border-reading-divider px-6 py-4",
                 className,
             )}
             {...props}

@@ -36,7 +36,7 @@ export function Modal({
                         "fixed left-1/2 top-1/2 z-50",
                         "-translate-x-1/2 -translate-y-1/2",
                         "w-full max-w-lg",
-                        "rounded-2xl bg-reading-bg border border-reading-border shadow-lg",
+                        "rounded-lg bg-reading-surface-raised border border-reading-border-strong shadow-lg",
                         "transition-all duration-200",
                         "data-[state=open]:opacity-100 data-[state=open]:scale-100",
                         "data-[state=closed]:opacity-0 data-[state=closed]:scale-95",
@@ -67,7 +67,7 @@ function ModalHeader({
     return (
         <div
             className={cn(
-                "flex items-start justify-between border-b border-reading-border px-6 py-4",
+                "flex items-start justify-between border-b border-reading-divider px-6 py-4",
                 className,
             )}
         >
@@ -76,7 +76,7 @@ function ModalHeader({
             </Dialog.Title>
             <Dialog.Close
                 onClick={onClose}
-                className="ml-4 rounded p-1 text-reading-text-muted transition-colors hover:bg-reading-bg-subtle hover:text-reading-text focus:outline-none focus-visible:ring-2 focus-visible:ring-dark-clay"
+                className="ml-4 rounded p-1 text-reading-text-muted transition-colors hover:bg-reading-bg-subtle hover:text-reading-text focus:outline-none focus-visible:ring-2 focus-visible:ring-reading-focus"
                 aria-label="Close"
             >
                 <svg
@@ -118,7 +118,7 @@ export function ModalFooter({
     return (
         <div
             className={cn(
-                "flex justify-end gap-3 border-t border-reading-border px-6 py-4",
+                "flex justify-end gap-3 border-t border-reading-divider px-6 py-4",
                 className,
             )}
             {...props}

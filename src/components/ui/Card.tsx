@@ -1,10 +1,10 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/cn";
 
-const cardVariants = cva("rounded-2xl bg-reading-bg transition-colors", {
+const cardVariants = cva("rounded-lg bg-reading-surface transition-colors", {
     variants: {
         border: {
-            true: "border border-reading-border",
+            true: "border border-reading-divider",
             false: "",
         },
         shadow: {
@@ -21,7 +21,7 @@ const cardVariants = cva("rounded-2xl bg-reading-bg transition-colors", {
     },
     defaultVariants: {
         border: true,
-        shadow: "sm",
+        shadow: "none",
         padding: "none",
     },
 });
@@ -57,7 +57,7 @@ export function CardHeader({
     return (
         <div
             className={cn(
-                "border-b border-reading-border px-6 py-4",
+                "border-b border-reading-divider px-6 py-4",
                 className,
             )}
             {...props}
@@ -87,7 +87,7 @@ export function CardFooter({
     return (
         <div
             className={cn(
-                "border-t border-reading-border px-6 py-4",
+                "border-t border-reading-divider px-6 py-4",
                 className,
             )}
             {...props}
