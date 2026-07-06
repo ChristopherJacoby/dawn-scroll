@@ -173,8 +173,18 @@ function validate(verses, manifest, checksum) {
 
 function buildSql(manifest, checksum, verses) {
   const t = manifest.translation, s = manifest.source;
+  const chapterVerseCounts = new Map();
+  for (const verse of verses) {
+    const key = `${verse.book}.${verse.chapter}`;
+    chapterVerseCounts.set(key, (chapterVerseCounts.get(key) ?? 0) + 1);
+  }
   const lines = ['begin;', `insert into public.translations (slug, abbreviation, name, language_code, versification, copyright_notice, rights_statement, is_public_domain, is_enabled, metadata) values (${sql(t.slug)}, ${sql(t.abbreviation)}, ${sql(t.name)}, ${sql(t.languageCode)}, ${sql(t.versification)}, ${sql('Public domain in the USA')}, ${sql(s.license)}, true, true, ${sql(JSON.stringify({ sourceManifest: 'data/kjv/source-manifest.json' }))}::jsonb) on conflict (slug) do update set abbreviation = excluded.abbreviation, name = excluded.name, language_code = excluded.language_code, versification = excluded.versification, copyright_notice = excluded.copyright_notice, rights_statement = excluded.rights_statement, is_public_domain = excluded.is_public_domain, is_enabled = excluded.is_enabled, metadata = excluded.metadata;`];
   for (const b of BOOKS) lines.push(`insert into public.books (osis_id, slug, name, common_abbreviation, testament, book_order, chapters_count) values (${sql(b.osisId)}, ${sql(b.slug)}, ${sql(b.name)}, ${sql(b.abbreviation)}, ${sql(b.testament)}, ${b.order}, ${b.chaptersCount}) on conflict (osis_id) do update set slug = excluded.slug, name = excluded.name, common_abbreviation = excluded.common_abbreviation, testament = excluded.testament, book_order = excluded.book_order, chapters_count = excluded.chapters_count;`);
+  for (const b of BOOKS) {
+    for (let chapter = 1; chapter <= b.chaptersCount; chapter += 1) {
+      lines.push(`insert into public.chapters (book_id, chapter_number, verse_count) select id, ${chapter}, ${chapterVerseCounts.get(`${b.osisId}.${chapter}`)} from public.books where osis_id = ${sql(b.osisId)} on conflict (book_id, chapter_number) do update set verse_count = excluded.verse_count;`);
+    }
+  }
   lines.push(`insert into public.data_sources (translation_id, source_key, source_type, title, url, license, attribution, checksum_sha256, imported_at, metadata) select id, ${sql(s.key)}, ${sql(s.type)}, ${sql(s.title)}, ${sql(s.url)}, ${sql(s.license)}, ${sql(s.attribution)}, ${sql(checksum)}, now(), ${sql(JSON.stringify({ catalogUrl: s.catalogUrl, accessedOn: s.accessedOn }))}::jsonb from public.translations where slug = ${sql(t.slug)} on conflict (source_key) do update set translation_id = excluded.translation_id, source_type = excluded.source_type, title = excluded.title, url = excluded.url, license = excluded.license, attribution = excluded.attribution, checksum_sha256 = excluded.checksum_sha256, imported_at = excluded.imported_at, metadata = excluded.metadata;`);
   for (const v of verses) lines.push(`insert into public.verses (translation_id, book_id, chapter_number, verse_number, verse_text, source_id) select tr.id, b.id, ${v.chapter}, ${v.verse}, ${sql(v.text)}, ds.id from public.translations tr join public.books b on b.osis_id = ${sql(v.book)} join public.data_sources ds on ds.source_key = ${sql(s.key)} where tr.slug = ${sql(t.slug)} on conflict (translation_id, book_id, chapter_number, verse_number) do update set verse_text = excluded.verse_text, source_id = excluded.source_id;`);
   lines.push('commit;');
