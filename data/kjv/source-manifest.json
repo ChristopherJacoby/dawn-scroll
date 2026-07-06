@@ -17,7 +17,7 @@
     "catalogUrl": "https://www.gutenberg.org/ebooks/10",
     "license": "Project Gutenberg License; catalog marks the work as public domain in the USA.",
     "attribution": "The King James Version of the Bible, Project Gutenberg eBook #10.",
-    "expectedSha256": null,
+    "expectedSha256": "6ddeb05fc18e988ab569549603410fecf1a40604d826187c278b3b948a92c0e4",
     "accessedOn": "2026-07-06",
     "notes": "Project Gutenberg catalog page lists eBook #10 release date Aug 1, 1989, last update Apr 6, 2024, language English, and copyright status 'Public domain in the USA.' The import keeps the source and checksum in generated reports so future updates are auditable. If expectedSha256 is set, the pipeline fails on checksum mismatch."
   }
