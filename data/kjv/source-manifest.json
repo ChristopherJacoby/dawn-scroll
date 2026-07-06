@@ -1,0 +1,24 @@
+{
+  "translation": {
+    "slug": "kjv",
+    "abbreviation": "KJV",
+    "name": "King James Version",
+    "languageCode": "en",
+    "versification": "kjv",
+    "isPublicDomainUS": true
+  },
+  "source": {
+    "key": "project-gutenberg-ebook-10",
+    "type": "digital_text",
+    "title": "The King James Version of the Bible",
+    "publisher": "Project Gutenberg",
+    "ebookNumber": 10,
+    "url": "https://www.gutenberg.org/files/10/10-0.txt",
+    "catalogUrl": "https://www.gutenberg.org/ebooks/10",
+    "license": "Project Gutenberg License; catalog marks the work as public domain in the USA.",
+    "attribution": "The King James Version of the Bible, Project Gutenberg eBook #10.",
+    "expectedSha256": null,
+    "accessedOn": "2026-07-06",
+    "notes": "Project Gutenberg catalog page lists eBook #10 release date Aug 1, 1989, last update Apr 6, 2024, language English, and copyright status 'Public domain in the USA.' The import keeps the source and checksum in generated reports so future updates are auditable. If expectedSha256 is set, the pipeline fails on checksum mismatch."
+  }
+}

@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "prepare": "husky || true"
+    "prepare": "husky || true",
+    "import:kjv": "node scripts/import-kjv.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
