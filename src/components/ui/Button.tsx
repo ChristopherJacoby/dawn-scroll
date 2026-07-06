@@ -3,17 +3,17 @@ import { cn } from "@/lib/cn";
 
 const buttonVariants = cva(
     // Base styles applied to every variant
-    "inline-flex items-center justify-center gap-2 rounded-full font-sans font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dark-clay focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+    "inline-flex items-center justify-center gap-2 rounded-md font-sans font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-reading-focus focus-visible:ring-offset-2 focus-visible:ring-offset-reading-bg disabled:pointer-events-none disabled:opacity-50",
     {
         variants: {
             variant: {
                 primary:
-                    "bg-bronze text-linen hover:bg-clay-mid active:bg-dark-clay",
+                    "bg-reading-accent text-reading-accent-contrast hover:brightness-110 active:brightness-95",
                 secondary:
-                    "border border-bronze text-bronze hover:bg-bronze/10 active:bg-bronze/20",
-                ghost: "text-dark-clay hover:bg-dark-clay/10 active:bg-dark-clay/20",
+                    "border border-reading-border-strong text-reading-accent hover:bg-reading-surface-raised active:bg-reading-bg-subtle",
+                ghost: "text-reading-accent hover:bg-reading-surface-raised active:bg-reading-bg-subtle",
                 destructive:
-                    "bg-rust text-linen hover:bg-rust/90 active:bg-rust/80",
+                    "bg-rust text-linen hover:brightness-110 active:brightness-95",
             },
             size: {
                 sm: "h-8 px-3 text-sm",

@@ -8,6 +8,18 @@
     --reading-text: #2c2016;
     --reading-text-muted: #5c4a2a;
     --reading-border: #c9a96e;
+    --reading-surface: #f7f0df;
+    --reading-surface-raised: #fff8e8;
+    --reading-divider: #d8bd7c;
+    --reading-border-strong: #8f6b35;
+    --reading-accent: #5c4a2a;
+    --reading-accent-contrast: #f7f0df;
+    --reading-link: #4a5e4a;
+    --reading-focus: #4a5e4a;
+    --reading-selection: #edd9a3;
+    --reading-highlight: #f1df9b;
+    --reading-note: #fff8e8;
+    --reading-citation: #4a5e4a;
 }
 
 [data-reading-mode="dark"] {
@@ -16,6 +28,18 @@
     --reading-text: #f7f0df;
     --reading-text-muted: #c9a96e;
     --reading-border: #5c4a2a;
+    --reading-surface: #2c2016;
+    --reading-surface-raised: #3d2e1e;
+    --reading-divider: #5c4a2a;
+    --reading-border-strong: #c9a96e;
+    --reading-accent: #c9a96e;
+    --reading-accent-contrast: #2c2016;
+    --reading-link: #b7c7a8;
+    --reading-focus: #c9a96e;
+    --reading-selection: #5c4a2a;
+    --reading-highlight: #5c4a2a;
+    --reading-note: #3d2e1e;
+    --reading-citation: #b7c7a8;
 }
 
 [data-reading-mode="sepia"] {
@@ -24,6 +48,18 @@
     --reading-text: #3d2610;
     --reading-text-muted: #7a5e38;
     --reading-border: #a07840;
+    --reading-surface: #edd9a3;
+    --reading-surface-raised: #f7e7b8;
+    --reading-divider: #b88f4f;
+    --reading-border-strong: #6f4f28;
+    --reading-accent: #5c4a2a;
+    --reading-accent-contrast: #f7f0df;
+    --reading-link: #3f563f;
+    --reading-focus: #4a5e4a;
+    --reading-selection: #f7f0df;
+    --reading-highlight: #f7e7b8;
+    --reading-note: #f7e7b8;
+    --reading-citation: #3f563f;
 }
 
 /* ─── Tailwind theme ──────────────────────────────────────────────────────── */
@@ -67,6 +103,54 @@
     .border-reading-border {
         border-color: var(--reading-border);
     }
+    .bg-reading-surface {
+        background-color: var(--reading-surface);
+    }
+    .bg-reading-surface-raised {
+        background-color: var(--reading-surface-raised);
+    }
+    .bg-reading-note {
+        background-color: var(--reading-note);
+    }
+    .bg-reading-highlight {
+        background-color: var(--reading-highlight);
+    }
+    .bg-reading-selection {
+        background-color: var(--reading-selection);
+    }
+    .text-reading-accent {
+        color: var(--reading-accent);
+    }
+    .text-reading-accent-contrast {
+        color: var(--reading-accent-contrast);
+    }
+    .text-reading-link {
+        color: var(--reading-link);
+    }
+    .text-reading-citation {
+        color: var(--reading-citation);
+    }
+    .bg-reading-accent {
+        background-color: var(--reading-accent);
+    }
+    .border-reading-divider {
+        border-color: var(--reading-divider);
+    }
+    .border-reading-border-strong {
+        border-color: var(--reading-border-strong);
+    }
+    .ring-reading-focus {
+        --tw-ring-color: var(--reading-focus);
+    }
+    .outline-reading-focus {
+        outline-color: var(--reading-focus);
+    }
+    .selection-reading {
+        &::selection {
+            background-color: var(--reading-selection);
+            color: var(--reading-text);
+        }
+    }
 }
 
 /* ─── Base styles ─────────────────────────────────────────────────────────── */
@@ -77,4 +161,24 @@ body {
     transition:
         background-color 0.2s ease,
         color 0.2s ease;
+}
+
+::selection {
+    background-color: var(--reading-selection);
+    color: var(--reading-text);
+}
+
+a {
+    text-underline-offset: 0.18em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
 }

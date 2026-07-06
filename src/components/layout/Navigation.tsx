@@ -3,13 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { BookOpen, Compass, MessageSquare, User, Menu, X } from "lucide-react";
+import { BookOpen, Compass, User, Menu, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 const navItems = [
     { href: "/reader", icon: BookOpen, label: "Reader" },
     { href: "/explore", icon: Compass, label: "Explore" },
-    { href: "/chat", icon: MessageSquare, label: "Chat" },
     { href: "/profile", icon: User, label: "Profile" },
 ];
 
@@ -33,7 +32,7 @@ function NavItem({
             className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 active
-                    ? "bg-reading-bg-subtle text-reading-text"
+                    ? "bg-reading-surface-raised text-reading-text ring-1 ring-inset ring-reading-focus"
                     : "text-reading-text-muted hover:bg-reading-bg-subtle hover:text-reading-text",
             )}
             aria-current={active ? "page" : undefined}
@@ -53,7 +52,7 @@ export function Navigation() {
     return (
         <>
             {/* ── Desktop sidebar (md+) ─────────────────────────────── */}
-            <nav className="hidden md:flex h-screen w-56 shrink-0 sticky top-0 flex-col gap-1 border-r border-reading-border bg-reading-bg px-3 py-6">
+            <nav className="hidden md:flex h-screen w-56 shrink-0 sticky top-0 flex-col gap-1 border-r border-reading-divider bg-reading-surface px-3 py-6">
                 <p className="mb-4 px-3 font-serif text-lg text-reading-text">
                     Dawnscroll
                 </p>
@@ -67,7 +66,7 @@ export function Navigation() {
             </nav>
 
             {/* ── Mobile top bar ────────────────────────────────────── */}
-            <div className="md:hidden fixed top-0 left-0 right-0 z-30 flex h-14 items-center gap-3 border-b border-reading-border bg-reading-bg px-4">
+            <div className="md:hidden fixed top-0 left-0 right-0 z-30 flex h-14 items-center gap-3 border-b border-reading-divider bg-reading-surface px-4">
                 <button
                     onClick={() => setMobileOpen(true)}
                     className="rounded-lg p-1.5 text-reading-text-muted transition-colors hover:bg-reading-bg-subtle hover:text-reading-text"
@@ -96,7 +95,7 @@ export function Navigation() {
             <nav
                 className={cn(
                     "md:hidden fixed left-0 top-0 bottom-0 z-50 w-56 flex flex-col gap-1",
-                    "border-r border-reading-border bg-reading-bg px-3 py-6",
+                    "border-r border-reading-divider bg-reading-surface px-3 py-6",
                     "transition-transform duration-300",
                     mobileOpen ? "translate-x-0" : "-translate-x-full",
                 )}
