@@ -1,0 +1,36 @@
+{
+  "generatedAt": "2026-07-06T02:12:43.789Z",
+  "source": {
+    "key": "project-gutenberg-ebook-10",
+    "type": "digital_text",
+    "title": "The King James Version of the Bible",
+    "publisher": "Project Gutenberg",
+    "ebookNumber": 10,
+    "url": "https://www.gutenberg.org/files/10/10-0.txt",
+    "catalogUrl": "https://www.gutenberg.org/ebooks/10",
+    "license": "Project Gutenberg License; catalog marks the work as public domain in the USA.",
+    "attribution": "The King James Version of the Bible, Project Gutenberg eBook #10.",
+    "expectedSha256": "6ddeb05fc18e988ab569549603410fecf1a40604d826187c278b3b948a92c0e4",
+    "accessedOn": "2026-07-06",
+    "notes": "Project Gutenberg catalog page lists eBook #10 release date Aug 1, 1989, last update Apr 6, 2024, language English, and copyright status 'Public domain in the USA.' The import keeps the source and checksum in generated reports so future updates are auditable. If expectedSha256 is set, the pipeline fails on checksum mismatch.",
+    "computedSha256": "6ddeb05fc18e988ab569549603410fecf1a40604d826187c278b3b948a92c0e4"
+  },
+  "normalization": {
+    "unicode": "NFC",
+    "newlines": "LF",
+    "verseWhitespace": "collapsed internal whitespace"
+  },
+  "expectedTotals": {
+    "books": 66,
+    "chapters": 1189,
+    "verses": 31102
+  },
+  "ok": true,
+  "errors": [],
+  "warnings": [],
+  "totals": {
+    "books": 66,
+    "chapters": 1189,
+    "verses": 31102
+  }
+}
