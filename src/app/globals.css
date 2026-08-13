@@ -26,7 +26,8 @@
     --reading-bg: #2c2016;
     --reading-bg-subtle: #3d2e1e;
     --reading-text: #f7f0df;
-    --reading-text-muted: #c9a96e;
+    /* Lighter than brand sand: small muted text on dark needs ~Lc 60+ (APCA) */
+    --reading-text-muted: #d9bc85;
     --reading-border: #5c4a2a;
     --reading-surface: #2c2016;
     --reading-surface-raised: #3d2e1e;
@@ -46,7 +47,8 @@
     --reading-bg: #edd9a3;
     --reading-bg-subtle: #e0c980;
     --reading-text: #3d2610;
-    --reading-text-muted: #7a5e38;
+    /* Darker than clay-mid: 4.5:1 AA on the sepia bg for small verse numbers */
+    --reading-text-muted: #65492a;
     --reading-border: #a07840;
     --reading-surface: #edd9a3;
     --reading-surface-raised: #f7e7b8;
@@ -124,11 +126,15 @@
     .text-reading-accent-contrast {
         color: var(--reading-accent-contrast);
     }
+    /* Links are underlined, not color-only: sage vs body brown is a hue
+       distinction (< 3:1 luminance, WCAG G183) that colorblind readers miss */
     .text-reading-link {
         color: var(--reading-link);
+        text-decoration-line: underline;
     }
     .text-reading-citation {
         color: var(--reading-citation);
+        text-decoration-line: underline;
     }
     .bg-reading-accent {
         background-color: var(--reading-accent);
