@@ -157,6 +157,21 @@
             color: var(--reading-text);
         }
     }
+    /* Applied by VerseAnchorScroll to the verse an anchor navigation lands
+       on; the delay holds the highlight briefly before the fade begins. */
+    .verse-flash {
+        border-radius: 0.375rem;
+        animation: verse-flash 2.5s ease-out 0.4s both;
+    }
+}
+
+@keyframes verse-flash {
+    from {
+        background-color: var(--reading-highlight);
+    }
+    to {
+        background-color: transparent;
+    }
 }
 
 /* ─── Base styles ─────────────────────────────────────────────────────────── */
