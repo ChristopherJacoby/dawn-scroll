@@ -89,6 +89,6 @@ export function ReaderSelectors({
 }
 
 const selectClassName = cn(
-    "h-11 w-full rounded-md border border-reading-border bg-reading-surface-raised px-3 text-sm text-reading-text",
+    "h-11 w-full rounded-md border border-reading-border-strong bg-reading-surface-raised px-3 text-sm text-reading-text",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-reading-focus focus-visible:ring-offset-2 focus-visible:ring-offset-reading-bg",
 );

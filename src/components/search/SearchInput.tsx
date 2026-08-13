@@ -58,7 +58,7 @@ export function SearchInput({
                 autoFocus
                 enterKeyHint="search"
                 className={cn(
-                    "h-12 w-full rounded-md border border-reading-border bg-reading-surface-raised pl-10 pr-20 text-base text-reading-text",
+                    "h-12 w-full rounded-md border border-reading-border-strong bg-reading-surface-raised pl-10 pr-20 text-base text-reading-text",
                     "placeholder:text-reading-text-muted",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-reading-focus focus-visible:ring-offset-2 focus-visible:ring-offset-reading-bg",
                     "[&::-webkit-search-cancel-button]:hidden",
