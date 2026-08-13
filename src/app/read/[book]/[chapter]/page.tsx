@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChapterPrefetch } from "@/components/reader/ChapterPrefetch";
 import { ReaderSelectors } from "@/components/reader/ReaderSelectors";
 import { ReadingModeToggle } from "@/components/reader/ReadingModeToggle";
 import { VerseAnchorScroll } from "@/components/reader/VerseAnchorScroll";
@@ -81,6 +82,18 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                 <VerseAnchorScroll
                     key={`${passage.book.slug}-${passage.chapter.chapterNumber}`}
                 />
+                <ChapterPrefetch
+                    previousHref={
+                        passage.previous
+                            ? `/read/${passage.previous.bookSlug}/${passage.previous.chapterNumber}`
+                            : null
+                    }
+                    nextHref={
+                        passage.next
+                            ? `/read/${passage.next.bookSlug}/${passage.next.chapterNumber}`
+                            : null
+                    }
+                />
                 <div className="selection-reading flex flex-col gap-4 font-serif text-[1.35rem] leading-9 text-reading-text md:text-[1.5rem] md:leading-10">
                     {passage.verses.map((verse) => (
                         <p
@@ -138,6 +151,7 @@ function ChapterNavLink({
     return (
         <Link
             href={`/read/${item.bookSlug}/${item.chapterNumber}`}
+            prefetch={true}
             className={cn(
                 "flex min-h-16 items-center gap-3 rounded-md border border-reading-border px-4 text-sm text-reading-text transition-colors hover:bg-reading-surface-raised focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-reading-focus focus-visible:ring-offset-2 focus-visible:ring-offset-reading-bg",
                 isPrevious ? "justify-start" : "justify-end text-right",
