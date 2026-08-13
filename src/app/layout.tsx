@@ -35,7 +35,16 @@ export default function RootLayout({
             lang="en"
             className={`${geistSans.variable} ${geistMono.variable} ${ebGaramond.variable} h-full antialiased`}
         >
-            <body className="min-h-full">
+            {/* suppressHydrationWarning: the pre-paint script below sets
+                data-reading-mode before React hydrates */}
+            <body className="min-h-full" suppressHydrationWarning>
+                {/* Pre-paint: apply the saved reading mode before first render
+                    so a dark/sepia user never sees a flash of light mode. */}
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `try{var m=localStorage.getItem("dawnscroll.reading-mode");if(m==="dark"||m==="sepia")document.body.dataset.readingMode=m}catch(e){}`,
+                    }}
+                />
                 <Providers>
                     <div className="flex min-h-full">
                         <Navigation />
