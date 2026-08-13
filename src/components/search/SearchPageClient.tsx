@@ -3,6 +3,8 @@
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import type { SearchResult } from "@/lib/bible/types";
+import { addRecentSearch } from "@/lib/search-history";
+import { RecentSearches } from "./RecentSearches";
 import { SearchInput } from "./SearchInput";
 import { SearchResults } from "./SearchResults";
 
@@ -14,6 +16,7 @@ interface CompletedSearch {
 
 export function SearchPageClient() {
     const initialQuery = useSearchParams().get("q")?.trim() ?? "";
+    const [value, setValue] = useState(initialQuery);
     const [query, setQuery] = useState(initialQuery);
     const [completed, setCompleted] = useState<CompletedSearch | null>(null);
 
@@ -36,6 +39,7 @@ export function SearchPageClient() {
                 const body = (await response.json()) as {
                     results: SearchResult[];
                 };
+                addRecentSearch(query);
                 setCompleted({ query, results: body.results, error: null });
             } catch (cause) {
                 if (controller.signal.aborted) return;
@@ -65,22 +69,43 @@ export function SearchPageClient() {
         );
     }, []);
 
+    const rerunSearch = useCallback(
+        (nextQuery: string) => {
+            setValue(nextQuery);
+            handleQueryChange(nextQuery);
+        },
+        [handleQueryChange],
+    );
+
     const active = query && completed?.query === query ? completed : null;
     const loading = Boolean(query) && !active;
 
     return (
         <div className="flex flex-col gap-6">
             <SearchInput
-                defaultValue={initialQuery}
+                value={value}
                 loading={loading}
+                onValueChange={setValue}
                 onQueryChange={handleQueryChange}
             />
-            <SearchResults
-                query={query}
-                results={active?.results ?? []}
-                loading={loading}
-                error={active?.error ?? null}
-            />
+            {query ? (
+                <SearchResults
+                    query={query}
+                    results={active?.results ?? []}
+                    loading={loading}
+                    error={active?.error ?? null}
+                />
+            ) : (
+                <>
+                    <RecentSearches onSelect={rerunSearch} />
+                    <SearchResults
+                        query={query}
+                        results={[]}
+                        loading={false}
+                        error={null}
+                    />
+                </>
+            )}
         </div>
     );
 }
