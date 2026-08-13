@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ReaderSelectors } from "@/components/reader/ReaderSelectors";
+import { VerseAnchorScroll } from "@/components/reader/VerseAnchorScroll";
 import { getBibleBooks, getKjvChapter } from "@/lib/bible/queries";
 import { cn } from "@/lib/cn";
 
@@ -73,6 +74,9 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                 <h2 id="reader-heading" className="sr-only">
                     {reference} King James Version
                 </h2>
+                <VerseAnchorScroll
+                    key={`${passage.book.slug}-${passage.chapter.chapterNumber}`}
+                />
                 <div className="selection-reading flex flex-col gap-4 font-serif text-[1.35rem] leading-9 text-reading-text md:text-[1.5rem] md:leading-10">
                     {passage.verses.map((verse) => (
                         <p
