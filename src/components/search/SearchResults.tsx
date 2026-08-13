@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { SearchResult } from "@/lib/bible/types";
+import { saveSearchScrollPosition } from "@/lib/search-scroll";
 
 interface SearchResultsProps {
     query: string;
@@ -51,6 +52,7 @@ export function SearchResults({
                         >
                             <Link
                                 href={`/read/${result.bookSlug}/${result.chapterNumber}#verse-${result.verseNumber}`}
+                                onClick={saveSearchScrollPosition}
                                 className="flex flex-col gap-1.5 rounded-md border border-reading-border bg-reading-surface-raised px-4 py-3 transition-colors hover:bg-reading-bg-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-reading-focus focus-visible:ring-offset-2 focus-visible:ring-offset-reading-bg"
                             >
                                 <span className="text-xs font-medium uppercase tracking-wide text-reading-text-muted">

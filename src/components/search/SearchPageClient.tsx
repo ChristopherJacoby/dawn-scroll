@@ -1,9 +1,10 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { SearchResult } from "@/lib/bible/types";
 import { addRecentSearch } from "@/lib/search-history";
+import { consumeSearchScrollPosition } from "@/lib/search-scroll";
 import { RecentSearches } from "./RecentSearches";
 import { SearchInput } from "./SearchInput";
 import { SearchResults } from "./SearchResults";
@@ -79,6 +80,24 @@ export function SearchPageClient() {
 
     const active = query && completed?.query === query ? completed : null;
     const loading = Boolean(query) && !active;
+
+    // Returning from a search result: the browser's scroll restoration ran
+    // against an empty page, so re-apply the saved position once the first
+    // batch of results is actually in the DOM.
+    const scrollRestored = useRef(false);
+    useEffect(() => {
+        if (scrollRestored.current) return;
+        if (!initialQuery) {
+            // Fresh visit, not a return — discard any stale saved position.
+            scrollRestored.current = true;
+            consumeSearchScrollPosition();
+            return;
+        }
+        if (!active || active.query !== initialQuery || active.error) return;
+        scrollRestored.current = true;
+        const saved = consumeSearchScrollPosition();
+        if (saved !== null) window.scrollTo(0, saved);
+    }, [active, initialQuery]);
 
     return (
         <div className="flex flex-col gap-6">
