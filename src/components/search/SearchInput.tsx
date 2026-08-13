@@ -1,23 +1,24 @@
 "use client";
 
 import { Loader2, Search, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { cn } from "@/lib/cn";
 
 const DEBOUNCE_MS = 300;
 
 interface SearchInputProps {
-    defaultValue?: string;
+    value: string;
     loading?: boolean;
+    onValueChange: (value: string) => void;
     onQueryChange: (query: string) => void;
 }
 
 export function SearchInput({
-    defaultValue = "",
+    value,
     loading = false,
+    onValueChange,
     onQueryChange,
 }: SearchInputProps) {
-    const [value, setValue] = useState(defaultValue);
     const isFirstRender = useRef(true);
 
     useEffect(() => {
@@ -33,7 +34,7 @@ export function SearchInput({
     }, [value, onQueryChange]);
 
     function clear() {
-        setValue("");
+        onValueChange("");
         onQueryChange("");
     }
 
@@ -46,7 +47,7 @@ export function SearchInput({
             <input
                 type="search"
                 value={value}
-                onChange={(event) => setValue(event.target.value)}
+                onChange={(event) => onValueChange(event.target.value)}
                 onKeyDown={(event) => {
                     if (event.key === "Escape" && value) {
                         event.preventDefault();
