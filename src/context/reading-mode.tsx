@@ -1,8 +1,10 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useSyncExternalStore } from "react";
 
-type ReadingMode = "light" | "dark" | "sepia";
+export type ReadingMode = "light" | "dark" | "sepia";
+
+export const READING_MODE_STORAGE_KEY = "dawnscroll.reading-mode";
 
 interface ReadingModeContextValue {
     mode: ReadingMode;
@@ -11,19 +13,49 @@ interface ReadingModeContextValue {
 
 const ReadingModeContext = createContext<ReadingModeContextValue | null>(null);
 
+const listeners = new Set<() => void>();
+
+function subscribe(listener: () => void) {
+    listeners.add(listener);
+    return () => listeners.delete(listener);
+}
+
+function getSnapshot(): ReadingMode {
+    try {
+        const stored = window.localStorage.getItem(READING_MODE_STORAGE_KEY);
+        return stored === "dark" || stored === "sepia" ? stored : "light";
+    } catch {
+        return "light";
+    }
+}
+
+function getServerSnapshot(): ReadingMode {
+    return "light";
+}
+
+function setStoredMode(mode: ReadingMode) {
+    try {
+        window.localStorage.setItem(READING_MODE_STORAGE_KEY, mode);
+    } catch {
+        // Private browsing or blocked storage — mode still applies this visit.
+    }
+    document.body.dataset.readingMode = mode;
+    for (const listener of listeners) listener();
+}
+
 export function ReadingModeProvider({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const [mode, setMode] = useState<ReadingMode>("light");
-
-    useEffect(() => {
-        document.body.dataset.readingMode = mode;
-    }, [mode]);
+    const mode = useSyncExternalStore(
+        subscribe,
+        getSnapshot,
+        getServerSnapshot,
+    );
 
     return (
-        <ReadingModeContext.Provider value={{ mode, setMode }}>
+        <ReadingModeContext.Provider value={{ mode, setMode: setStoredMode }}>
             {children}
         </ReadingModeContext.Provider>
     );

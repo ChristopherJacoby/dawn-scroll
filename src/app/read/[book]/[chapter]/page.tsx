@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ReaderSelectors } from "@/components/reader/ReaderSelectors";
+import { ReadingModeToggle } from "@/components/reader/ReadingModeToggle";
 import { VerseAnchorScroll } from "@/components/reader/VerseAnchorScroll";
 import { getBibleBooks, getKjvChapter } from "@/lib/bible/queries";
 import { cn } from "@/lib/cn";
@@ -51,13 +52,16 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
         <div className="flex min-h-full w-full flex-col bg-reading-bg">
             <header className="border-b border-reading-divider bg-reading-surface">
                 <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-5 py-6 md:px-10 md:py-8">
-                    <div className="flex flex-col gap-2">
-                        <p className="text-xs font-medium uppercase tracking-wide text-reading-text-muted">
-                            {passage.translation.abbreviation}
-                        </p>
-                        <h1 className="font-serif text-4xl leading-tight text-reading-text md:text-5xl">
-                            {reference}
-                        </h1>
+                    <div className="flex items-start justify-between gap-4">
+                        <div className="flex flex-col gap-2">
+                            <p className="text-xs font-medium uppercase tracking-wide text-reading-text-muted">
+                                {passage.translation.abbreviation}
+                            </p>
+                            <h1 className="font-serif text-4xl leading-tight text-reading-text md:text-5xl">
+                                {reference}
+                            </h1>
+                        </div>
+                        <ReadingModeToggle />
                     </div>
                     <ReaderSelectors
                         books={books}
