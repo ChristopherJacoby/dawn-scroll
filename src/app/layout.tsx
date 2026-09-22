@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 import { EB_Garamond, Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "@/components/Providers";
 import { Navigation } from "@/components/layout/Navigation";
+import type { ReadingPreferences } from "@/context/reading-mode";
+import { getUser } from "@/lib/auth";
+import { getUserSettings } from "@/lib/settings";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,27 +28,51 @@ export const metadata: Metadata = {
     description: "Read, explore, and understand the Bible",
 };
 
-export default function RootLayout({
+async function accountPreferences(): Promise<ReadingPreferences | null> {
+    const user = await getUser();
+    if (!user) return null;
+    const settings = await getUserSettings(user.id);
+    return { mode: settings.readingMode, fontScale: settings.fontScale };
+}
+
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const account = await accountPreferences();
+
     return (
         <html
             lang="en"
             className={`${geistSans.variable} ${geistMono.variable} ${ebGaramond.variable} h-full antialiased`}
         >
-            {/* suppressHydrationWarning: the pre-paint script below sets
-                data-reading-mode before React hydrates */}
-            <body className="min-h-full" suppressHydrationWarning>
-                {/* Pre-paint: apply the saved reading mode before first render
-                    so a dark/sepia user never sees a flash of light mode. */}
-                <script
-                    dangerouslySetInnerHTML={{
-                        __html: `try{var m=localStorage.getItem("dawnscroll.reading-mode");if(m==="dark"||m==="sepia")document.body.dataset.readingMode=m}catch(e){}`,
-                    }}
-                />
-                <Providers>
+            {/* Signed-in users get their saved mode server-rendered (no flash
+                script needed); signed-out users fall back to the pre-paint
+                script reading localStorage. suppressHydrationWarning covers
+                the script-set attributes. */}
+            <body
+                className="min-h-full"
+                data-reading-mode={account?.mode}
+                style={
+                    account
+                        ? ({
+                              "--reading-font-scale": String(
+                                  account.fontScale / 100,
+                              ),
+                          } as React.CSSProperties)
+                        : undefined
+                }
+                suppressHydrationWarning
+            >
+                {!account && (
+                    <script
+                        dangerouslySetInnerHTML={{
+                            __html: `try{var m=localStorage.getItem("dawnscroll.reading-mode");if(m==="dark"||m==="sepia")document.body.dataset.readingMode=m;var f=Number(localStorage.getItem("dawnscroll.font-scale"));if(f>=80&&f<=140)document.body.style.setProperty("--reading-font-scale",String(f/100))}catch(e){}`,
+                        }}
+                    />
+                )}
+                <Providers account={account}>
                     <div className="flex min-h-full">
                         <Navigation />
                         {/* pt-14 offsets the fixed mobile top bar; removed on md+ */}

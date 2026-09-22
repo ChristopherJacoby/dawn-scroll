@@ -3,14 +3,23 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { BookOpen, Compass, Search, User, Menu, X } from "lucide-react";
+import {
+    BookOpen,
+    Compass,
+    Search,
+    Settings,
+    User,
+    Menu,
+    X,
+} from "lucide-react";
 import { cn } from "@/lib/cn";
 
 const navItems = [
     { href: "/reader", icon: BookOpen, label: "Reader" },
     { href: "/search", icon: Search, label: "Search" },
     { href: "/explore", icon: Compass, label: "Explore" },
-    { href: "/profile", icon: User, label: "Profile" },
+    { href: "/account", icon: User, label: "Account" },
+    { href: "/settings", icon: Settings, label: "Settings" },
 ];
 
 function NavItem({

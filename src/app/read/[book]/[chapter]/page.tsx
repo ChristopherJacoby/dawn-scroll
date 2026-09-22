@@ -94,7 +94,7 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                             : null
                     }
                 />
-                <div className="selection-reading flex flex-col gap-4 font-serif text-[1.35rem] leading-9 text-reading-text md:text-[1.5rem] md:leading-10">
+                <div className="selection-reading reading-scale flex flex-col gap-4 font-serif text-reading-text">
                     {passage.verses.map((verse) => (
                         <p
                             key={verse.id}
