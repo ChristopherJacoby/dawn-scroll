@@ -5,7 +5,9 @@ import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import {
     safeReturnPath,
+    validateEmail,
     validateLogIn,
+    validatePassword,
     validateSignUp,
     type FieldErrors,
 } from "@/lib/auth-validation";
@@ -133,4 +135,79 @@ export async function logOut() {
     const supabase = await createClient();
     await supabase.auth.signOut();
     redirect("/reader");
+}
+
+export interface ForgotPasswordState {
+    errors?: FieldErrors<"email" | "form">;
+    values?: { email: string };
+    sent?: boolean;
+}
+
+export async function forgotPassword(
+    _prev: ForgotPasswordState,
+    formData: FormData,
+): Promise<ForgotPasswordState> {
+    const email = String(formData.get("email") ?? "").trim();
+    const emailError = validateEmail(email);
+    if (emailError) return { errors: { email: emailError }, values: { email } };
+
+    const supabase = await createClient();
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${await siteOrigin()}/auth/confirm`,
+    });
+
+    // Rate limits are the only error worth distinguishing; anything else
+    // (including unknown addresses) reads as "sent" to avoid enumeration.
+    if (error && /rate limit|too many/i.test(error.message)) {
+        return {
+            errors: {
+                form: "Too many attempts. Please wait a minute and try again.",
+            },
+            values: { email },
+        };
+    }
+
+    return { sent: true, values: { email } };
+}
+
+export interface ResetPasswordState {
+    errors?: FieldErrors<"password" | "confirmPassword" | "form">;
+}
+
+export async function resetPassword(
+    _prev: ResetPasswordState,
+    formData: FormData,
+): Promise<ResetPasswordState> {
+    const password = String(formData.get("password") ?? "");
+    const confirmPassword = String(formData.get("confirmPassword") ?? "");
+
+    const passwordError = validatePassword(password);
+    if (passwordError) return { errors: { password: passwordError } };
+    if (password !== confirmPassword)
+        return { errors: { confirmPassword: "Passwords don't match." } };
+
+    const supabase = await createClient();
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+        return {
+            errors: {
+                form: "Your reset link has expired. Please request a new one.",
+            },
+        };
+    }
+
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) {
+        return {
+            errors: {
+                form: /same|different/i.test(error.message)
+                    ? "Choose a password you haven't used before."
+                    : error.message,
+            },
+        };
+    }
+
+    redirect("/account?reset=1");
 }
