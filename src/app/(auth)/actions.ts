@@ -1,9 +1,12 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import { updateOwnDisplayName } from "@/lib/profiles";
 import { createClient } from "@/lib/supabase/server";
 import {
+    DISPLAY_NAME_MAX_LENGTH,
     safeReturnPath,
     validateEmail,
     validateLogIn,
@@ -210,4 +213,34 @@ export async function resetPassword(
     }
 
     redirect("/account?reset=1");
+}
+
+export interface DisplayNameState {
+    error?: string;
+    saved?: boolean;
+}
+
+export async function updateDisplayName(
+    _prev: DisplayNameState,
+    formData: FormData,
+): Promise<DisplayNameState> {
+    const {
+        data: { user },
+    } = await (await createClient()).auth.getUser();
+    if (!user) redirect("/login?next=%2Faccount");
+
+    const raw = String(formData.get("displayName") ?? "").trim();
+    if (raw.length > DISPLAY_NAME_MAX_LENGTH) {
+        return {
+            error: `Use ${DISPLAY_NAME_MAX_LENGTH} characters or fewer.`,
+        };
+    }
+
+    try {
+        await updateOwnDisplayName(user.id, raw || null);
+    } catch {
+        return { error: "We couldn't save your name. Please try again." };
+    }
+    revalidatePath("/account");
+    return { saved: true };
 }
