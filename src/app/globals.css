@@ -167,6 +167,15 @@
             color: var(--reading-text);
         }
     }
+    /* Scripture text size: the user's font-scale preference (0.8–1.4, set on
+       <body>) multiplies the base size; line-height stays proportional. */
+    .reading-scale {
+        font-size: calc(1.35rem * var(--reading-font-scale, 1));
+        line-height: 1.65;
+        @media (width >= 48rem) {
+            font-size: calc(1.5rem * var(--reading-font-scale, 1));
+        }
+    }
     /* Applied by VerseAnchorScroll to the verse an anchor navigation lands
        on; the delay holds the highlight briefly before the fade begins. */
     .verse-flash {

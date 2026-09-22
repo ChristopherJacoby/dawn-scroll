@@ -1,11 +1,20 @@
 "use client";
 
-import { ReadingModeProvider } from "@/context/reading-mode";
+import {
+    ReadingModeProvider,
+    type ReadingPreferences,
+} from "@/context/reading-mode";
 import { ToastProvider } from "@/context/toast";
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({
+    children,
+    account,
+}: {
+    children: React.ReactNode;
+    account?: ReadingPreferences | null;
+}) {
     return (
-        <ReadingModeProvider>
+        <ReadingModeProvider account={account}>
             <ToastProvider>{children}</ToastProvider>
         </ReadingModeProvider>
     );

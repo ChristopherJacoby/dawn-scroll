@@ -1,6 +1,7 @@
 "use client";
 
 import { Moon, Scroll, Sun } from "lucide-react";
+import { persistReadingMode } from "@/app/(auth)/actions";
 import { useReadingMode, type ReadingMode } from "@/context/reading-mode";
 import { cn } from "@/lib/cn";
 
@@ -27,7 +28,10 @@ export function ReadingModeToggle() {
                 <button
                     key={value}
                     type="button"
-                    onClick={() => setMode(value)}
+                    onClick={() => {
+                        setMode(value);
+                        void persistReadingMode(value);
+                    }}
                     aria-pressed={mode === value}
                     aria-label={label}
                     title={label}

@@ -3,7 +3,13 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import type { ReadingMode } from "@/context/reading-mode";
 import { updateOwnDisplayName } from "@/lib/profiles";
+import {
+    FONT_SCALE_MAX,
+    FONT_SCALE_MIN,
+    saveUserSettings,
+} from "@/lib/settings";
 import { createClient } from "@/lib/supabase/server";
 import {
     DISPLAY_NAME_MAX_LENGTH,
@@ -243,4 +249,56 @@ export async function updateDisplayName(
     }
     revalidatePath("/account");
     return { saved: true };
+}
+
+export interface SettingsState {
+    error?: string;
+    saved?: boolean;
+}
+
+export async function saveSettings(
+    _prev: SettingsState,
+    formData: FormData,
+): Promise<SettingsState> {
+    const {
+        data: { user },
+    } = await (await createClient()).auth.getUser();
+    if (!user) redirect("/login?next=%2Fsettings");
+
+    const readingMode = String(formData.get("readingMode") ?? "");
+    const fontScale = Number(formData.get("fontScale"));
+    if (!isReadingMode(readingMode)) return { error: "Choose a reading mode." };
+    if (
+        !Number.isInteger(fontScale) ||
+        fontScale < FONT_SCALE_MIN ||
+        fontScale > FONT_SCALE_MAX
+    ) {
+        return { error: "Choose a text size between 80% and 140%." };
+    }
+
+    try {
+        await saveUserSettings(user.id, { readingMode, fontScale });
+    } catch {
+        return { error: "We couldn't save your settings. Please try again." };
+    }
+    revalidatePath("/", "layout");
+    return { saved: true };
+}
+
+function isReadingMode(value: string): value is ReadingMode {
+    return value === "light" || value === "sepia" || value === "dark";
+}
+
+/** Fire-and-forget save from the reader toolbar; no-op when signed out. */
+export async function persistReadingMode(mode: ReadingMode) {
+    if (!isReadingMode(mode)) return;
+    const {
+        data: { user },
+    } = await (await createClient()).auth.getUser();
+    if (!user) return;
+    try {
+        await saveUserSettings(user.id, { readingMode: mode });
+    } catch {
+        // Local state already applied; a failed sync just doesn't persist.
+    }
 }
