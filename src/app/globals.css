@@ -20,6 +20,7 @@
     --reading-highlight: #f1df9b;
     --reading-note: #fff8e8;
     --reading-citation: #4a5e4a;
+    --reading-danger: #8b4a2a;
 }
 
 [data-reading-mode="dark"] {
@@ -41,6 +42,8 @@
     --reading-highlight: #5c4a2a;
     --reading-note: #3d2e1e;
     --reading-citation: #b7c7a8;
+    /* Lighter than brand rust: 6.7:1 on the dark bg, 5.5:1 on raised */
+    --reading-danger: #e6956a;
 }
 
 [data-reading-mode="sepia"] {
@@ -62,6 +65,7 @@
     --reading-highlight: #f7e7b8;
     --reading-note: #f7e7b8;
     --reading-citation: #3f563f;
+    --reading-danger: #8b4a2a;
 }
 
 /* ─── Tailwind theme ──────────────────────────────────────────────────────── */
@@ -144,6 +148,12 @@
     }
     .border-reading-border-strong {
         border-color: var(--reading-border-strong);
+    }
+    .text-reading-danger {
+        color: var(--reading-danger);
+    }
+    .border-reading-danger {
+        border-color: var(--reading-danger);
     }
     .ring-reading-focus {
         --tw-ring-color: var(--reading-focus);
