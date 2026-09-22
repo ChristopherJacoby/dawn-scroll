@@ -1,21 +1,36 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { AuthShell } from "@/components/auth/AuthShell";
+import { LogInForm } from "@/components/auth/LogInForm";
+import { getUser } from "@/lib/auth";
+import { safeReturnPath } from "@/lib/auth-validation";
 
 export const metadata: Metadata = {
     title: "Log in | Dawnscroll",
 };
 
-// Placeholder redirect target for requireAuth(); the form ships in DS-021.
-export default function LoginPage() {
+const LINK_ERRORS: Record<string, string> = {
+    "invalid-link": "That link isn't valid. Please request a new one.",
+    "expired-link": "That link has expired. Please request a new one.",
+};
+
+export default async function LogInPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ next?: string; error?: string }>;
+}) {
+    const params = await searchParams;
+    const next = safeReturnPath(params.next);
+    if (await getUser()) redirect(next);
+
     return (
-        <div className="flex min-h-full w-full flex-col bg-reading-bg">
-            <div className="mx-auto flex w-full max-w-md flex-col gap-2 px-5 py-16 md:px-10">
-                <h1 className="font-serif text-4xl leading-tight text-reading-text">
-                    Log in
-                </h1>
-                <p className="text-sm text-reading-text-muted">
-                    Accounts are coming soon.
-                </p>
-            </div>
-        </div>
+        <AuthShell title="Log in">
+            <LogInForm
+                next={next}
+                initialError={
+                    params.error ? LINK_ERRORS[params.error] : undefined
+                }
+            />
+        </AuthShell>
     );
 }

@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import {
     safeReturnPath,
+    validateLogIn,
     validateSignUp,
     type FieldErrors,
 } from "@/lib/auth-validation";
@@ -80,4 +81,56 @@ function friendlySignUpError(message: string) {
     if (/rate limit|too many/i.test(message))
         return "Too many attempts. Please wait a minute and try again.";
     return "We couldn't create your account. Please try again.";
+}
+
+export interface LogInState {
+    errors?: FieldErrors<"email" | "password" | "form">;
+    values?: { email: string };
+}
+
+export async function logIn(
+    _prev: LogInState,
+    formData: FormData,
+): Promise<LogInState> {
+    const email = String(formData.get("email") ?? "").trim();
+    const password = String(formData.get("password") ?? "");
+    const next = safeReturnPath(formData.get("next"));
+
+    const errors = validateLogIn({ email, password });
+    if (Object.keys(errors).length > 0) {
+        return { errors, values: { email } };
+    }
+
+    const supabase = await createClient();
+    const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+    });
+
+    if (error) {
+        return {
+            errors: { form: friendlyLogInError(error.code) },
+            values: { email },
+        };
+    }
+
+    redirect(next);
+}
+
+function friendlyLogInError(code: string | undefined) {
+    switch (code) {
+        case "email_not_confirmed":
+            return "Confirm your email first — check your inbox for the link.";
+        case "over_request_rate_limit":
+        case "over_email_send_rate_limit":
+            return "Too many attempts. Please wait a minute and try again.";
+        default:
+            return "Incorrect email or password.";
+    }
+}
+
+export async function logOut() {
+    const supabase = await createClient();
+    await supabase.auth.signOut();
+    redirect("/reader");
 }
