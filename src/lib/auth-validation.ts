@@ -1,4 +1,5 @@
 export const PASSWORD_MIN_LENGTH = 8;
+export const DISPLAY_NAME_MAX_LENGTH = 60;
 
 export type FieldErrors<K extends string> = Partial<Record<K, string>>;
 
