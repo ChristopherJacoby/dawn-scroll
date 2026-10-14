@@ -11,11 +11,12 @@ import { verseHref } from "@/lib/verse-ref";
 
 const PREVIEW_LENGTH = 80;
 
+/** First 80 characters, counting by code point so emoji aren't split. */
 function preview(content: string) {
-    const text = content.trim().replace(/\s+/g, " ");
-    return text.length > PREVIEW_LENGTH
-        ? `${text.slice(0, PREVIEW_LENGTH).trimEnd()}…`
-        : text;
+    const chars = Array.from(content.trim().replace(/\s+/g, " "));
+    return chars.length > PREVIEW_LENGTH
+        ? `${chars.slice(0, PREVIEW_LENGTH).join("").trimEnd()}…`
+        : chars.join("");
 }
 
 export function NoteList({ initialNotes }: { initialNotes: Note[] }) {

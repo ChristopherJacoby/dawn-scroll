@@ -42,7 +42,11 @@ export function NoteEditor({
     const [text, setText] = useState(savedContent);
     const [dirty, setDirty] = useState(false);
     const latestText = useRef(savedContent);
-    const lastSent = useRef(savedContent);
+    // What the server has or will have: the pending target while a save is
+    // in flight, reverting to the server's value if it fails. Comparing
+    // against this (not "what we last sent") means a failed save is resent
+    // on the next flush, including on close and unmount.
+    const saved = useRef(savedContent);
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const textareaId = useId();
     const statusId = useId();
@@ -51,8 +55,7 @@ export function NoteEditor({
         if (timer.current) clearTimeout(timer.current);
         timer.current = null;
         setDirty(false);
-        if (sameNote(latestText.current, lastSent.current)) return;
-        lastSent.current = latestText.current;
+        if (sameNote(latestText.current, saved.current)) return;
         onSave(latestText.current);
     }
 
@@ -64,20 +67,17 @@ export function NoteEditor({
         timer.current = setTimeout(flush, AUTOSAVE_DELAY_MS);
     }
 
-    function retry() {
-        lastSent.current = savedContent;
-        flush();
-    }
-
     function remove() {
         change("");
         flush();
         onOpenChange(false);
     }
 
-    // Save whatever is pending if the editor unmounts mid-debounce.
+    // Keep refs current for timers and for the unmount flush, which saves
+    // whatever is pending if the editor unmounts mid-debounce.
     const flushOnUnmount = useRef(flush);
     useEffect(() => {
+        saved.current = savedContent;
         flushOnUnmount.current = flush;
     });
     useEffect(() => () => flushOnUnmount.current(), []);
@@ -134,7 +134,7 @@ export function NoteEditor({
                         {failed && (
                             <button
                                 type="button"
-                                onClick={retry}
+                                onClick={flush}
                                 className="ml-2 font-medium text-reading-link"
                             >
                                 Retry

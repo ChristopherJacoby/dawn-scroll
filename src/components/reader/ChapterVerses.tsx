@@ -17,7 +17,7 @@ import {
     removeHighlightAction,
     setHighlightAction,
 } from "@/app/highlights/actions";
-import { removeNoteAction, saveNoteAction } from "@/app/notes/actions";
+import { saveNoteAction } from "@/app/notes/actions";
 import type { HighlightColor } from "@/lib/highlight-colors";
 import type { VerseHighlight } from "@/lib/highlights";
 import type { VerseNote } from "@/lib/notes";
@@ -126,17 +126,13 @@ export function ChapterVerses({
             ? { id: shown?.id ?? "", content }
             : undefined;
         notes.update(verse, target, async (settled, wanted) => {
-            if (wanted) {
-                return settled?.content === wanted.content
-                    ? ok(settled)
-                    : saveNoteAction({
-                          ...verseRef(verse),
-                          content: wanted.content,
-                      });
-            }
-            if (!settled) return ok(undefined);
-            const result = await removeNoteAction(settled.id);
-            return result.ok || result.status === 404 ? ok(undefined) : result;
+            if (settled?.content === wanted?.content) return ok(settled);
+            // Saving blank text deletes the verse's note (by verse, so it's
+            // safe to repeat and needs no id).
+            return saveNoteAction({
+                ...verseRef(verse),
+                content: wanted?.content ?? "",
+            });
         });
     }
 

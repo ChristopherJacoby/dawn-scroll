@@ -1,4 +1,5 @@
-/** Longest note, in characters (matches the database check). */
+/** Longest note, in UTF-16 code units of the raw text (the database caps
+ * char_length, which counts code points, so this is the stricter bound). */
 export const NOTE_MAX_LENGTH = 5000;
 
 /**
