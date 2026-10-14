@@ -407,7 +407,13 @@ commit;
 `;
   // Connection details go through PG* env vars, never argv, so a failure
   // can't echo the password in an error message.
-  const db = new URL(url);
+  let db;
+  try {
+    db = new URL(url);
+  } catch {
+    // Node's URL error includes the input, i.e. the password.
+    throw new Error("SUPABASE_DB_URL is not a valid URL (percent-encode special characters in the password).");
+  }
   const env = {
     ...process.env,
     PGHOST: db.hostname,
@@ -415,6 +421,9 @@ commit;
     PGUSER: decodeURIComponent(db.username),
     PGPASSWORD: decodeURIComponent(db.password),
     PGDATABASE: db.pathname.slice(1) || "postgres",
+    // Keep the URL's TLS settings; default to requiring TLS.
+    PGSSLMODE: db.searchParams.get("sslmode") ?? "require",
+    ...(db.searchParams.get("sslrootcert") && { PGSSLROOTCERT: db.searchParams.get("sslrootcert") }),
   };
   try {
     execFileSync("psql", ["-q", "-f", "-"], { input: sql, env, stdio: ["pipe", "inherit", "inherit"] });
