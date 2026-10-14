@@ -82,7 +82,7 @@ export function VerseText({
                 className={cn(
                     highlight &&
                         cn(
-                            "rounded-sm px-0.5 box-decoration-clone",
+                            "-mx-0.5 rounded-sm px-0.5 box-decoration-clone",
                             HIGHLIGHT_BG[highlight],
                         ),
                     selected &&

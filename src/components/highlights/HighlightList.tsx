@@ -103,7 +103,7 @@ export function HighlightList({
                                     <span className="font-serif text-lg leading-relaxed text-reading-text">
                                         <span
                                             className={cn(
-                                                "rounded-sm px-0.5 box-decoration-clone",
+                                                "-mx-0.5 rounded-sm px-0.5 box-decoration-clone",
                                                 HIGHLIGHT_BG[highlight.color],
                                             )}
                                         >

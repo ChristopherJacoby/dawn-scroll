@@ -60,51 +60,47 @@ export function ChapterVerses({
         ? `${bookName} ${chapterNumber}:${selectedVerse.number}`
         : "";
 
+    const verseRef = (verse: number) => ({
+        book: bookSlug,
+        chapter: chapterNumber,
+        verse,
+        translation: translation.slug,
+    });
+
     function toggleBookmark(verse: number) {
-        // "" stands in for the id until the server assigns one.
-        bookmarks.update(
-            verse,
-            (id) => (id === undefined ? "" : undefined),
-            async (id) => {
-                if (id === undefined) {
-                    return addBookmarkAction({
-                        book: bookSlug,
-                        chapter: chapterNumber,
-                        verse,
-                        translation: translation.slug,
-                    });
-                }
-                const result = await removeBookmarkAction(id);
-                // Already gone (e.g. removed on another page) is the goal.
-                return result.ok || result.status === 404
-                    ? ok(undefined)
-                    : result;
-            },
-        );
+        // Toggle what's on screen; "" stands in for the id until the
+        // server assigns one.
+        const target = bookmarks.latest(verse) === undefined ? "" : undefined;
+        bookmarks.update(verse, target, async (settledId, wanted) => {
+            if (wanted !== undefined) {
+                return settledId !== undefined
+                    ? ok(settledId)
+                    : addBookmarkAction(verseRef(verse));
+            }
+            if (settledId === undefined) return ok(undefined);
+            const result = await removeBookmarkAction(settledId);
+            // Already gone (e.g. removed on another page) is the goal.
+            return result.ok || result.status === 404 ? ok(undefined) : result;
+        });
     }
 
     function setHighlight(verse: number, color: HighlightColor | null) {
-        highlights.update(
-            verse,
-            // "" stands in for a new highlight's id until the server's.
-            (current) => (color ? { id: current?.id ?? "", color } : undefined),
-            async (current) => {
-                if (color) {
-                    return setHighlightAction({
-                        book: bookSlug,
-                        chapter: chapterNumber,
-                        verse,
-                        translation: translation.slug,
-                        color,
-                    });
-                }
-                if (!current) return ok(undefined);
-                const result = await removeHighlightAction(current.id);
-                return result.ok || result.status === 404
-                    ? ok(undefined)
-                    : result;
-            },
-        );
+        const shown = highlights.latest(verse);
+        // "" stands in for a new highlight's id until the server's.
+        const target = color ? { id: shown?.id ?? "", color } : undefined;
+        highlights.update(verse, target, async (settled, wanted) => {
+            if (wanted) {
+                return settled?.color === wanted.color
+                    ? ok(settled)
+                    : setHighlightAction({
+                          ...verseRef(verse),
+                          color: wanted.color,
+                      });
+            }
+            if (!settled) return ok(undefined);
+            const result = await removeHighlightAction(settled.id);
+            return result.ok || result.status === 404 ? ok(undefined) : result;
+        });
     }
 
     function toggle(number: number, viaKeyboard: boolean) {

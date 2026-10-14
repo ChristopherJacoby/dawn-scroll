@@ -1,6 +1,8 @@
 import "server-only";
 import {
+    insertOrExisting,
     mapAnnotatedVerse,
+    readable,
     VERSE_EMBED,
     type AnnotatedVerse,
     type VerseEmbedRow,
@@ -34,13 +36,15 @@ interface HighlightRow extends VerseEmbedRow {
     updated_at: string;
 }
 
-function mapHighlight(row: HighlightRow): Highlight {
+function mapHighlight(row: HighlightRow): Highlight | null {
+    const verse = mapAnnotatedVerse(row);
+    if (!verse) return null;
     return {
         id: row.id,
         color: row.color,
         createdAt: row.created_at,
         updatedAt: row.updated_at,
-        ...mapAnnotatedVerse(row),
+        ...verse,
     };
 }
 
@@ -63,7 +67,9 @@ export async function listHighlights(filter?: {
         ascending: false,
     });
     if (error) throw error;
-    return (data as unknown as HighlightRow[]).map(mapHighlight);
+    return (data as unknown as HighlightRow[])
+        .map(mapHighlight)
+        .filter((item): item is Highlight => item !== null);
 }
 
 /** Verse number → highlight for one chapter, for the reader. */
@@ -95,41 +101,33 @@ async function upsertHighlight(
     color: HighlightColor,
 ): Promise<{ highlight: Highlight; created: boolean }> {
     const supabase = await createClient();
-    // user_id is left to its auth.uid() default; clients can't set it.
-    const inserted = await supabase
-        .from("highlights")
-        .insert({
-            translation_id: verse.translationId,
-            book_id: verse.bookId,
-            chapter_number: verse.chapterNumber,
-            verse_number: verse.verseNumber,
-            color,
-        })
-        .select(HIGHLIGHT_COLUMNS)
-        .single();
-    if (!inserted.error) {
-        return {
-            highlight: mapHighlight(inserted.data as unknown as HighlightRow),
-            created: true,
-        };
-    }
-    if (inserted.error.code !== "23505") throw inserted.error;
-
-    // Not an upsert: only `color` is updatable, and PostgREST's upsert
-    // would try to set every inserted column.
-    const updated = await supabase
-        .from("highlights")
-        .update({ color })
-        .eq("book_id", verse.bookId)
-        .eq("chapter_number", verse.chapterNumber)
-        .eq("verse_number", verse.verseNumber)
-        .select(HIGHLIGHT_COLUMNS)
-        .single();
-    if (updated.error) throw updated.error;
-    return {
-        highlight: mapHighlight(updated.data as unknown as HighlightRow),
-        created: false,
-    };
+    const { row, created } = await insertOrExisting<HighlightRow>(
+        // user_id is left to its auth.uid() default; clients can't set it.
+        () =>
+            supabase
+                .from("highlights")
+                .insert({
+                    translation_id: verse.translationId,
+                    book_id: verse.bookId,
+                    chapter_number: verse.chapterNumber,
+                    verse_number: verse.verseNumber,
+                    color,
+                })
+                .select(HIGHLIGHT_COLUMNS)
+                .single(),
+        // Not a PostgREST upsert: only `color` is updatable, and upsert
+        // would try to set every inserted column.
+        () =>
+            supabase
+                .from("highlights")
+                .update({ color })
+                .eq("book_id", verse.bookId)
+                .eq("chapter_number", verse.chapterNumber)
+                .eq("verse_number", verse.verseNumber)
+                .select(HIGHLIGHT_COLUMNS)
+                .maybeSingle(),
+    );
+    return { highlight: readable(mapHighlight(row)), created };
 }
 
 /** Delete one of the user's highlights; false when there was none. */
