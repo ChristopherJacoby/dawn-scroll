@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { BookmarkVerseAction } from "@/components/reader/BookmarkVerseAction";
 import { CopyVerseAction } from "@/components/reader/CopyVerseAction";
 import { HighlightVerseAction } from "@/components/reader/HighlightVerseAction";
+import { NoteEditor } from "@/components/reader/NoteEditor";
+import { NoteVerseAction } from "@/components/reader/NoteVerseAction";
 import { VerseActionBar } from "@/components/reader/VerseActionBar";
 import { VerseText } from "@/components/reader/VerseText";
 import { useVerseAnnotations } from "@/components/reader/useVerseAnnotations";
@@ -15,8 +17,10 @@ import {
     removeHighlightAction,
     setHighlightAction,
 } from "@/app/highlights/actions";
+import { saveNoteAction } from "@/app/notes/actions";
 import type { HighlightColor } from "@/lib/highlight-colors";
 import type { VerseHighlight } from "@/lib/highlights";
+import type { VerseNote } from "@/lib/notes";
 import { ok } from "@/lib/result";
 
 interface ChapterVersesProps {
@@ -30,6 +34,8 @@ interface ChapterVersesProps {
     bookmarks: Record<number, string>;
     /** Verse number → highlight for this chapter (empty when signed out). */
     highlights: Record<number, VerseHighlight>;
+    /** Verse number → note for this chapter (empty when signed out). */
+    notes: Record<number, VerseNote>;
 }
 
 /**
@@ -45,10 +51,15 @@ export function ChapterVerses({
     signedIn,
     bookmarks: initialBookmarks,
     highlights: initialHighlights,
+    notes: initialNotes,
 }: ChapterVersesProps) {
     const [selected, setSelected] = useState<number | null>(null);
     const bookmarks = useVerseAnnotations(initialBookmarks);
     const highlights = useVerseAnnotations(initialHighlights);
+    const notes = useVerseAnnotations(initialNotes);
+    // The editor keeps its verse while closing so the drawer can animate out.
+    const [noteVerse, setNoteVerse] = useState<number | null>(null);
+    const [noteOpen, setNoteOpen] = useState(false);
     const signInHref = signedIn
         ? null
         : `/login?next=${encodeURIComponent(`/read/${bookSlug}/${chapterNumber}`)}`;
@@ -56,6 +67,11 @@ export function ChapterVerses({
     const focusToolbar = useRef(false);
 
     const selectedVerse = verses.find((v) => v.number === selected) ?? null;
+    const noteTarget =
+        noteVerse === null
+            ? null
+            : (verses.find((v) => v.number === noteVerse) ?? null);
+
     const reference = selectedVerse
         ? `${bookName} ${chapterNumber}:${selectedVerse.number}`
         : "";
@@ -100,6 +116,23 @@ export function ChapterVerses({
             if (!settled) return ok(undefined);
             const result = await removeHighlightAction(settled.id);
             return result.ok || result.status === 404 ? ok(undefined) : result;
+        });
+    }
+
+    function saveNote(verse: number, content: string) {
+        const shown = notes.latest(verse);
+        // Blank text deletes the note; "" stands in for a new note's id.
+        const target = content.trim()
+            ? { id: shown?.id ?? "", content }
+            : undefined;
+        notes.update(verse, target, async (settled, wanted) => {
+            if (settled?.content === wanted?.content) return ok(settled);
+            // Saving blank text deletes the verse's note (by verse, so it's
+            // safe to repeat and needs no id).
+            return saveNoteAction({
+                ...verseRef(verse),
+                content: wanted?.content ?? "",
+            });
         });
     }
 
@@ -157,6 +190,7 @@ export function ChapterVerses({
                         selected={verse.number === selected}
                         bookmarked={bookmarks.get(verse.number) !== undefined}
                         highlight={highlights.get(verse.number)?.color ?? null}
+                        hasNote={notes.get(verse.number) !== undefined}
                         onToggle={toggle}
                     />
                 ))}
@@ -165,7 +199,7 @@ export function ChapterVerses({
                 // Keyed per verse so each action's state (e.g. "Copied")
                 // resets when the selection moves.
                 <VerseActionBar
-                    key={selectedVerse.number}
+                    key={`bar-${selectedVerse.number}`}
                     ref={toolbarRef}
                     reference={reference}
                     onClose={close}
@@ -177,6 +211,14 @@ export function ChapterVerses({
                         onChange={(color) =>
                             setHighlight(selectedVerse.number, color)
                         }
+                        signInHref={signInHref}
+                    />
+                    <NoteVerseAction
+                        hasNote={notes.get(selectedVerse.number) !== undefined}
+                        onOpen={() => {
+                            setNoteVerse(selectedVerse.number);
+                            setNoteOpen(true);
+                        }}
                         signInHref={signInHref}
                     />
                     <BookmarkVerseAction
@@ -192,6 +234,26 @@ export function ChapterVerses({
                         translation={translation.abbreviation}
                     />
                 </VerseActionBar>
+            )}
+            {noteTarget && (
+                <NoteEditor
+                    key={`note-${noteTarget.number}`}
+                    open={noteOpen}
+                    onOpenChange={setNoteOpen}
+                    reference={`${bookName} ${chapterNumber}:${noteTarget.number}`}
+                    verseText={noteTarget.text}
+                    savedContent={notes.get(noteTarget.number)?.content ?? ""}
+                    saving={notes.isPending(noteTarget.number)}
+                    onSave={(content) => saveNote(noteTarget.number, content)}
+                    returnFocus={() =>
+                        toolbarRef.current?.querySelector<HTMLElement>(
+                            "[aria-haspopup=dialog]",
+                        ) ??
+                        document.querySelector<HTMLElement>(
+                            `[data-verse-button="${noteTarget.number}"]`,
+                        )
+                    }
+                />
             )}
         </>
     );

@@ -11,6 +11,7 @@ import { getUser } from "@/lib/auth";
 import { getBibleBooks, getKjvChapter } from "@/lib/bible/queries";
 import { getChapterBookmarkIds } from "@/lib/bookmarks";
 import { getChapterHighlights } from "@/lib/highlights";
+import { getChapterNotes } from "@/lib/notes";
 import { cn } from "@/lib/cn";
 
 interface ReaderPageProps {
@@ -52,18 +53,15 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
     ]);
     if (!passage || passage.verses.length === 0) notFound();
 
-    const [bookmarks, highlights] = user
+    const { id: bookId } = passage.book;
+    const { chapterNumber: chapterNum } = passage.chapter;
+    const [bookmarks, highlights, notes] = user
         ? await Promise.all([
-              getChapterBookmarkIds(
-                  passage.book.id,
-                  passage.chapter.chapterNumber,
-              ),
-              getChapterHighlights(
-                  passage.book.id,
-                  passage.chapter.chapterNumber,
-              ),
+              getChapterBookmarkIds(bookId, chapterNum),
+              getChapterHighlights(bookId, chapterNum),
+              getChapterNotes(bookId, chapterNum),
           ])
-        : [{}, {}];
+        : [{}, {}, {}];
 
     const reference = `${passage.book.name} ${passage.chapter.chapterNumber}`;
 
@@ -128,6 +126,7 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                     signedIn={user !== null}
                     bookmarks={bookmarks}
                     highlights={highlights}
+                    notes={notes}
                 />
             </article>
 

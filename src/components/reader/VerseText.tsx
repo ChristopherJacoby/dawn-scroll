@@ -1,6 +1,6 @@
 "use client";
 
-import { Bookmark } from "lucide-react";
+import { Bookmark, NotebookPen } from "lucide-react";
 import { cn } from "@/lib/cn";
 import {
     HIGHLIGHT_BG,
@@ -14,6 +14,7 @@ interface VerseTextProps {
     selected: boolean;
     bookmarked: boolean;
     highlight: HighlightColor | null;
+    hasNote: boolean;
     onToggle: (number: number, viaKeyboard: boolean) => void;
 }
 
@@ -28,6 +29,7 @@ export function VerseText({
     selected,
     bookmarked,
     highlight,
+    hasNote,
     onToggle,
 }: VerseTextProps) {
     function handleVerseClick(event: React.MouseEvent<HTMLParagraphElement>) {
@@ -69,6 +71,15 @@ export function VerseText({
                             aria-hidden="true"
                         />
                         <span className="sr-only">(bookmarked)</span>
+                    </>
+                )}
+                {hasNote && (
+                    <>
+                        <NotebookPen
+                            className="ml-0.5 inline h-3 w-3 text-reading-accent"
+                            aria-hidden="true"
+                        />
+                        <span className="sr-only">(has a note)</span>
                     </>
                 )}
                 {highlight && (

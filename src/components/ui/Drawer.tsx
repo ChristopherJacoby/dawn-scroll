@@ -10,6 +10,11 @@ interface DrawerProps {
     description?: string;
     children: React.ReactNode;
     className?: string;
+    /**
+     * Where focus goes on close. Radix returns it to a Dialog.Trigger,
+     * which a controlled drawer doesn't have; without this, focus is lost.
+     */
+    onCloseAutoFocus?: (event: Event) => void;
 }
 
 export function Drawer({
@@ -19,6 +24,7 @@ export function Drawer({
     description,
     children,
     className,
+    onCloseAutoFocus,
 }: DrawerProps) {
     return (
         <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -32,6 +38,7 @@ export function Drawer({
                     )}
                 />
                 <Dialog.Content
+                    onCloseAutoFocus={onCloseAutoFocus}
                     className={cn(
                         "fixed bottom-0 left-0 right-0 z-50",
                         "max-h-[85dvh] flex flex-col",
