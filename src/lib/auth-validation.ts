@@ -45,10 +45,24 @@ export function validateLogIn(input: {
     return errors;
 }
 
-/** Only allow same-origin relative paths as post-auth redirect targets. */
+const PLACEHOLDER_ORIGIN = "http://same-origin.invalid";
+
+/**
+ * Only allow same-origin relative paths as post-auth redirect targets.
+ * Browsers strip tabs and newlines from URLs (so "/\t/evil" becomes
+ * "//evil") and treat "\\" as "/", so any control character or backslash
+ * is rejected outright; resolving against a placeholder origin then catches
+ * every other way of spelling another host.
+ */
 export function safeReturnPath(value: unknown, fallback = "/reader"): string {
-    if (typeof value !== "string") return fallback;
-    if (!value.startsWith("/") || value.startsWith("//")) return fallback;
-    if (value.includes("\\") || /[\r\n]/.test(value)) return fallback;
-    return value;
+    if (typeof value !== "string" || !value.startsWith("/")) return fallback;
+    if (/[\x00-\x1f\x7f\\]/.test(value)) return fallback;
+    let url: URL;
+    try {
+        url = new URL(value, PLACEHOLDER_ORIGIN);
+    } catch {
+        return fallback;
+    }
+    if (url.origin !== PLACEHOLDER_ORIGIN) return fallback;
+    return url.pathname + url.search + url.hash;
 }

@@ -1,5 +1,6 @@
 import "server-only";
 import { redirect } from "next/navigation";
+import { cache } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 
@@ -19,15 +20,16 @@ export async function getSession(): Promise<Session | null> {
 /**
  * Current user, verified against the auth server. This is the source of
  * truth for "is this request authenticated" — cookies can be forged, a
- * server-validated user cannot.
+ * server-validated user cannot. Memoized per server render, so the layout
+ * and page share one auth round trip.
  */
-export async function getUser(): Promise<User | null> {
+export const getUser = cache(async (): Promise<User | null> => {
     const supabase = await createClient();
     const {
         data: { user },
     } = await supabase.auth.getUser();
     return user;
-}
+});
 
 /**
  * Gate a server component, route handler, or server action on a verified

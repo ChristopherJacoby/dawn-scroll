@@ -2,7 +2,10 @@
 
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
-import { VerseActionButton } from "@/components/reader/VerseActionBar";
+import {
+    VerseActionButton,
+    VerseActionLabel,
+} from "@/components/reader/VerseActionBar";
 import { useToast } from "@/context/toast";
 
 interface CopyVerseActionProps {
@@ -41,7 +44,9 @@ export function CopyVerseAction({
                 ) : (
                     <Copy className="h-4 w-4" aria-hidden="true" />
                 )}
-                {copied ? "Copied" : "Copy"}
+                <VerseActionLabel>
+                    {copied ? "Copied" : "Copy"}
+                </VerseActionLabel>
             </VerseActionButton>
             <span role="status" className="sr-only">
                 {copied ? `Copied ${reference}` : ""}

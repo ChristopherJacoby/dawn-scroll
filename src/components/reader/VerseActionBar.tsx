@@ -47,18 +47,24 @@ export function VerseActionBar({
     );
 }
 
+export const verseActionClass = cn(
+    "inline-flex h-10 min-w-10 items-center justify-center gap-2 rounded-md px-3 font-sans text-sm font-medium text-reading-text transition-colors",
+    "hover:bg-reading-bg-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-reading-focus",
+);
+
 export function VerseActionButton({
     className,
     ...props
 }: React.ComponentProps<typeof Toolbar.Button>) {
     return (
         <Toolbar.Button
-            className={cn(
-                "inline-flex h-10 min-w-10 items-center justify-center gap-2 rounded-md px-3 font-sans text-sm font-medium text-reading-text transition-colors",
-                "hover:bg-reading-bg-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-reading-focus",
-                className,
-            )}
+            className={cn(verseActionClass, className)}
             {...props}
         />
     );
+}
+
+/** Action text: visible from `sm` up, screen-reader-only on phones. */
+export function VerseActionLabel({ children }: { children: React.ReactNode }) {
+    return <span className="sr-only sm:not-sr-only">{children}</span>;
 }

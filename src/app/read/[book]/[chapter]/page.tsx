@@ -7,7 +7,9 @@ import { ChapterVerses } from "@/components/reader/ChapterVerses";
 import { ReaderSelectors } from "@/components/reader/ReaderSelectors";
 import { ReadingModeToggle } from "@/components/reader/ReadingModeToggle";
 import { VerseAnchorScroll } from "@/components/reader/VerseAnchorScroll";
+import { getUser } from "@/lib/auth";
 import { getBibleBooks, getKjvChapter } from "@/lib/bible/queries";
+import { getChapterBookmarkIds } from "@/lib/bookmarks";
 import { cn } from "@/lib/cn";
 
 interface ReaderPageProps {
@@ -42,11 +44,19 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
     const chapterNumber = parseChapter(chapter);
     if (!chapterNumber) notFound();
 
-    const [books, passage] = await Promise.all([
+    const [books, passage, user] = await Promise.all([
         getBibleBooks(),
         getKjvChapter(book, chapterNumber),
+        getUser(),
     ]);
     if (!passage || passage.verses.length === 0) notFound();
+
+    const bookmarks = user
+        ? await getChapterBookmarkIds(
+              passage.book.id,
+              passage.chapter.chapterNumber,
+          )
+        : {};
 
     const reference = `${passage.book.name} ${passage.chapter.chapterNumber}`;
 
@@ -97,13 +107,19 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                 />
                 <ChapterVerses
                     key={`verses-${passage.book.slug}-${passage.chapter.chapterNumber}`}
+                    bookSlug={passage.book.slug}
                     bookName={passage.book.name}
                     chapterNumber={passage.chapter.chapterNumber}
-                    translation={passage.translation.abbreviation}
+                    translation={{
+                        slug: passage.translation.slug,
+                        abbreviation: passage.translation.abbreviation,
+                    }}
                     verses={passage.verses.map((verse) => ({
                         number: verse.verseNumber,
                         text: verse.text,
                     }))}
+                    signedIn={user !== null}
+                    bookmarks={bookmarks}
                 />
             </article>
 

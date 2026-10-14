@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import type { VerseRefInput } from "@/lib/verse-ref";
 import type {
     BibleChapter,
     Book,
@@ -264,4 +265,42 @@ export async function searchKjv(
 
     if (error) throw error;
     return ((data ?? []) as SearchRow[]).map(mapSearchResult);
+}
+
+/** A verse as the database keys it (what annotation tables reference). */
+export interface ResolvedVerseRef {
+    translationId: number;
+    bookId: number;
+    chapterNumber: number;
+    verseNumber: number;
+}
+
+/** Look up a verse's database keys; null when no such verse exists. */
+export async function resolveVerseRef(
+    ref: VerseRefInput,
+): Promise<ResolvedVerseRef | null> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+        .from("verses")
+        .select(
+            "translation_id, book_id, chapter_number, verse_number, books!inner(slug), translations!inner(slug)",
+        )
+        .eq("books.slug", ref.book)
+        .eq("translations.slug", ref.translation)
+        .eq("chapter_number", ref.chapter)
+        .eq("verse_number", ref.verse)
+        .maybeSingle();
+
+    if (error) throw error;
+    if (!data) return null;
+    const row = data as Pick<
+        VerseRow,
+        "translation_id" | "book_id" | "chapter_number" | "verse_number"
+    >;
+    return {
+        translationId: row.translation_id,
+        bookId: row.book_id,
+        chapterNumber: row.chapter_number,
+        verseNumber: row.verse_number,
+    };
 }

@@ -1,15 +1,26 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { BookmarkVerseAction } from "@/components/reader/BookmarkVerseAction";
 import { CopyVerseAction } from "@/components/reader/CopyVerseAction";
 import { VerseActionBar } from "@/components/reader/VerseActionBar";
 import { VerseText } from "@/components/reader/VerseText";
+import { useVerseAnnotations } from "@/components/reader/useVerseAnnotations";
+import {
+    addBookmarkAction,
+    removeBookmarkAction,
+} from "@/app/bookmarks/actions";
+import { ok } from "@/lib/result";
 
 interface ChapterVersesProps {
+    bookSlug: string;
     bookName: string;
     chapterNumber: number;
-    translation: string;
+    translation: { slug: string; abbreviation: string };
     verses: { number: number; text: string }[];
+    signedIn: boolean;
+    /** Verse number → bookmark id for this chapter (empty when signed out). */
+    bookmarks: Record<number, string>;
 }
 
 /**
@@ -17,12 +28,19 @@ interface ChapterVersesProps {
  * chapter (via `key`) so a selection doesn't carry over on navigation.
  */
 export function ChapterVerses({
+    bookSlug,
     bookName,
     chapterNumber,
     translation,
     verses,
+    signedIn,
+    bookmarks: initialBookmarks,
 }: ChapterVersesProps) {
     const [selected, setSelected] = useState<number | null>(null);
+    const bookmarks = useVerseAnnotations(initialBookmarks);
+    const signInHref = signedIn
+        ? null
+        : `/login?next=${encodeURIComponent(`/read/${bookSlug}/${chapterNumber}`)}`;
     const toolbarRef = useRef<HTMLDivElement>(null);
     const focusToolbar = useRef(false);
 
@@ -30,6 +48,29 @@ export function ChapterVerses({
     const reference = selectedVerse
         ? `${bookName} ${chapterNumber}:${selectedVerse.number}`
         : "";
+
+    function toggleBookmark(verse: number) {
+        // "" stands in for the id until the server assigns one.
+        bookmarks.update(
+            verse,
+            (id) => (id === undefined ? "" : undefined),
+            async (id) => {
+                if (id === undefined) {
+                    return addBookmarkAction({
+                        book: bookSlug,
+                        chapter: chapterNumber,
+                        verse,
+                        translation: translation.slug,
+                    });
+                }
+                const result = await removeBookmarkAction(id);
+                // Already gone (e.g. removed on another page) is the goal.
+                return result.ok || result.status === 404
+                    ? ok(undefined)
+                    : result;
+            },
+        );
+    }
 
     function toggle(number: number, viaKeyboard: boolean) {
         const next = number === selected ? null : number;
@@ -83,6 +124,7 @@ export function ChapterVerses({
                         number={verse.number}
                         text={verse.text}
                         selected={verse.number === selected}
+                        bookmarked={bookmarks.get(verse.number) !== undefined}
                         onToggle={toggle}
                     />
                 ))}
@@ -96,10 +138,17 @@ export function ChapterVerses({
                     reference={reference}
                     onClose={close}
                 >
+                    <BookmarkVerseAction
+                        bookmarked={
+                            bookmarks.get(selectedVerse.number) !== undefined
+                        }
+                        onToggle={() => toggleBookmark(selectedVerse.number)}
+                        signInHref={signInHref}
+                    />
                     <CopyVerseAction
                         text={selectedVerse.text}
                         reference={reference}
-                        translation={translation}
+                        translation={translation.abbreviation}
                     />
                 </VerseActionBar>
             )}

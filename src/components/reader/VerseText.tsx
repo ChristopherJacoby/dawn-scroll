@@ -1,11 +1,13 @@
 "use client";
 
+import { Bookmark } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 interface VerseTextProps {
     number: number;
     text: string;
     selected: boolean;
+    bookmarked: boolean;
     onToggle: (number: number, viaKeyboard: boolean) => void;
 }
 
@@ -18,6 +20,7 @@ export function VerseText({
     number,
     text,
     selected,
+    bookmarked,
     onToggle,
 }: VerseTextProps) {
     function handleVerseClick(event: React.MouseEvent<HTMLParagraphElement>) {
@@ -52,6 +55,15 @@ export function VerseText({
                 >
                     {number}
                 </button>
+                {bookmarked && (
+                    <>
+                        <Bookmark
+                            className="ml-0.5 inline h-3 w-3 fill-current text-reading-accent"
+                            aria-hidden="true"
+                        />
+                        <span className="sr-only">(bookmarked)</span>
+                    </>
+                )}
             </sup>
             <span
                 className={cn(
