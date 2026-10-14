@@ -29,10 +29,14 @@ export function ActivePlanCard({ entry }: { entry: EnrolledPlan }) {
     const toast = useToast();
     const timeZone = useTimeZone();
     const [pending, startTransition] = useTransition();
+    const [busy, setBusy] = useState<"complete" | "undo" | "leave" | null>(
+        null,
+    );
     const [confirmingLeave, setConfirmingLeave] = useState(false);
 
     const doneCount = completed.length;
-    const percent = Math.round((doneCount / plan.durationDays) * 100);
+    // Floor, so 364 of 365 doesn't read as 100%.
+    const percent = Math.floor((doneCount / plan.durationDays) * 100);
     const streak = computeStreak(
         completed.map((c) => c.completedAt),
         new Date(),
@@ -44,10 +48,20 @@ export function ActivePlanCard({ entry }: { entry: EnrolledPlan }) {
         null,
     );
 
-    function run(action: () => Promise<Result<null>>) {
+    function run(
+        kind: "complete" | "undo" | "leave",
+        action: () => Promise<Result<null>>,
+    ) {
+        setBusy(kind);
         startTransition(async () => {
-            const result = await action();
-            if (!result.ok) toast.error(result.error);
+            // A failed call (offline, or a deploy since this page loaded)
+            // throws; without the catch it would take down the page.
+            const result = await action().catch(() => null);
+            if (!result) {
+                toast.error("Something went wrong. Please try again.");
+            } else if (!result.ok) {
+                toast.error(result.error);
+            }
         });
     }
 
@@ -130,7 +144,7 @@ export function ActivePlanCard({ entry }: { entry: EnrolledPlan }) {
                     </ul>
                     <Button
                         onClick={() =>
-                            run(() =>
+                            run("complete", () =>
                                 setDayCompleteAction(
                                     plan.slug,
                                     currentDay,
@@ -138,7 +152,8 @@ export function ActivePlanCard({ entry }: { entry: EnrolledPlan }) {
                                 ),
                             )
                         }
-                        loading={pending}
+                        loading={pending && busy === "complete"}
+                        disabled={pending}
                         className="self-start"
                     >
                         Mark day {currentDay} complete
@@ -161,7 +176,7 @@ export function ActivePlanCard({ entry }: { entry: EnrolledPlan }) {
                         size="sm"
                         disabled={pending}
                         onClick={() =>
-                            run(() =>
+                            run("undo", () =>
                                 setDayCompleteAction(
                                     plan.slug,
                                     lastCompleted.dayNumber,
@@ -182,13 +197,17 @@ export function ActivePlanCard({ entry }: { entry: EnrolledPlan }) {
                             variant="destructive"
                             size="sm"
                             disabled={pending}
-                            onClick={() => run(() => leaveAction(plan.slug))}
+                            loading={pending && busy === "leave"}
+                            onClick={() =>
+                                run("leave", () => leaveAction(plan.slug))
+                            }
                         >
                             Leave plan
                         </Button>
                         <Button
                             variant="ghost"
                             size="sm"
+                            disabled={pending}
                             onClick={() => setConfirmingLeave(false)}
                         >
                             Keep it

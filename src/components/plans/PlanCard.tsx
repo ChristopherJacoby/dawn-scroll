@@ -18,8 +18,9 @@ export function PlanCard({ plan, signedIn }: PlanCardProps) {
 
     function start() {
         startTransition(async () => {
-            const result = await enrollAction(plan.slug);
-            if (!result.ok) toast.error(result.error);
+            const result = await enrollAction(plan.slug).catch(() => null);
+            if (!result) toast.error("Something went wrong. Please try again.");
+            else if (!result.ok) toast.error(result.error);
         });
     }
 
