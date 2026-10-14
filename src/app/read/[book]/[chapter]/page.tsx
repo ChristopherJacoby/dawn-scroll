@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ChapterPrefetch } from "@/components/reader/ChapterPrefetch";
+import { ChapterVerses } from "@/components/reader/ChapterVerses";
 import { ReaderSelectors } from "@/components/reader/ReaderSelectors";
 import { ReadingModeToggle } from "@/components/reader/ReadingModeToggle";
 import { VerseAnchorScroll } from "@/components/reader/VerseAnchorScroll";
@@ -94,20 +95,16 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                             : null
                     }
                 />
-                <div className="selection-reading reading-scale flex flex-col gap-4 font-serif text-reading-text">
-                    {passage.verses.map((verse) => (
-                        <p
-                            key={verse.id}
-                            id={`verse-${verse.verseNumber}`}
-                            className="scroll-mt-24"
-                        >
-                            <sup className="mr-2 align-super font-sans text-xs font-semibold text-reading-text-muted">
-                                {verse.verseNumber}
-                            </sup>
-                            {verse.text}
-                        </p>
-                    ))}
-                </div>
+                <ChapterVerses
+                    key={`verses-${passage.book.slug}-${passage.chapter.chapterNumber}`}
+                    bookName={passage.book.name}
+                    chapterNumber={passage.chapter.chapterNumber}
+                    translation={passage.translation.abbreviation}
+                    verses={passage.verses.map((verse) => ({
+                        number: verse.verseNumber,
+                        text: verse.text,
+                    }))}
+                />
             </article>
 
             <nav
