@@ -1,6 +1,9 @@
 import "server-only";
-import type { ResolvedVerseRef } from "@/lib/bible/queries";
+import { getUser } from "@/lib/auth";
+import { resolveVerseRef, type ResolvedVerseRef } from "@/lib/bible/queries";
+import { fail, ok, type Result } from "@/lib/result";
 import { createClient } from "@/lib/supabase/server";
+import { isUuid, parseVerseRef } from "@/lib/verse-ref";
 
 export interface Bookmark {
     id: string;
@@ -85,14 +88,13 @@ export async function getChapterBookmarkIds(
  * returns the existing bookmark with `created: false`.
  */
 export async function createBookmark(
-    userId: string,
     verse: ResolvedVerseRef,
 ): Promise<{ bookmark: Bookmark; created: boolean }> {
     const supabase = await createClient();
+    // user_id is left to its auth.uid() default; clients can't set it.
     const { data, error } = await supabase
         .from("bookmarks")
         .insert({
-            user_id: userId,
             translation_id: verse.translationId,
             book_id: verse.bookId,
             chapter_number: verse.chapterNumber,
@@ -133,4 +135,39 @@ export async function deleteBookmark(id: string): Promise<boolean> {
         .select("id");
     if (error) throw error;
     return (data ?? []).length > 0;
+}
+
+// ── Mutations as the signed-in user ──────────────────────────────────────
+// Shared by the API routes and the Server Actions: auth, validation and
+// error mapping live here once.
+
+/** Bookmark the verse described by an untrusted `{ book, chapter, verse }`. */
+export async function addBookmark(input: unknown): Promise<Result<Bookmark>> {
+    if (!(await getUser())) return fail(401, "Sign in to save bookmarks.");
+    const ref = parseVerseRef(input);
+    if (!ref) return fail(400, "Provide a book, chapter and verse.");
+    try {
+        const verse = await resolveVerseRef(ref);
+        if (!verse) return fail(404, "That verse doesn't exist.");
+        const { bookmark, created } = await createBookmark(verse);
+        return ok(bookmark, created ? 201 : 200);
+    } catch {
+        return fail(500, "Couldn't save the bookmark. Please try again.");
+    }
+}
+
+/** Remove one of the user's bookmarks by id. */
+export async function removeBookmark(id: unknown): Promise<Result<null>> {
+    if (!(await getUser())) return fail(401, "Sign in to manage bookmarks.");
+    if (typeof id !== "string" || !isUuid(id)) {
+        return fail(404, "Bookmark not found.");
+    }
+    try {
+        if (!(await deleteBookmark(id))) {
+            return fail(404, "Bookmark not found.");
+        }
+        return ok(null, 204);
+    } catch {
+        return fail(500, "Couldn't remove the bookmark. Please try again.");
+    }
 }

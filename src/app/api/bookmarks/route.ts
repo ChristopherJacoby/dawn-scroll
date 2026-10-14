@@ -1,8 +1,13 @@
 import type { NextRequest } from "next/server";
-import { jsonError, readJson, unauthorized } from "@/lib/api";
+import {
+    jsonError,
+    readJson,
+    rejectUntrustedMutation,
+    resultResponse,
+    unauthorized,
+} from "@/lib/api";
 import { getUser } from "@/lib/auth";
-import { resolveVerseRef } from "@/lib/bible/queries";
-import { createBookmark, listBookmarks } from "@/lib/bookmarks";
+import { addBookmark, listBookmarks } from "@/lib/bookmarks";
 import { parseVerseRef } from "@/lib/verse-ref";
 
 /**
@@ -37,20 +42,10 @@ export async function GET(request: NextRequest) {
  * already bookmarked.
  */
 export async function POST(request: Request) {
-    const user = await getUser();
-    if (!user) return unauthorized();
-
-    const ref = parseVerseRef(await readJson(request));
-    if (!ref) {
-        return jsonError("Provide a book, chapter and verse.", 400);
-    }
-
-    try {
-        const verse = await resolveVerseRef(ref);
-        if (!verse) return jsonError("That verse doesn't exist.", 404);
-        const { bookmark, created } = await createBookmark(user.id, verse);
-        return Response.json({ bookmark }, { status: created ? 201 : 200 });
-    } catch {
-        return jsonError("Couldn't save the bookmark. Please try again.", 500);
-    }
+    const rejected = rejectUntrustedMutation(request, { hasBody: true });
+    if (rejected) return rejected;
+    return resultResponse(
+        await addBookmark(await readJson(request)),
+        "bookmark",
+    );
 }

@@ -1,26 +1,13 @@
-import { jsonError, unauthorized } from "@/lib/api";
-import { getUser } from "@/lib/auth";
-import { deleteBookmark } from "@/lib/bookmarks";
-import { isUuid } from "@/lib/verse-ref";
+import { rejectUntrustedMutation, resultResponse } from "@/lib/api";
+import { removeBookmark } from "@/lib/bookmarks";
 
 /** DELETE /api/bookmarks/:id — 204, or 404 if it isn't the user's. */
 export async function DELETE(
-    _request: Request,
+    request: Request,
     { params }: RouteContext<"/api/bookmarks/[id]">,
 ) {
-    if (!(await getUser())) return unauthorized();
-
+    const rejected = rejectUntrustedMutation(request, { hasBody: false });
+    if (rejected) return rejected;
     const { id } = await params;
-    if (!isUuid(id)) return jsonError("Bookmark not found.", 404);
-
-    try {
-        const deleted = await deleteBookmark(id);
-        if (!deleted) return jsonError("Bookmark not found.", 404);
-        return new Response(null, { status: 204 });
-    } catch {
-        return jsonError(
-            "Couldn't remove the bookmark. Please try again.",
-            500,
-        );
-    }
+    return resultResponse(await removeBookmark(id), "bookmark");
 }
