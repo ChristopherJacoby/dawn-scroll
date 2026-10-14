@@ -21,6 +21,13 @@
     --reading-note: #fff8e8;
     --reading-citation: #4a5e4a;
     --reading-danger: #8b4a2a;
+    /* Verse highlights: same hue family per mode, tuned so body text
+       keeps 6:1+ contrast on every color */
+    --highlight-yellow: #f4dc7e;
+    --highlight-green: #cde0b0;
+    --highlight-blue: #c3dae8;
+    --highlight-pink: #f2c6c0;
+    --highlight-purple: #ddc9e6;
 }
 
 [data-reading-mode="dark"] {
@@ -44,6 +51,11 @@
     --reading-citation: #b7c7a8;
     /* Lighter than brand rust: 6.7:1 on the dark bg, 5.5:1 on raised */
     --reading-danger: #e6956a;
+    --highlight-yellow: #6b5714;
+    --highlight-green: #3d5229;
+    --highlight-blue: #2c4a5c;
+    --highlight-pink: #683530;
+    --highlight-purple: #4f3a5e;
 }
 
 [data-reading-mode="sepia"] {
@@ -66,6 +78,11 @@
     --reading-note: #f7e7b8;
     --reading-citation: #3f563f;
     --reading-danger: #8b4a2a;
+    --highlight-yellow: #f6cf55;
+    --highlight-green: #bfd394;
+    --highlight-blue: #b5cfd8;
+    --highlight-pink: #ebb6a4;
+    --highlight-purple: #d3b9d3;
 }
 
 /* ─── Tailwind theme ──────────────────────────────────────────────────────── */
@@ -158,6 +175,21 @@
 }
 @utility border-reading-danger {
     border-color: var(--reading-danger);
+}
+@utility bg-highlight-yellow {
+    background-color: var(--highlight-yellow);
+}
+@utility bg-highlight-green {
+    background-color: var(--highlight-green);
+}
+@utility bg-highlight-blue {
+    background-color: var(--highlight-blue);
+}
+@utility bg-highlight-pink {
+    background-color: var(--highlight-pink);
+}
+@utility bg-highlight-purple {
+    background-color: var(--highlight-purple);
 }
 @utility ring-reading-focus {
     --tw-ring-color: var(--reading-focus);

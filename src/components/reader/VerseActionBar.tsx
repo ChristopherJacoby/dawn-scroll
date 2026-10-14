@@ -27,7 +27,7 @@ export function VerseActionBar({
             ref={ref}
             aria-label={`Actions for ${reference}`}
             className={cn(
-                "sticky bottom-4 z-20 mx-auto mt-8 flex w-fit max-w-full items-center gap-1",
+                "sticky bottom-4 z-20 mx-auto mt-8 flex w-fit max-w-full flex-wrap items-center justify-center gap-1",
                 "rounded-lg border border-reading-border-strong bg-reading-surface-raised p-1.5 font-sans shadow-lg",
             )}
         >

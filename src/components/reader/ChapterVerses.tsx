@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { BookmarkVerseAction } from "@/components/reader/BookmarkVerseAction";
 import { CopyVerseAction } from "@/components/reader/CopyVerseAction";
+import { HighlightVerseAction } from "@/components/reader/HighlightVerseAction";
 import { VerseActionBar } from "@/components/reader/VerseActionBar";
 import { VerseText } from "@/components/reader/VerseText";
 import { useVerseAnnotations } from "@/components/reader/useVerseAnnotations";
@@ -10,6 +11,12 @@ import {
     addBookmarkAction,
     removeBookmarkAction,
 } from "@/app/bookmarks/actions";
+import {
+    removeHighlightAction,
+    setHighlightAction,
+} from "@/app/highlights/actions";
+import type { HighlightColor } from "@/lib/highlight-colors";
+import type { VerseHighlight } from "@/lib/highlights";
 import { ok } from "@/lib/result";
 
 interface ChapterVersesProps {
@@ -21,6 +28,8 @@ interface ChapterVersesProps {
     signedIn: boolean;
     /** Verse number → bookmark id for this chapter (empty when signed out). */
     bookmarks: Record<number, string>;
+    /** Verse number → highlight for this chapter (empty when signed out). */
+    highlights: Record<number, VerseHighlight>;
 }
 
 /**
@@ -35,9 +44,11 @@ export function ChapterVerses({
     verses,
     signedIn,
     bookmarks: initialBookmarks,
+    highlights: initialHighlights,
 }: ChapterVersesProps) {
     const [selected, setSelected] = useState<number | null>(null);
     const bookmarks = useVerseAnnotations(initialBookmarks);
+    const highlights = useVerseAnnotations(initialHighlights);
     const signInHref = signedIn
         ? null
         : `/login?next=${encodeURIComponent(`/read/${bookSlug}/${chapterNumber}`)}`;
@@ -49,27 +60,47 @@ export function ChapterVerses({
         ? `${bookName} ${chapterNumber}:${selectedVerse.number}`
         : "";
 
+    const verseRef = (verse: number) => ({
+        book: bookSlug,
+        chapter: chapterNumber,
+        verse,
+        translation: translation.slug,
+    });
+
     function toggleBookmark(verse: number) {
-        // "" stands in for the id until the server assigns one.
-        bookmarks.update(
-            verse,
-            (id) => (id === undefined ? "" : undefined),
-            async (id) => {
-                if (id === undefined) {
-                    return addBookmarkAction({
-                        book: bookSlug,
-                        chapter: chapterNumber,
-                        verse,
-                        translation: translation.slug,
-                    });
-                }
-                const result = await removeBookmarkAction(id);
-                // Already gone (e.g. removed on another page) is the goal.
-                return result.ok || result.status === 404
-                    ? ok(undefined)
-                    : result;
-            },
-        );
+        // Toggle what's on screen; "" stands in for the id until the
+        // server assigns one.
+        const target = bookmarks.latest(verse) === undefined ? "" : undefined;
+        bookmarks.update(verse, target, async (settledId, wanted) => {
+            if (wanted !== undefined) {
+                return settledId !== undefined
+                    ? ok(settledId)
+                    : addBookmarkAction(verseRef(verse));
+            }
+            if (settledId === undefined) return ok(undefined);
+            const result = await removeBookmarkAction(settledId);
+            // Already gone (e.g. removed on another page) is the goal.
+            return result.ok || result.status === 404 ? ok(undefined) : result;
+        });
+    }
+
+    function setHighlight(verse: number, color: HighlightColor | null) {
+        const shown = highlights.latest(verse);
+        // "" stands in for a new highlight's id until the server's.
+        const target = color ? { id: shown?.id ?? "", color } : undefined;
+        highlights.update(verse, target, async (settled, wanted) => {
+            if (wanted) {
+                return settled?.color === wanted.color
+                    ? ok(settled)
+                    : setHighlightAction({
+                          ...verseRef(verse),
+                          color: wanted.color,
+                      });
+            }
+            if (!settled) return ok(undefined);
+            const result = await removeHighlightAction(settled.id);
+            return result.ok || result.status === 404 ? ok(undefined) : result;
+        });
     }
 
     function toggle(number: number, viaKeyboard: boolean) {
@@ -125,6 +156,7 @@ export function ChapterVerses({
                         text={verse.text}
                         selected={verse.number === selected}
                         bookmarked={bookmarks.get(verse.number) !== undefined}
+                        highlight={highlights.get(verse.number)?.color ?? null}
                         onToggle={toggle}
                     />
                 ))}
@@ -138,6 +170,15 @@ export function ChapterVerses({
                     reference={reference}
                     onClose={close}
                 >
+                    <HighlightVerseAction
+                        color={
+                            highlights.get(selectedVerse.number)?.color ?? null
+                        }
+                        onChange={(color) =>
+                            setHighlight(selectedVerse.number, color)
+                        }
+                        signInHref={signInHref}
+                    />
                     <BookmarkVerseAction
                         bookmarked={
                             bookmarks.get(selectedVerse.number) !== undefined

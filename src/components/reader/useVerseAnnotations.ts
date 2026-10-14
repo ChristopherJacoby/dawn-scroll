@@ -5,59 +5,114 @@ import { useToast } from "@/context/toast";
 import type { Result } from "@/lib/result";
 
 /**
- * Per-verse user data for one chapter (bookmark ids, highlight colors…)
- * with optimistic updates: the UI changes immediately, then commits, then
- * either settles on the server's value or rolls back with a toast.
- *
- * Decisions read from a ref, not render state, so a tap that lands between
- * a commit finishing and React re-rendering still sees the latest value.
+ * Persists a target value for a verse. Receives the last value the server
+ * confirmed (never an optimistic placeholder) and the target to reach;
+ * resolves to the value the server now holds.
+ */
+export type CommitAnnotation<T> = (
+    settled: T | undefined,
+    target: T | undefined,
+) => Promise<Result<T | undefined>>;
+
+/**
+ * Per-verse user data for one chapter (bookmark ids, highlight colors,
+ * notes) with optimistic updates. The UI shows each target immediately;
+ * commits run one at a time per verse, and the latest target always wins:
+ * changes made while a commit is in flight are queued (replacing any
+ * earlier queued change) and committed against the server's settled value.
+ * If the last commit fails, the verse reverts to that value with a toast.
  */
 export function useVerseAnnotations<T>(initial: Record<number, T>) {
     const toast = useToast();
     const [values, setValues] = useState(initial);
-    const latest = useRef(initial);
-    const inFlight = useRef(new Set<number>());
+    const [pending, setPending] = useState<ReadonlySet<number>>(new Set());
+    const shown = useRef(initial);
+    const settled = useRef(initial);
+    const queued = useRef(
+        new Map<
+            number,
+            { target: T | undefined; commit: CommitAnnotation<T> }
+        >(),
+    );
+    const draining = useRef(new Set<number>());
 
-    function apply(verse: number, value: T | undefined) {
-        const next = { ...latest.current };
+    function write(
+        map: Record<number, T>,
+        verse: number,
+        value: T | undefined,
+    ) {
+        const next = { ...map };
         if (value === undefined) delete next[verse];
         else next[verse] = value;
-        latest.current = next;
-        setValues(next);
+        return next;
     }
 
-    /**
-     * Show `optimistic` for the verse while `commit` runs; `commit` receives
-     * the current value and resolves to the value to keep. Ignored while
-     * another update to the same verse is in flight.
-     */
-    async function update(
-        verse: number,
-        optimistic: (current: T | undefined) => T | undefined,
-        commit: (current: T | undefined) => Promise<Result<T | undefined>>,
-    ) {
-        if (inFlight.current.has(verse)) return;
-        inFlight.current.add(verse);
-        const previous = latest.current[verse];
-        apply(verse, optimistic(previous));
-        try {
-            const result = await commit(previous);
-            if (!result.ok) throw new Error(result.error);
-            apply(verse, result.value);
-        } catch (error) {
-            apply(verse, previous);
-            toast.error(
-                error instanceof Error && error.message
-                    ? error.message
-                    : "Something went wrong. Please try again.",
-            );
-        } finally {
-            inFlight.current.delete(verse);
+    function show(verse: number, value: T | undefined) {
+        shown.current = write(shown.current, verse, value);
+        setValues(shown.current);
+    }
+
+    function setVersePending(verse: number, isPending: boolean) {
+        setPending((current) => {
+            const next = new Set(current);
+            if (isPending) next.add(verse);
+            else next.delete(verse);
+            return next;
+        });
+    }
+
+    async function drain(verse: number) {
+        draining.current.add(verse);
+        setVersePending(verse, true);
+        let next;
+        while ((next = queued.current.get(verse))) {
+            queued.current.delete(verse);
+            let error: string | null = null;
+            try {
+                const result = await next.commit(
+                    settled.current[verse],
+                    next.target,
+                );
+                if (result.ok) {
+                    settled.current = write(
+                        settled.current,
+                        verse,
+                        result.value,
+                    );
+                } else {
+                    error = result.error;
+                }
+            } catch {
+                error = "Something went wrong. Please try again.";
+            }
+            // Only the last change decides what's shown; earlier ones are
+            // superseded either way.
+            if (!queued.current.has(verse)) {
+                show(verse, settled.current[verse]);
+                if (error) toast.error(error);
+            }
         }
+        draining.current.delete(verse);
+        setVersePending(verse, false);
+    }
+
+    /** Show `target` for the verse now and commit it (latest wins). */
+    function update(
+        verse: number,
+        target: T | undefined,
+        commit: CommitAnnotation<T>,
+    ) {
+        show(verse, target);
+        queued.current.set(verse, { target, commit });
+        if (!draining.current.has(verse)) void drain(verse);
     }
 
     return {
+        /** For rendering. */
         get: (verse: number): T | undefined => values[verse],
+        /** For event handlers: includes changes not yet rendered. */
+        latest: (verse: number): T | undefined => shown.current[verse],
+        isPending: (verse: number) => pending.has(verse),
         update,
     };
 }

@@ -1,46 +1,37 @@
 import "server-only";
+import {
+    insertOrExisting,
+    mapAnnotatedVerse,
+    readable,
+    VERSE_EMBED,
+    type AnnotatedVerse,
+    type VerseEmbedRow,
+} from "@/lib/annotations";
 import { getUser } from "@/lib/auth";
 import { resolveVerseRef, type ResolvedVerseRef } from "@/lib/bible/queries";
 import { fail, ok, type Result } from "@/lib/result";
 import { createClient } from "@/lib/supabase/server";
 import { isUuid, parseVerseRef } from "@/lib/verse-ref";
 
-export interface Bookmark {
+export interface Bookmark extends AnnotatedVerse {
     id: string;
-    bookSlug: string;
-    bookName: string;
-    bookOrder: number;
-    chapterNumber: number;
-    verseNumber: number;
-    translation: string;
-    text: string;
     createdAt: string;
 }
 
-const BOOKMARK_COLUMNS =
-    "id, chapter_number, verse_number, created_at, books!inner(slug, name, book_order), translations(abbreviation), verses(verse_text)";
+const BOOKMARK_COLUMNS = `id, created_at, ${VERSE_EMBED}`;
 
-interface BookmarkRow {
+interface BookmarkRow extends VerseEmbedRow {
     id: string;
-    chapter_number: number;
-    verse_number: number;
     created_at: string;
-    books: { slug: string; name: string; book_order: number };
-    translations: { abbreviation: string };
-    verses: { verse_text: string };
 }
 
-function mapBookmark(row: BookmarkRow): Bookmark {
+function mapBookmark(row: BookmarkRow): Bookmark | null {
+    const verse = mapAnnotatedVerse(row);
+    if (!verse) return null;
     return {
         id: row.id,
-        bookSlug: row.books.slug,
-        bookName: row.books.name,
-        bookOrder: row.books.book_order,
-        chapterNumber: row.chapter_number,
-        verseNumber: row.verse_number,
-        translation: row.translations.abbreviation,
-        text: row.verses.verse_text,
         createdAt: row.created_at,
+        ...verse,
     };
 }
 
@@ -63,7 +54,9 @@ export async function listBookmarks(filter?: {
         ascending: false,
     });
     if (error) throw error;
-    return (data as unknown as BookmarkRow[]).map(mapBookmark);
+    return (data as unknown as BookmarkRow[])
+        .map(mapBookmark)
+        .filter((item): item is Bookmark => item !== null);
 }
 
 /** Verse number → bookmark id for one chapter, for the reader. */
@@ -91,38 +84,29 @@ export async function createBookmark(
     verse: ResolvedVerseRef,
 ): Promise<{ bookmark: Bookmark; created: boolean }> {
     const supabase = await createClient();
-    // user_id is left to its auth.uid() default; clients can't set it.
-    const { data, error } = await supabase
-        .from("bookmarks")
-        .insert({
-            translation_id: verse.translationId,
-            book_id: verse.bookId,
-            chapter_number: verse.chapterNumber,
-            verse_number: verse.verseNumber,
-        })
-        .select(BOOKMARK_COLUMNS)
-        .single();
-
-    if (!error) {
-        return {
-            bookmark: mapBookmark(data as unknown as BookmarkRow),
-            created: true,
-        };
-    }
-    if (error.code !== "23505") throw error;
-
-    const existing = await supabase
-        .from("bookmarks")
-        .select(BOOKMARK_COLUMNS)
-        .eq("book_id", verse.bookId)
-        .eq("chapter_number", verse.chapterNumber)
-        .eq("verse_number", verse.verseNumber)
-        .single();
-    if (existing.error) throw existing.error;
-    return {
-        bookmark: mapBookmark(existing.data as unknown as BookmarkRow),
-        created: false,
-    };
+    const { row, created } = await insertOrExisting<BookmarkRow>(
+        // user_id is left to its auth.uid() default; clients can't set it.
+        () =>
+            supabase
+                .from("bookmarks")
+                .insert({
+                    translation_id: verse.translationId,
+                    book_id: verse.bookId,
+                    chapter_number: verse.chapterNumber,
+                    verse_number: verse.verseNumber,
+                })
+                .select(BOOKMARK_COLUMNS)
+                .single(),
+        () =>
+            supabase
+                .from("bookmarks")
+                .select(BOOKMARK_COLUMNS)
+                .eq("book_id", verse.bookId)
+                .eq("chapter_number", verse.chapterNumber)
+                .eq("verse_number", verse.verseNumber)
+                .maybeSingle(),
+    );
+    return { bookmark: readable(mapBookmark(row)), created };
 }
 
 /** Delete one of the user's bookmarks; false when there was none to delete. */
