@@ -63,51 +63,51 @@ export function useWordStudy({
         }
     }
 
-    /** The verse text with tappable words, or undefined when not studying it. */
-    function render(target: number, text: string): React.ReactNode {
+    /** The verse text with tappable words and a hint, or undefined. */
+    function render(
+        target: number,
+        text: string,
+    ): { content: React.ReactNode; hint: string } | undefined {
         const study = verse === target ? studies[target] : undefined;
         if (!study) return undefined;
-        const hebrew = study.tokens.some((t) => t?.s.startsWith("H"));
-        return (
-            <>
-                {tokenizeVerse(text).map((token, index) => {
-                    const mapping = study.tokens[index];
-                    const separator = index > 0 ? " " : "";
-                    if (!mapping) return separator + token;
-                    const word =
-                        mapping.o === null ? null : study.words[mapping.o];
-                    return (
-                        <span key={index}>
-                            {separator}
-                            <StudyWord
-                                token={token}
-                                open={openToken === index}
-                                onOpenChange={(open) =>
-                                    setOpenToken(open ? index : null)
+        const language = study.words[0]?.s.startsWith("H") ? "Hebrew" : "Greek";
+        const hasLinks = study.tokens.some(Boolean);
+        const content = tokenizeVerse(text).map((token, index) => {
+            const mapping = study.tokens[index];
+            const separator = index > 0 ? " " : "";
+            if (!mapping) return separator + token;
+            const word = mapping.o === null ? null : study.words[mapping.o];
+            return (
+                <span key={index}>
+                    {separator}
+                    <StudyWord
+                        token={token}
+                        open={openToken === index}
+                        onOpenChange={(open) =>
+                            setOpenToken(open ? index : null)
+                        }
+                        card={() => (
+                            <WordStudyCard
+                                mapping={mapping}
+                                word={word ?? null}
+                                entry={study.entries[mapping.s] ?? null}
+                                features={
+                                    word?.m
+                                        ? (study.morphology[word.m] ?? null)
+                                        : null
                                 }
-                                card={() => (
-                                    <WordStudyCard
-                                        mapping={mapping}
-                                        word={word ?? null}
-                                        entry={study.entries[mapping.s] ?? null}
-                                        features={
-                                            word?.m
-                                                ? (study.morphology[word.m] ??
-                                                  null)
-                                                : null
-                                        }
-                                    />
-                                )}
                             />
-                        </span>
-                    );
-                })}
-                <span className="mt-1 block font-sans text-xs text-reading-text-muted">
-                    Tap an underlined word to see the{" "}
-                    {hebrew ? "Hebrew" : "Greek"} behind it.
+                        )}
+                    />
                 </span>
-            </>
-        );
+            );
+        });
+        return {
+            content,
+            hint: hasLinks
+                ? `Tap an underlined word to see the ${language} behind it.`
+                : `No words in this verse are linked to the ${language} yet.`,
+        };
     }
 
     return {

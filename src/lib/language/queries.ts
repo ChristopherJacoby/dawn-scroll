@@ -1,5 +1,5 @@
 import "server-only";
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import type { VerseRefInput } from "@/lib/verse-ref";
 import type {
     MorphologicalFeature,
@@ -52,7 +52,7 @@ function mapEntry(row: StrongsRow): StrongsEntry {
 export async function getStrongsEntry(
     number: string,
 ): Promise<StrongsEntry | null> {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data, error } = await supabase
         .from("strongs_entries")
         .select(STRONGS_COLUMNS)
@@ -66,7 +66,7 @@ export async function getStrongsEntry(
 export async function getVerseWordStudy(
     ref: VerseRefInput,
 ): Promise<VerseWordStudy | null> {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data: verse, error } = await supabase
         .from("verses")
         .select(
