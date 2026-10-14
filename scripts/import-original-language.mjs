@@ -16,7 +16,7 @@ import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { alignTokens } from "../src/lib/language/align.ts";
 import { parseMorphologyExpansion } from "../src/lib/language/morphology.ts";
-import { normalizeStrongs, tokenizeVerse } from "../src/lib/language/text.ts";
+import { normalizeStrongs, normalizeToken, tokenizeVerse } from "../src/lib/language/text.ts";
 
 const ROOT = new URL("../", import.meta.url).pathname;
 const DIR = `${ROOT}data/original-language`;
@@ -170,37 +170,74 @@ function kjvRef(ref) {
 }
 const strongsIn = (s) => [...(s ?? "").matchAll(/[GH]\d{1,4}[A-Za-z]?/g)].map((m) => normalizeStrongs(m[0])).filter(Boolean);
 
-/** `order` sorts words within a verse (edition chapter, verse, word #). */
-function addWord(byVerse, slug, [chapter, verse], order, word) {
-  const key = verseKey(slug, chapter, verse);
-  if (!byVerse.has(key)) byVerse.set(key, new Map());
-  const words = byVerse.get(key);
-  if (!words.has(order)) words.set(order, word); // first variant (K/Q) wins
+/**
+ * Words are grouped by KJV verse but ordered (and de-duplicated) by their
+ * position in the source edition: `key` identifies the word (edition
+ * verse + word number), `sort` orders it. K/Q variants share a key; the
+ * first wins.
+ */
+function addWord(byVerse, slug, [chapter, verse], key, sort, word) {
+  const verseKeyStr = verseKey(slug, chapter, verse);
+  if (!byVerse.has(verseKeyStr)) byVerse.set(verseKeyStr, new Map());
+  const words = byVerse.get(verseKeyStr);
+  if (!words.has(key)) words.set(key, { ...word, sort });
 }
-const wordOrder = (ref) => Number(ref[2]) * 1e6 + Number(ref[3]) * 1e3 + Number(ref[5]);
+
+/** The edition's own chapter/verse: TAHOT's (Hebrew) ref when given, else the main ref. */
+function nativeRef(ref) {
+  const hebrew = ref[4].match(/\((\d+)\.(\d+)\)/);
+  return hebrew ? [Number(hebrew[1]), Number(hebrew[2])] : [Number(ref[2]), Number(ref[3])];
+}
+
+/**
+ * Whether an editions list ("NA28+…+TR»2+Byz»2") includes the KJV's Greek
+ * (TR, or STEP's KJV label), and that word's position shift there: »N
+ * means N places later in TR, «N earlier.
+ */
+function kjvEdition(editions) {
+  for (const edition of (editions ?? "").split("+")) {
+    const m = edition.trim().match(/^(TR|KJV)(?:([«»])(\d+))?$/);
+    if (m) return { included: true, shift: m[2] === "»" ? Number(m[3]) : m[2] === "«" ? -Number(m[3]) : 0 };
+  }
+  return { included: false, shift: 0 };
+}
+
+const VARIANT = /(\S+)\s+\([tT]=([^)]*)\)\s*(.*?)\s+-\s+([GH]\d{1,4}[A-Za-z]?)=(\S+)\s+in:\s*(\S+)/g;
 
 function parseTagnt(file, byVerse) {
   for (const line of readFileSync(`${RAW}/${file}`, "utf8").split(/\r?\n/)) {
     const ref = STEP_REF.exec(line);
     if (!ref) continue;
     const cols = line.split("\t");
-    // KJV translates the Textus Receptus; skip words absent from it.
-    // Editions look like "NA28+…+TR+Byz«14.24" (« notes a placement).
-    const editions = (cols[5] ?? "").split("+").map((e) => e.split("«")[0].trim());
-    if (!editions.includes("TR")) continue;
     const slug = SLUG_BY_STEP.get(ref[1]);
     if (!slug) throw new Error(`Unknown book ${ref[1]}`);
-    const [form, translit] = [cols[1].replace(/\s*\(.*$/, ""), cols[1].match(/\(([^)]*)\)/)?.[1] ?? ""];
-    const [strongs, morph] = cols[3].split("=");
+    // The KJV translates the Textus Receptus. Use the row's word when TR
+    // (or STEP's "KJV") has it; otherwise TR's reading may be a variant
+    // ("word (t=…) gloss - G1905=V-IAI-3P in: TR+Byz").
+    let edition = kjvEdition(cols[5]);
+    let form = cols[1].replace(/\s*\(.*$/, "");
+    let translit = cols[1].match(/\(([^)]*)\)/)?.[1] ?? "";
+    let gloss = cols[2];
+    let [strongs, morph] = cols[3].split("=");
+    if (!edition.included) {
+      const variant = [...(cols[6] ?? "").matchAll(VARIANT)].find((v) => kjvEdition(v[6]).included);
+      if (!variant) continue;
+      edition = kjvEdition(variant[6]);
+      [form, translit, gloss, strongs, morph] = [variant[1], variant[2], variant[3], variant[4], variant[5]];
+    }
     const s = normalizeStrongs(strongs);
     if (!s) continue;
-    addWord(byVerse, slug, kjvRef(ref), wordOrder(ref), {
-      w: form.replace(/[,.;:·⸀⸂⸃]+$/u, ""),
+    const [c, v] = nativeRef(ref);
+    const n = Number(ref[5]);
+    // Shifted words sort just past (») or before («) the slot they move to.
+    const position = n + edition.shift + Math.sign(edition.shift) * 0.5;
+    addWord(byVerse, slug, kjvRef(ref), `${c}.${v}#${n}`, c * 1e6 + v * 1e3 + position, {
+      w: form.replace(/[,.;:·¶⸀⸂⸃]+$/u, ""),
       x: translit,
       s,
       // Crasis forms carry "CONJ + G5101"; the code is the part before " + ".
       m: morph?.split(" + ")[0].trim() || null,
-      g: cols[2].replace(/[,.;:]+$/, "").trim(),
+      g: gloss.replace(/[,.;:]+$/, "").trim(),
       alt: strongsIn(cols[12]),
     });
   }
@@ -221,7 +258,9 @@ function parseTahot(file, byVerse) {
     if (!s) continue;
     const grammar = cols[5] ?? "";
     const morphSegment = grammar.slice(1).split("/")[main];
-    addWord(byVerse, slug, kjvRef(ref), wordOrder(ref), {
+    const [c, v] = nativeRef(ref);
+    const n = Number(ref[5]);
+    addWord(byVerse, slug, kjvRef(ref), `${c}.${v}#${n}`, c * 1e6 + v * 1e3 + n, {
       w: cols[1].replaceAll("/", "").replaceAll("\\", ""),
       x: cols[2].replace(/[/.]/g, "").toLowerCase(),
       s,
@@ -266,21 +305,44 @@ function parseTaggedKjv() {
   return verses;
 }
 
+let phraseCount = 0;
+
 function parseUsfmVerse(raw) {
   const text = raw
     .replace(/\\f [\s\S]*?\\f\*/g, " ")
     .replace(/\\x [\s\S]*?\\x\*/g, " ")
     // Tag each word of a \w phrase with its Strong's number: word⟦G3056⟧
-    .replace(/\\\+?w ([^|\\]*?)\|strong="([^"]+)"[^\\]*\\\+?w\*/g, (_, phrase, strongs) =>
-      phrase.trim().split(/\s+/).map((word) => `${word}⟦${strongs}⟧`).join(" "))
-    .replace(/\\[a-z0-9]+\*?/gi, " ");
+    // Tag each word of a \\w phrase with its Strong's number and phrase
+    // id (word⟦G3056#4⟧), so a phrase links to one original word.
+    .replace(/\\\+?w ([^|\\]*?)\|strong="([^"]+)"[^\\]*\\\+?w\*/g, (_, phrase, strongs) => {
+      const id = phraseCount++;
+      return phrase.trim().split(/\s+/).map((word) => `${word}⟦${strongs}#${id}⟧`).join(" ");
+    })
+    .replace(/\\\+?[a-z0-9]+\*?/gi, " ");
   return tokenizeVerse(text).map((token) => {
-    const tag = token.match(/⟦([^⟧]+)⟧/)?.[1];
-    return { text: token.replace(/⟦[^⟧]+⟧/g, ""), strongs: tag ? normalizeStrongs(tag) : null };
+    const tag = token.match(/⟦([^#⟧]+)#(\d+)⟧/);
+    return {
+      text: token.replace(/⟦[^⟧]+⟧/g, ""),
+      strongs: tag ? normalizeStrongs(tag[1]) : null,
+      phrase: tag ? Number(tag[2]) : null,
+    };
   });
 }
 
 // ── Build ────────────────────────────────────────────────────────────────
+
+// Strong's numbers the two sources assign differently to the same word
+// (the KJV tagging on the left, STEPBible on the right).
+const EQUIVALENT_STRONGS = [
+  ["G1492", "G6063"], // eidō, "know"
+  ["G2046", "G4483"], // eipon/rheō, "say/speak"
+  ["G3440", "G3441"], // monon/monos, "only"
+  ["G3187", "G3173"], // meizōn/megas, "greater"
+  ["H7125", "H7122"], // qirah/qara, "to meet"
+  ["H3240", "H5117"], // yanach/nuach, "rest, lay"
+];
+const CANONICAL = new Map(EQUIVALENT_STRONGS.flatMap(([a, b]) => [[a, a], [b, a]]));
+const sameStrongs = (a, b) => (CANONICAL.get(a) ?? a) === (CANONICAL.get(b) ?? b);
 
 function csvRow(values) {
   return values
@@ -288,8 +350,31 @@ function csvRow(values) {
     .join(",");
 }
 
+/**
+ * Make Strong's text readable on its own: name the words a derivation
+ * points to ("from G3004;" → "from λέγω (G3004)"), drop the KJV-usage
+ * markers for idiomatic (X) and compound (+) renderings, and don't repeat
+ * a definition that is just the KJV usage.
+ */
+function tidyEntries(entries) {
+  const lemmas = new Map(entries.map((e) => [e.number, e.lemma]));
+  const name = (text) =>
+    text.replace(/\b([GH])0*(\d{1,4})\b/g, (ref, lang, n) => {
+      const lemma = lemmas.get(normalizeStrongs(`${lang}${n}`));
+      return lemma ? `${lemma} (${lang}${n})` : ref;
+    });
+  for (const entry of entries) {
+    if (entry.derivation) entry.derivation = name(entry.derivation).replace(/[;,.\s]+$/, "");
+    if (entry.kjv_usage) {
+      entry.kjv_usage = entry.kjv_usage.replace(/(^|[,;(]\s*)[X+]\s+/g, "$1").trim();
+      if (entry.kjv_usage === entry.definition) entry.kjv_usage = null;
+    }
+  }
+  return entries;
+}
+
 function build() {
-  const strongs = [...parseGreekStrongs(), ...parseHebrewStrongs()];
+  const strongs = tidyEntries([...parseGreekStrongs(), ...parseHebrewStrongs()]);
   const known = new Set(strongs.map((e) => e.number));
   const morphology = [...parseMorphologyCodes("TEGMC.txt", "greek"), ...parseMorphologyCodes("TEHMC.txt", "hebrew")];
   const morphCodes = new Set(morphology.map((m) => m.code));
@@ -298,7 +383,7 @@ function build() {
   for (const file of readdirSync(RAW).filter((f) => f.startsWith("TAHOT"))) parseTahot(file, originalsByVerse);
   for (const file of readdirSync(RAW).filter((f) => f.startsWith("TAGNT"))) parseTagnt(file, originalsByVerse);
   const originals = new Map(
-    [...originalsByVerse].map(([key, words]) => [key, [...words.entries()].sort((a, b) => a[0] - b[0]).map(([, w]) => w)]),
+    [...originalsByVerse].map(([key, words]) => [key, [...words.values()].sort((a, b) => a.sort - b.sort)]),
   );
 
   const tagged = parseTaggedKjv();
@@ -317,19 +402,38 @@ function build() {
     if (!theirs) stats.versesWithoutTags++;
     if (!words.length) stats.versesWithoutOriginals.push(key);
     const alignment = theirs ? alignTokens(theirs.map((t) => t.text), ours) : [];
-    // Repeated Strong's numbers in a verse map to repeated original words in order.
-    const nextIndex = new Map();
-    const tokens = ours.map((_, i) => {
+    // Each tagged phrase links to one original word: an unused one with the
+    // same (or equivalent) Strong's number, preferring one whose gloss
+    // contains the English word, else the next in order.
+    const used = new Set();
+    const byPhrase = new Map();
+    const tokens = ours.map((token, i) => {
       const source = alignment[i] == null ? null : theirs[alignment[i]];
       const s = source?.strongs;
       if (!s) return null;
       stats.taggedTokens++;
       if (!known.has(s)) stats.unknownStrongs.add(s);
-      const candidates = words.flatMap((w, index) => (w.s === s || w.alt.includes(s) ? [index] : []));
-      const used = nextIndex.get(s) ?? 0;
-      const o = candidates.length ? candidates[Math.min(used, candidates.length - 1)] : null;
-      nextIndex.set(s, used + 1);
-      if (o !== null) stats.linkedTokens++;
+      if (byPhrase.has(source.phrase)) {
+        const o = byPhrase.get(source.phrase);
+        if (o !== null) stats.linkedTokens++;
+        return { s, o };
+      }
+      const phraseWords = new Set(
+        ours.filter((_, j) => alignment[j] != null && theirs[alignment[j]].phrase === source.phrase).map(normalizeToken),
+      );
+      const candidates = words.flatMap((w, index) =>
+        sameStrongs(w.s, s) || w.alt.some((a) => sameStrongs(a, s)) ? [index] : [],
+      );
+      const unused = candidates.filter((index) => !used.has(index));
+      const glossed = unused.find((index) =>
+        words[index].g.split(/[\s/]+/).some((g) => phraseWords.has(normalizeToken(g))),
+      );
+      const o = glossed ?? unused[0] ?? candidates.at(-1) ?? null;
+      if (o !== null) {
+        used.add(o);
+        stats.linkedTokens++;
+      }
+      byPhrase.set(source.phrase, o);
       return { s, o };
     });
     if (tokens.some(Boolean)) wordMap.push([slug, chapter, verse, JSON.stringify(tokens)]);
@@ -399,6 +503,14 @@ join public.books b on b.slug = s.book_slug
 join public.translations t on t.slug = 'kjv'
 join public.verses v on v.translation_id = t.id and v.book_id = b.id
   and v.chapter_number = s.chapter and v.verse_number = s.verse;
+-- Inner joins drop rows silently; refuse to commit if any went missing.
+do $$
+begin
+  if (select count(*) from public.verse_original_words) <> (select count(*) from stage_vow)
+     or (select count(*) from public.verse_word_map) <> (select count(*) from stage_map) then
+    raise exception 'Some staged rows did not match a book or verse; rolling back.';
+  end if;
+end $$;
 select (select count(*) from public.strongs_entries) as strongs_entries,
        (select count(*) from public.morphology_codes) as morphology_codes,
        (select count(*) from public.verse_original_words) as verse_original_words,
