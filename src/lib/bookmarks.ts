@@ -1,46 +1,33 @@
 import "server-only";
+import {
+    mapAnnotatedVerse,
+    VERSE_EMBED,
+    type AnnotatedVerse,
+    type VerseEmbedRow,
+} from "@/lib/annotations";
 import { getUser } from "@/lib/auth";
 import { resolveVerseRef, type ResolvedVerseRef } from "@/lib/bible/queries";
 import { fail, ok, type Result } from "@/lib/result";
 import { createClient } from "@/lib/supabase/server";
 import { isUuid, parseVerseRef } from "@/lib/verse-ref";
 
-export interface Bookmark {
+export interface Bookmark extends AnnotatedVerse {
     id: string;
-    bookSlug: string;
-    bookName: string;
-    bookOrder: number;
-    chapterNumber: number;
-    verseNumber: number;
-    translation: string;
-    text: string;
     createdAt: string;
 }
 
-const BOOKMARK_COLUMNS =
-    "id, chapter_number, verse_number, created_at, books!inner(slug, name, book_order), translations(abbreviation), verses(verse_text)";
+const BOOKMARK_COLUMNS = `id, created_at, ${VERSE_EMBED}`;
 
-interface BookmarkRow {
+interface BookmarkRow extends VerseEmbedRow {
     id: string;
-    chapter_number: number;
-    verse_number: number;
     created_at: string;
-    books: { slug: string; name: string; book_order: number };
-    translations: { abbreviation: string };
-    verses: { verse_text: string };
 }
 
 function mapBookmark(row: BookmarkRow): Bookmark {
     return {
         id: row.id,
-        bookSlug: row.books.slug,
-        bookName: row.books.name,
-        bookOrder: row.books.book_order,
-        chapterNumber: row.chapter_number,
-        verseNumber: row.verse_number,
-        translation: row.translations.abbreviation,
-        text: row.verses.verse_text,
         createdAt: row.created_at,
+        ...mapAnnotatedVerse(row),
     };
 }
 
