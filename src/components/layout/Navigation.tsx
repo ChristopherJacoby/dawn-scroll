@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
     BookOpen,
+    Bookmark,
     Compass,
     Search,
     Settings,
@@ -17,6 +18,7 @@ import { cn } from "@/lib/cn";
 const navItems = [
     { href: "/reader", icon: BookOpen, label: "Reader" },
     { href: "/search", icon: Search, label: "Search" },
+    { href: "/bookmarks", icon: Bookmark, label: "Bookmarks" },
     { href: "/explore", icon: Compass, label: "Explore" },
     { href: "/account", icon: User, label: "Account" },
     { href: "/settings", icon: Settings, label: "Settings" },

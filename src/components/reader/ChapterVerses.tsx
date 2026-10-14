@@ -1,15 +1,21 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { BookmarkVerseAction } from "@/components/reader/BookmarkVerseAction";
 import { CopyVerseAction } from "@/components/reader/CopyVerseAction";
 import { VerseActionBar } from "@/components/reader/VerseActionBar";
 import { VerseText } from "@/components/reader/VerseText";
+import { useVerseBookmarks } from "@/components/reader/useVerseBookmarks";
 
 interface ChapterVersesProps {
+    bookSlug: string;
     bookName: string;
     chapterNumber: number;
-    translation: string;
+    translation: { slug: string; abbreviation: string };
     verses: { number: number; text: string }[];
+    signedIn: boolean;
+    /** Verse number → bookmark id for this chapter (empty when signed out). */
+    bookmarks: Record<number, string>;
 }
 
 /**
@@ -17,12 +23,24 @@ interface ChapterVersesProps {
  * chapter (via `key`) so a selection doesn't carry over on navigation.
  */
 export function ChapterVerses({
+    bookSlug,
     bookName,
     chapterNumber,
     translation,
     verses,
+    signedIn,
+    bookmarks: initialBookmarks,
 }: ChapterVersesProps) {
     const [selected, setSelected] = useState<number | null>(null);
+    const bookmarks = useVerseBookmarks({
+        initial: initialBookmarks,
+        bookSlug,
+        chapterNumber,
+        translation: translation.slug,
+    });
+    const signInHref = signedIn
+        ? null
+        : `/login?next=${encodeURIComponent(`/read/${bookSlug}/${chapterNumber}`)}`;
     const toolbarRef = useRef<HTMLDivElement>(null);
     const focusToolbar = useRef(false);
 
@@ -83,6 +101,7 @@ export function ChapterVerses({
                         number={verse.number}
                         text={verse.text}
                         selected={verse.number === selected}
+                        bookmarked={bookmarks.isBookmarked(verse.number)}
                         onToggle={toggle}
                     />
                 ))}
@@ -96,10 +115,17 @@ export function ChapterVerses({
                     reference={reference}
                     onClose={close}
                 >
+                    <BookmarkVerseAction
+                        bookmarked={bookmarks.isBookmarked(
+                            selectedVerse.number,
+                        )}
+                        onToggle={() => bookmarks.toggle(selectedVerse.number)}
+                        signInHref={signInHref}
+                    />
                     <CopyVerseAction
                         text={selectedVerse.text}
                         reference={reference}
-                        translation={translation}
+                        translation={translation.abbreviation}
                     />
                 </VerseActionBar>
             )}
