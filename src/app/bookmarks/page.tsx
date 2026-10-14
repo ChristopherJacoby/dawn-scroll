@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { BookmarkList } from "@/components/bookmarks/BookmarkList";
+import { SortLinks } from "@/components/library/SortLinks";
 import { requireAuth } from "@/lib/auth";
 import { listBookmarks } from "@/lib/bookmarks";
-import { cn } from "@/lib/cn";
 import { compareCanonical } from "@/lib/verse-ref";
 
 export const metadata: Metadata = {
@@ -41,29 +40,12 @@ export default async function BookmarksPage({
                         </h1>
                     </div>
                     {bookmarks.length > 1 && (
-                        <nav
-                            aria-label="Sort bookmarks"
-                            className="flex rounded-md border border-reading-border-strong p-0.5 text-sm"
-                        >
-                            {SORTS.map(({ value, label }) => (
-                                <Link
-                                    key={value}
-                                    href={`/bookmarks?sort=${value}`}
-                                    aria-current={
-                                        order === value ? "true" : undefined
-                                    }
-                                    className={cn(
-                                        "rounded px-3 py-1.5 font-medium transition-colors",
-                                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-reading-focus",
-                                        order === value
-                                            ? "bg-reading-accent text-reading-accent-contrast"
-                                            : "text-reading-text hover:bg-reading-bg-subtle",
-                                    )}
-                                >
-                                    {label}
-                                </Link>
-                            ))}
-                        </nav>
+                        <SortLinks
+                            label="Sort bookmarks"
+                            basePath="/bookmarks"
+                            current={order}
+                            options={SORTS}
+                        />
                     )}
                 </div>
 
