@@ -15,6 +15,8 @@ interface VerseTextProps {
     bookmarked: boolean;
     highlight: HighlightColor | null;
     hasNote: boolean;
+    /** Word-study rendering of the text (tappable words), when active. */
+    study?: React.ReactNode;
     onToggle: (number: number, viaKeyboard: boolean) => void;
 }
 
@@ -30,6 +32,7 @@ export function VerseText({
     bookmarked,
     highlight,
     hasNote,
+    study,
     onToggle,
 }: VerseTextProps) {
     function handleVerseClick(event: React.MouseEvent<HTMLParagraphElement>) {
@@ -97,10 +100,11 @@ export function VerseText({
                             HIGHLIGHT_BG[highlight],
                         ),
                     selected &&
+                        !study &&
                         "underline decoration-dotted decoration-2 underline-offset-[0.3em] decoration-[var(--reading-border-strong)]",
                 )}
             >
-                {text}
+                {study ?? text}
             </span>
         </p>
     );
