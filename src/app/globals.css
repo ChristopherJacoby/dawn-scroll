@@ -92,96 +92,99 @@
 }
 
 /* ─── Reading mode utility classes ───────────────────────────────────────── */
-/*     Written directly so var() stays live at runtime (not resolved by Tailwind) */
-@layer utilities {
-    .text-reading-text {
+/*     @utility (not @layer utilities) so variants like hover: and
+       focus-visible: work; var() stays live at runtime (not resolved by
+       Tailwind, unlike @theme inline). */
+@utility text-reading-text {
+    color: var(--reading-text);
+}
+@utility text-reading-text-muted {
+    color: var(--reading-text-muted);
+}
+@utility bg-reading-bg {
+    background-color: var(--reading-bg);
+}
+@utility bg-reading-bg-subtle {
+    background-color: var(--reading-bg-subtle);
+}
+@utility border-reading-border {
+    border-color: var(--reading-border);
+}
+@utility bg-reading-surface {
+    background-color: var(--reading-surface);
+}
+@utility bg-reading-surface-raised {
+    background-color: var(--reading-surface-raised);
+}
+@utility bg-reading-note {
+    background-color: var(--reading-note);
+}
+@utility bg-reading-highlight {
+    background-color: var(--reading-highlight);
+}
+@utility bg-reading-selection {
+    background-color: var(--reading-selection);
+}
+@utility text-reading-accent {
+    color: var(--reading-accent);
+}
+@utility text-reading-accent-contrast {
+    color: var(--reading-accent-contrast);
+}
+/* Links are underlined, not color-only: sage vs body brown is a hue
+   distinction (< 3:1 luminance, WCAG G183) that colorblind readers miss */
+@utility text-reading-link {
+    color: var(--reading-link);
+    text-decoration-line: underline;
+}
+@utility text-reading-citation {
+    color: var(--reading-citation);
+    text-decoration-line: underline;
+}
+@utility bg-reading-accent {
+    background-color: var(--reading-accent);
+}
+@utility border-reading-divider {
+    border-color: var(--reading-divider);
+}
+@utility bg-reading-divider {
+    background-color: var(--reading-divider);
+}
+@utility border-reading-border-strong {
+    border-color: var(--reading-border-strong);
+}
+@utility text-reading-danger {
+    color: var(--reading-danger);
+}
+@utility border-reading-danger {
+    border-color: var(--reading-danger);
+}
+@utility ring-reading-focus {
+    --tw-ring-color: var(--reading-focus);
+}
+@utility outline-reading-focus {
+    outline-color: var(--reading-focus);
+}
+@utility selection-reading {
+    &::selection {
+        background-color: var(--reading-selection);
         color: var(--reading-text);
     }
-    .text-reading-text-muted {
-        color: var(--reading-text-muted);
+}
+/* Scripture text size: the user's font-scale preference (0.8–1.4, set on
+   <body>) multiplies the base size; line-height stays proportional. */
+@utility reading-scale {
+    font-size: calc(1.35rem * var(--reading-font-scale, 1));
+    line-height: 1.65;
+    @media (width >= 48rem) {
+        font-size: calc(1.5rem * var(--reading-font-scale, 1));
     }
-    .bg-reading-bg {
-        background-color: var(--reading-bg);
-    }
-    .bg-reading-bg-subtle {
-        background-color: var(--reading-bg-subtle);
-    }
-    .border-reading-border {
-        border-color: var(--reading-border);
-    }
-    .bg-reading-surface {
-        background-color: var(--reading-surface);
-    }
-    .bg-reading-surface-raised {
-        background-color: var(--reading-surface-raised);
-    }
-    .bg-reading-note {
-        background-color: var(--reading-note);
-    }
-    .bg-reading-highlight {
-        background-color: var(--reading-highlight);
-    }
-    .bg-reading-selection {
-        background-color: var(--reading-selection);
-    }
-    .text-reading-accent {
-        color: var(--reading-accent);
-    }
-    .text-reading-accent-contrast {
-        color: var(--reading-accent-contrast);
-    }
-    /* Links are underlined, not color-only: sage vs body brown is a hue
-       distinction (< 3:1 luminance, WCAG G183) that colorblind readers miss */
-    .text-reading-link {
-        color: var(--reading-link);
-        text-decoration-line: underline;
-    }
-    .text-reading-citation {
-        color: var(--reading-citation);
-        text-decoration-line: underline;
-    }
-    .bg-reading-accent {
-        background-color: var(--reading-accent);
-    }
-    .border-reading-divider {
-        border-color: var(--reading-divider);
-    }
-    .border-reading-border-strong {
-        border-color: var(--reading-border-strong);
-    }
-    .text-reading-danger {
-        color: var(--reading-danger);
-    }
-    .border-reading-danger {
-        border-color: var(--reading-danger);
-    }
-    .ring-reading-focus {
-        --tw-ring-color: var(--reading-focus);
-    }
-    .outline-reading-focus {
-        outline-color: var(--reading-focus);
-    }
-    .selection-reading {
-        &::selection {
-            background-color: var(--reading-selection);
-            color: var(--reading-text);
-        }
-    }
-    /* Scripture text size: the user's font-scale preference (0.8–1.4, set on
-       <body>) multiplies the base size; line-height stays proportional. */
-    .reading-scale {
-        font-size: calc(1.35rem * var(--reading-font-scale, 1));
-        line-height: 1.65;
-        @media (width >= 48rem) {
-            font-size: calc(1.5rem * var(--reading-font-scale, 1));
-        }
-    }
-    /* Applied by VerseAnchorScroll to the verse an anchor navigation lands
-       on; the delay holds the highlight briefly before the fade begins. */
-    .verse-flash {
-        border-radius: 0.375rem;
-        animation: verse-flash 2.5s ease-out 0.4s both;
-    }
+}
+/* Applied by VerseAnchorScroll to the verse an anchor navigation lands
+   on; the delay holds the highlight briefly before the fade begins. */
+@utility verse-flash {
+    border-radius: 0.375rem;
+    animation: verse-flash 2.5s ease-out 0.4s both;
 }
 
 @keyframes verse-flash {

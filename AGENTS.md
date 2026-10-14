@@ -12,7 +12,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 <!-- BEGIN:tailwind-rules -->
 # Tailwind v4 — critical gotcha
 
-`@theme inline` resolves `var()` references **statically at build time**. Any utility that must stay live at runtime (e.g. reading-mode color tokens) must be written in `@layer utilities` with a direct `var()` reference, not registered under `@theme inline`.
+`@theme inline` resolves `var()` references **statically at build time**. Any utility that must stay live at runtime (e.g. reading-mode color tokens) must be defined with `@utility` and a direct `var()` reference, not registered under `@theme inline`. Don't use `@layer utilities` for these either: Tailwind v4 won't generate variants (`hover:`, `focus-visible:`) for classes defined there.
 
 See `src/app/globals.css` for the established pattern.
 <!-- END:tailwind-rules -->
