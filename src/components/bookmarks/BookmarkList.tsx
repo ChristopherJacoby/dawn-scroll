@@ -2,46 +2,23 @@
 
 import { Bookmark as BookmarkIcon, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 import { removeBookmarkAction } from "@/app/bookmarks/actions";
+import { useRemovableList } from "@/components/library/useRemovableList";
 import { LocalDate } from "@/components/ui/LocalDate";
-import { useToast } from "@/context/toast";
 import type { Bookmark } from "@/lib/bookmarks";
+import { verseReference } from "@/lib/annotations";
 import { verseHref } from "@/lib/verse-ref";
-
-function reference(bookmark: Bookmark) {
-    return `${bookmark.bookName} ${bookmark.chapterNumber}:${bookmark.verseNumber}`;
-}
 
 export function BookmarkList({
     initialBookmarks,
 }: {
     initialBookmarks: Bookmark[];
 }) {
-    const toast = useToast();
-    // Hide optimistically by id and render from the server's list, so a
-    // failed removal reappears in its original place.
-    const [removed, setRemoved] = useState<ReadonlySet<string>>(new Set());
-    const bookmarks = initialBookmarks.filter((b) => !removed.has(b.id));
-
-    function setHidden(id: string, hidden: boolean) {
-        setRemoved((current) => {
-            const next = new Set(current);
-            if (hidden) next.add(id);
-            else next.delete(id);
-            return next;
-        });
-    }
-
-    async function remove(bookmark: Bookmark) {
-        setHidden(bookmark.id, true);
-        const result = await removeBookmarkAction(bookmark.id).catch(
-            () => null,
-        );
-        if (result && (result.ok || result.status === 404)) return;
-        setHidden(bookmark.id, false);
-        toast.error(`Couldn't remove ${reference(bookmark)}.`);
-    }
+    const { visible: bookmarks, removeItem: remove } = useRemovableList(
+        initialBookmarks,
+        removeBookmarkAction,
+        verseReference,
+    );
 
     if (bookmarks.length === 0) {
         return (
@@ -82,7 +59,7 @@ export function BookmarkList({
                     >
                         <span className="flex flex-wrap items-baseline gap-x-2 text-sm">
                             <span className="font-semibold text-reading-text">
-                                {reference(bookmark)}
+                                {verseReference(bookmark)}
                             </span>
                             <span className="text-xs text-reading-text-muted">
                                 {bookmark.translation} · Added{" "}
@@ -96,7 +73,7 @@ export function BookmarkList({
                     <button
                         type="button"
                         onClick={() => remove(bookmark)}
-                        aria-label={`Remove bookmark: ${reference(bookmark)}`}
+                        aria-label={`Remove bookmark: ${verseReference(bookmark)}`}
                         className="m-2 rounded-md p-2.5 text-reading-text-muted transition-colors hover:bg-reading-bg-subtle hover:text-reading-danger focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-reading-focus"
                     >
                         <Trash2 className="h-4 w-4" aria-hidden="true" />

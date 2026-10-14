@@ -2,12 +2,18 @@
 
 import { Bookmark } from "lucide-react";
 import { cn } from "@/lib/cn";
+import {
+    HIGHLIGHT_BG,
+    HIGHLIGHT_LABELS,
+    type HighlightColor,
+} from "@/lib/highlight-colors";
 
 interface VerseTextProps {
     number: number;
     text: string;
     selected: boolean;
     bookmarked: boolean;
+    highlight: HighlightColor | null;
     onToggle: (number: number, viaKeyboard: boolean) => void;
 }
 
@@ -21,6 +27,7 @@ export function VerseText({
     text,
     selected,
     bookmarked,
+    highlight,
     onToggle,
 }: VerseTextProps) {
     function handleVerseClick(event: React.MouseEvent<HTMLParagraphElement>) {
@@ -64,9 +71,20 @@ export function VerseText({
                         <span className="sr-only">(bookmarked)</span>
                     </>
                 )}
+                {highlight && (
+                    <span className="sr-only">
+                        (highlighted {HIGHLIGHT_LABELS[highlight].toLowerCase()}
+                        )
+                    </span>
+                )}
             </sup>
             <span
                 className={cn(
+                    highlight &&
+                        cn(
+                            "rounded-sm px-0.5 box-decoration-clone",
+                            HIGHLIGHT_BG[highlight],
+                        ),
                     selected &&
                         "underline decoration-dotted decoration-2 underline-offset-[0.3em] decoration-[var(--reading-border-strong)]",
                 )}

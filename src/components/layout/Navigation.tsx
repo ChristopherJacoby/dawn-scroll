@@ -6,6 +6,7 @@ import { useState } from "react";
 import {
     BookOpen,
     Bookmark,
+    Highlighter,
     Compass,
     Search,
     Settings,
@@ -19,6 +20,7 @@ const navItems = [
     { href: "/reader", icon: BookOpen, label: "Reader" },
     { href: "/search", icon: Search, label: "Search" },
     { href: "/bookmarks", icon: Bookmark, label: "Bookmarks" },
+    { href: "/highlights", icon: Highlighter, label: "Highlights" },
     { href: "/explore", icon: Compass, label: "Explore" },
     { href: "/account", icon: User, label: "Account" },
     { href: "/settings", icon: Settings, label: "Settings" },

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { BookmarkVerseAction } from "@/components/reader/BookmarkVerseAction";
 import { CopyVerseAction } from "@/components/reader/CopyVerseAction";
+import { HighlightVerseAction } from "@/components/reader/HighlightVerseAction";
 import { VerseActionBar } from "@/components/reader/VerseActionBar";
 import { VerseText } from "@/components/reader/VerseText";
 import { useVerseAnnotations } from "@/components/reader/useVerseAnnotations";
@@ -10,6 +11,12 @@ import {
     addBookmarkAction,
     removeBookmarkAction,
 } from "@/app/bookmarks/actions";
+import {
+    removeHighlightAction,
+    setHighlightAction,
+} from "@/app/highlights/actions";
+import type { HighlightColor } from "@/lib/highlight-colors";
+import type { VerseHighlight } from "@/lib/highlights";
 import { ok } from "@/lib/result";
 
 interface ChapterVersesProps {
@@ -21,6 +28,8 @@ interface ChapterVersesProps {
     signedIn: boolean;
     /** Verse number → bookmark id for this chapter (empty when signed out). */
     bookmarks: Record<number, string>;
+    /** Verse number → highlight for this chapter (empty when signed out). */
+    highlights: Record<number, VerseHighlight>;
 }
 
 /**
@@ -35,9 +44,11 @@ export function ChapterVerses({
     verses,
     signedIn,
     bookmarks: initialBookmarks,
+    highlights: initialHighlights,
 }: ChapterVersesProps) {
     const [selected, setSelected] = useState<number | null>(null);
     const bookmarks = useVerseAnnotations(initialBookmarks);
+    const highlights = useVerseAnnotations(initialHighlights);
     const signInHref = signedIn
         ? null
         : `/login?next=${encodeURIComponent(`/read/${bookSlug}/${chapterNumber}`)}`;
@@ -65,6 +76,30 @@ export function ChapterVerses({
                 }
                 const result = await removeBookmarkAction(id);
                 // Already gone (e.g. removed on another page) is the goal.
+                return result.ok || result.status === 404
+                    ? ok(undefined)
+                    : result;
+            },
+        );
+    }
+
+    function setHighlight(verse: number, color: HighlightColor | null) {
+        highlights.update(
+            verse,
+            // "" stands in for a new highlight's id until the server's.
+            (current) => (color ? { id: current?.id ?? "", color } : undefined),
+            async (current) => {
+                if (color) {
+                    return setHighlightAction({
+                        book: bookSlug,
+                        chapter: chapterNumber,
+                        verse,
+                        translation: translation.slug,
+                        color,
+                    });
+                }
+                if (!current) return ok(undefined);
+                const result = await removeHighlightAction(current.id);
                 return result.ok || result.status === 404
                     ? ok(undefined)
                     : result;
@@ -125,6 +160,7 @@ export function ChapterVerses({
                         text={verse.text}
                         selected={verse.number === selected}
                         bookmarked={bookmarks.get(verse.number) !== undefined}
+                        highlight={highlights.get(verse.number)?.color ?? null}
                         onToggle={toggle}
                     />
                 ))}
@@ -138,6 +174,15 @@ export function ChapterVerses({
                     reference={reference}
                     onClose={close}
                 >
+                    <HighlightVerseAction
+                        color={
+                            highlights.get(selectedVerse.number)?.color ?? null
+                        }
+                        onChange={(color) =>
+                            setHighlight(selectedVerse.number, color)
+                        }
+                        signInHref={signInHref}
+                    />
                     <BookmarkVerseAction
                         bookmarked={
                             bookmarks.get(selectedVerse.number) !== undefined
