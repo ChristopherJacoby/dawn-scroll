@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
     BookOpen,
+    CalendarCheck,
     Bookmark,
     Highlighter,
     NotebookPen,
@@ -23,6 +24,7 @@ const navItems = [
     { href: "/bookmarks", icon: Bookmark, label: "Bookmarks" },
     { href: "/highlights", icon: Highlighter, label: "Highlights" },
     { href: "/notes", icon: NotebookPen, label: "Notes" },
+    { href: "/plans", icon: CalendarCheck, label: "Plans" },
     { href: "/explore", icon: Compass, label: "Explore" },
     { href: "/account", icon: User, label: "Account" },
     { href: "/settings", icon: Settings, label: "Settings" },
