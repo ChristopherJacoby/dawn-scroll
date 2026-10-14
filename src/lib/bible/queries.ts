@@ -137,26 +137,43 @@ function toChapterReference(
     };
 }
 
+// PostgREST caps every response at the project's max-rows (1,000); the
+// KJV has 1,189 chapters, so a single select silently drops the rest.
+const CHAPTER_PAGE_SIZE = 1000;
+
+async function getAllChapterRows(): Promise<ChapterRow[]> {
+    const supabase = await createClient();
+    const rows: ChapterRow[] = [];
+    for (let from = 0; ; from += CHAPTER_PAGE_SIZE) {
+        // (book_id, chapter_number) is unique, so pages never overlap.
+        const { data, error } = await supabase
+            .from("chapters")
+            .select("id, book_id, chapter_number, verse_count")
+            .order("book_id", { ascending: true })
+            .order("chapter_number", { ascending: true })
+            .range(from, from + CHAPTER_PAGE_SIZE - 1);
+        if (error) throw error;
+        rows.push(...((data ?? []) as ChapterRow[]));
+        if ((data ?? []).length < CHAPTER_PAGE_SIZE) return rows;
+    }
+}
+
 export async function getBibleBooks(): Promise<BookWithChapters[]> {
     const supabase = await createClient();
-    const [booksResult, chaptersResult] = await Promise.all([
+    const [booksResult, chapterRows] = await Promise.all([
         supabase
             .from("books")
             .select(
                 "id, osis_id, slug, name, common_abbreviation, testament, book_order, chapters_count",
             )
             .order("book_order", { ascending: true }),
-        supabase
-            .from("chapters")
-            .select("id, book_id, chapter_number, verse_count")
-            .order("chapter_number", { ascending: true }),
+        getAllChapterRows(),
     ]);
 
     if (booksResult.error) throw booksResult.error;
-    if (chaptersResult.error) throw chaptersResult.error;
 
     const chaptersByBook = new Map<number, Chapter[]>();
-    for (const row of (chaptersResult.data ?? []) as ChapterRow[]) {
+    for (const row of chapterRows) {
         const chapter = mapChapter(row);
         const existing = chaptersByBook.get(chapter.bookId) ?? [];
         existing.push(chapter);
