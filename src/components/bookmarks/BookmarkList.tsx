@@ -3,6 +3,8 @@
 import { Bookmark as BookmarkIcon, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { removeBookmarkAction } from "@/app/bookmarks/actions";
+import { LocalDate } from "@/components/ui/LocalDate";
 import { useToast } from "@/context/toast";
 import type { Bookmark } from "@/lib/bookmarks";
 import { verseHref } from "@/lib/verse-ref";
@@ -17,20 +19,27 @@ export function BookmarkList({
     initialBookmarks: Bookmark[];
 }) {
     const toast = useToast();
-    const [bookmarks, setBookmarks] = useState(initialBookmarks);
+    // Hide optimistically by id and render from the server's list, so a
+    // failed removal reappears in its original place.
+    const [removed, setRemoved] = useState<ReadonlySet<string>>(new Set());
+    const bookmarks = initialBookmarks.filter((b) => !removed.has(b.id));
 
-    async function remove(bookmark: Bookmark) {
-        const index = bookmarks.indexOf(bookmark);
-        setBookmarks((current) => current.filter((b) => b.id !== bookmark.id));
-        const response = await fetch(`/api/bookmarks/${bookmark.id}`, {
-            method: "DELETE",
-        }).catch(() => null);
-        if (response && (response.ok || response.status === 404)) return;
-        setBookmarks((current) => {
-            const next = [...current];
-            next.splice(index, 0, bookmark);
+    function setHidden(id: string, hidden: boolean) {
+        setRemoved((current) => {
+            const next = new Set(current);
+            if (hidden) next.add(id);
+            else next.delete(id);
             return next;
         });
+    }
+
+    async function remove(bookmark: Bookmark) {
+        setHidden(bookmark.id, true);
+        const result = await removeBookmarkAction(bookmark.id).catch(
+            () => null,
+        );
+        if (result && (result.ok || result.status === 404)) return;
+        setHidden(bookmark.id, false);
         toast.error(`Couldn't remove ${reference(bookmark)}.`);
     }
 
@@ -77,18 +86,7 @@ export function BookmarkList({
                             </span>
                             <span className="text-xs text-reading-text-muted">
                                 {bookmark.translation} · Added{" "}
-                                <time
-                                    dateTime={bookmark.createdAt}
-                                    suppressHydrationWarning
-                                >
-                                    {new Date(
-                                        bookmark.createdAt,
-                                    ).toLocaleDateString(undefined, {
-                                        month: "short",
-                                        day: "numeric",
-                                        year: "numeric",
-                                    })}
-                                </time>
+                                <LocalDate iso={bookmark.createdAt} />
                             </span>
                         </span>
                         <span className="line-clamp-2 font-serif text-lg leading-snug text-reading-text">
