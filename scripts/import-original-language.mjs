@@ -103,8 +103,11 @@ function parseGreekStrongs() {
   const entries = [];
   for (const [, num, body] of xml.matchAll(/<entry strongs="(\d+)">([\s\S]*?)<\/entry>/g)) {
     const greek = body.match(/<greek [^>]*\/>/)?.[0] ?? "";
+    // Inline references: <strongsref …/> → "G3004"; <greek unicode="ἄγαν" …/> → "ἄγαν".
     const refs = (s) =>
-      s.replace(/<strongsref language="(GREEK|HEBREW)" strongs="(\d+)"\s*\/>/g, (_, lang, n) => `${lang === "GREEK" ? "G" : "H"}${Number(n)}`);
+      s
+        .replace(/<strongsref language="(GREEK|HEBREW)" strongs="(\d+)"\s*\/>/g, (_, lang, n) => `${lang === "GREEK" ? "G" : "H"}${Number(n)}`)
+        .replace(/<greek [^>]*unicode="([^"]*)"[^>]*\/>/g, "$1");
     const def = collapse(refs(body.match(/<strongs_def>([\s\S]*?)<\/strongs_def>/)?.[1] ?? ""));
     const kjv = collapse(body.match(/<kjv_def>([\s\S]*?)<\/kjv_def>/)?.[1] ?? "").replace(/^:--/, "").replace(/\.$/, "");
     entries.push({
