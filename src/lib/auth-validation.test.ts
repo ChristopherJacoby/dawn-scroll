@@ -85,6 +85,11 @@ describe("safeReturnPath", () => {
         expect(safeReturnPath("//evil.example")).toBe("/reader");
         expect(safeReturnPath("/\\evil.example")).toBe("/reader");
         expect(safeReturnPath("/ok\r\nLocation: x")).toBe("/reader");
+        // Browsers drop tabs/newlines, turning these into "//evil.example".
+        expect(safeReturnPath("/\t/evil.example")).toBe("/reader");
+        expect(safeReturnPath("/\n/evil.example")).toBe("/reader");
+        expect(safeReturnPath("/\u0000/evil.example")).toBe("/reader");
+        expect(safeReturnPath("/%2F/evil.example")).toBe("/%2F/evil.example");
         expect(safeReturnPath(null)).toBe("/reader");
         expect(safeReturnPath(undefined, "/x")).toBe("/x");
     });
