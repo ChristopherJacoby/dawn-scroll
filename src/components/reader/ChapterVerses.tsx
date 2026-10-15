@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { BookmarkVerseAction } from "@/components/reader/BookmarkVerseAction";
 import { CopyVerseAction } from "@/components/reader/CopyVerseAction";
+import { DigDeeper } from "@/components/reader/DigDeeper";
 import { HighlightVerseAction } from "@/components/reader/HighlightVerseAction";
 import { NoteEditor } from "@/components/reader/NoteEditor";
 import { NoteVerseAction } from "@/components/reader/NoteVerseAction";
@@ -20,6 +21,8 @@ import {
     setHighlightAction,
 } from "@/app/highlights/actions";
 import { saveNoteAction } from "@/app/notes/actions";
+import { findingMarkers } from "@/lib/archaeology/refs";
+import type { FindingSummary } from "@/lib/archaeology/types";
 import type { HighlightColor } from "@/lib/highlight-colors";
 import type { VerseHighlight } from "@/lib/highlights";
 import type { VerseNote } from "@/lib/notes";
@@ -38,6 +41,8 @@ interface ChapterVersesProps {
     highlights: Record<number, VerseHighlight>;
     /** Verse number → note for this chapter (empty when signed out). */
     notes: Record<number, VerseNote>;
+    /** Archaeological findings with a reference in this chapter. */
+    findings: FindingSummary[];
 }
 
 /**
@@ -54,6 +59,7 @@ export function ChapterVerses({
     bookmarks: initialBookmarks,
     highlights: initialHighlights,
     notes: initialNotes,
+    findings,
 }: ChapterVersesProps) {
     const [selected, setSelected] = useState<number | null>(null);
     const bookmarks = useVerseAnnotations(initialBookmarks);
@@ -73,6 +79,7 @@ export function ChapterVerses({
     const toolbarRef = useRef<HTMLDivElement>(null);
     const focusToolbar = useRef(false);
 
+    const markers = findingMarkers(findings, bookSlug, chapterNumber);
     const selectedVerse = verses.find((v) => v.number === selected) ?? null;
     const noteTarget =
         noteVerse === null
@@ -203,6 +210,13 @@ export function ChapterVerses({
                         highlight={highlights.get(verse.number)?.color ?? null}
                         hasNote={notes.get(verse.number) !== undefined}
                         study={wordStudy.render(verse.number, verse.text)}
+                        dig={
+                            markers.has(verse.number) && (
+                                <DigDeeper
+                                    findings={markers.get(verse.number)!}
+                                />
+                            )
+                        }
                         onToggle={toggle}
                     />
                 ))}

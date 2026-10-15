@@ -17,6 +17,8 @@ interface VerseTextProps {
     hasNote: boolean;
     /** Word study, when active: the text with tappable words, and a hint. */
     study?: { content: React.ReactNode; hint: string };
+    /** Marker for archaeological findings that start at this verse. */
+    dig?: React.ReactNode;
     onToggle: (number: number, viaKeyboard: boolean) => void;
 }
 
@@ -33,6 +35,7 @@ export function VerseText({
     highlight,
     hasNote,
     study,
+    dig,
     onToggle,
 }: VerseTextProps) {
     function handleVerseClick(event: React.MouseEvent<HTMLParagraphElement>) {
@@ -99,6 +102,7 @@ export function VerseText({
                             {HIGHLIGHT_LABELS[highlight].toLowerCase()})
                         </span>
                     )}
+                    {dig}
                 </sup>
                 <span
                     className={cn(
