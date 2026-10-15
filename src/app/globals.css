@@ -163,6 +163,9 @@
 @utility bg-reading-accent {
     background-color: var(--reading-accent);
 }
+@utility border-reading-accent {
+    border-color: var(--reading-accent);
+}
 @utility border-reading-divider {
     border-color: var(--reading-divider);
 }
