@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { CREDIBILITY_ORDER, isCredibilityRating } from "./credibility";
 import {
+    findingMarkers,
     formatScriptureRef,
     refRangeInChapter,
     scriptureRefHref,
 } from "./refs";
-import type { FindingScriptureRef } from "./types";
+import type { FindingScriptureRef, FindingSummary } from "./types";
 
 const ref = (
     chapterStart: number,
@@ -55,6 +56,49 @@ describe("refRangeInChapter", () => {
             first: 4,
             last: 27,
         });
+    });
+});
+
+describe("findingMarkers", () => {
+    const finding = (
+        slug: string,
+        refs: FindingScriptureRef[],
+    ): FindingSummary => ({
+        slug,
+        title: slug,
+        summary: "",
+        siteName: "",
+        location: { lat: 0, lng: 0 },
+        credibility: "established",
+        refs,
+    });
+
+    it("marks each finding once, at its earliest verse in the chapter", () => {
+        const caiaphas = finding("caiaphas", [
+            { ...ref(18, 24, 18, 24), bookSlug: "john" },
+            { ...ref(18, 12, 18, 14), bookSlug: "john" },
+        ]);
+        const pilate = finding("pilate", [
+            { ...ref(18, 12, 18, 12), bookSlug: "john" },
+        ]);
+        const elsewhere = finding("elsewhere", [ref(18, 1, 18, 2)]);
+        const markers = findingMarkers(
+            [caiaphas, pilate, elsewhere],
+            "john",
+            18,
+        );
+        expect([...markers.keys()]).toEqual([12]);
+        expect(markers.get(12)?.map((f) => f.slug)).toEqual([
+            "caiaphas",
+            "pilate",
+        ]);
+    });
+
+    it("marks a range continuing from the previous chapter at verse 1", () => {
+        const lachish = finding("lachish", [ref(18, 13, 19, 37)]);
+        expect([...findingMarkers([lachish], "2-kings", 19).keys()]).toEqual([
+            1,
+        ]);
     });
 });
 

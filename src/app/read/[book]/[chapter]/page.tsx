@@ -7,6 +7,7 @@ import { ChapterVerses } from "@/components/reader/ChapterVerses";
 import { ReaderSelectors } from "@/components/reader/ReaderSelectors";
 import { ReadingModeToggle } from "@/components/reader/ReadingModeToggle";
 import { VerseAnchorScroll } from "@/components/reader/VerseAnchorScroll";
+import { getChapterFindings } from "@/lib/archaeology/queries";
 import { getUser } from "@/lib/auth";
 import { getBibleBooks, getKjvChapter } from "@/lib/bible/queries";
 import { getChapterBookmarkIds } from "@/lib/bookmarks";
@@ -46,10 +47,12 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
     const chapterNumber = parseChapter(chapter);
     if (!chapterNumber) notFound();
 
-    const [books, passage, user] = await Promise.all([
+    const [books, passage, user, findings] = await Promise.all([
         getBibleBooks(),
         getKjvChapter(book, chapterNumber),
         getUser(),
+        // Findings are extra; the chapter still renders without them.
+        getChapterFindings(book, chapterNumber).catch(() => []),
     ]);
     if (!passage || passage.verses.length === 0) notFound();
 
@@ -127,6 +130,7 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                     bookmarks={bookmarks}
                     highlights={highlights}
                     notes={notes}
+                    findings={findings}
                 />
             </article>
 

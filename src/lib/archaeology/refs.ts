@@ -1,4 +1,4 @@
-import type { FindingScriptureRef } from "./types";
+import type { FindingScriptureRef, FindingSummary } from "./types";
 
 /** "2 Kings 18:13–19:37", "Joshua 6:1–27", "Luke 3:1". */
 export function formatScriptureRef(ref: FindingScriptureRef): string {
@@ -29,4 +29,27 @@ export function refRangeInChapter(
         // null: runs to the end of the chapter.
         last: chapter === ref.chapterEnd ? ref.verseEnd : null,
     };
+}
+
+/**
+ * Where the reader shows each finding in a chapter: verse number → the
+ * findings marked there. A finding is marked once, at the first verse of
+ * its earliest reference in the chapter.
+ */
+export function findingMarkers(
+    findings: FindingSummary[],
+    bookSlug: string,
+    chapter: number,
+): Map<number, FindingSummary[]> {
+    const markers = new Map<number, FindingSummary[]>();
+    for (const finding of findings) {
+        const firsts = finding.refs
+            .filter((ref) => ref.bookSlug === bookSlug)
+            .map((ref) => refRangeInChapter(ref, chapter)?.first)
+            .filter((first) => first !== undefined);
+        if (firsts.length === 0) continue;
+        const verse = Math.min(...firsts);
+        markers.set(verse, [...(markers.get(verse) ?? []), finding]);
+    }
+    return markers;
 }
