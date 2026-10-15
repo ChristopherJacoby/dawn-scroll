@@ -50,4 +50,6 @@ export interface Finding extends FindingSummary {
     credibilityNote: string;
     sources: FindingSource[];
     timeline: FindingTimeline[];
+    /** When the content was last checked (YYYY-MM-DD). */
+    reviewedOn: string;
 }
