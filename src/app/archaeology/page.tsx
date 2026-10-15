@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { CredibilityBadge } from "@/components/archaeology/CredibilityBadge";
 import { FindingCard } from "@/components/archaeology/FindingCard";
 import { FindingFilters } from "@/components/archaeology/FindingFilters";
+import { FindingsMap } from "@/components/archaeology/FindingsMap";
 import {
     CREDIBILITY,
     CREDIBILITY_ORDER,
@@ -122,6 +123,11 @@ export default async function ArchaeologyPage({
                 </p>
                 {findings.length > 0 ? (
                     <>
+                        <FindingsMap
+                            // A new map per result set; markers are built once.
+                            key={findings.map((f) => f.slug).join()}
+                            findings={findings}
+                        />
                         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                             {findings.map((finding) => (
                                 <li key={finding.slug} className="flex">

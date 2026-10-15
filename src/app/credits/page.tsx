@@ -61,6 +61,25 @@ const CREDITS: { heading: string; items: Credit[] }[] = [
             },
         ],
     },
+    {
+        heading: "Maps",
+        items: [
+            {
+                name: "OpenFreeMap",
+                href: "https://openfreemap.org",
+                use: "Map tiles for the archaeology map.",
+                license: "Map data ODbL (OpenStreetMap)",
+                attribution:
+                    "© OpenMapTiles; map data © OpenStreetMap contributors.",
+            },
+            {
+                name: "MapLibre GL JS",
+                href: "https://maplibre.org",
+                use: "Draws the map.",
+                license: "BSD 3-Clause",
+            },
+        ],
+    },
 ];
 
 export default function CreditsPage() {
