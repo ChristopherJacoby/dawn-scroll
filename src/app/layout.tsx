@@ -1,6 +1,12 @@
 import "@/lib/env";
 import type { Metadata } from "next";
-import { EB_Garamond, Geist, Geist_Mono } from "next/font/google";
+import {
+    EB_Garamond,
+    Geist,
+    Geist_Mono,
+    Gentium_Book_Plus,
+    Noto_Serif_Hebrew,
+} from "next/font/google";
 import { Providers } from "@/components/Providers";
 import { Navigation } from "@/components/layout/Navigation";
 import type { ReadingPreferences } from "@/context/reading-mode";
@@ -21,6 +27,21 @@ const geistMono = Geist_Mono({
 const ebGaramond = EB_Garamond({
     variable: "--font-eb-garamond",
     subsets: ["latin"],
+});
+
+// Original-language words in word study; not preloaded, since most pages
+// never show them.
+const notoSerifHebrew = Noto_Serif_Hebrew({
+    variable: "--font-noto-serif-hebrew",
+    subsets: ["hebrew"],
+    preload: false,
+});
+
+const gentium = Gentium_Book_Plus({
+    variable: "--font-gentium",
+    subsets: ["greek-ext"],
+    weight: ["400"],
+    preload: false,
 });
 
 export const metadata: Metadata = {
@@ -45,7 +66,7 @@ export default async function RootLayout({
     return (
         <html
             lang="en"
-            className={`${geistSans.variable} ${geistMono.variable} ${ebGaramond.variable} h-full antialiased`}
+            className={`${geistSans.variable} ${geistMono.variable} ${ebGaramond.variable} ${notoSerifHebrew.variable} ${gentium.variable} h-full antialiased`}
         >
             {/* Signed-in users get their saved mode server-rendered (no flash
                 script needed); signed-out users fall back to the pre-paint

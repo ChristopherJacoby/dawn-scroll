@@ -61,6 +61,19 @@ function NavItem({
     );
 }
 
+/** Secondary link pinned to the bottom of the nav. */
+function CreditsLink({ onClick }: { onClick?: () => void }) {
+    return (
+        <Link
+            href="/credits"
+            onClick={onClick}
+            className="mt-auto px-3 py-2 text-xs text-reading-text-muted hover:text-reading-text"
+        >
+            Credits &amp; sources
+        </Link>
+    );
+}
+
 export function Navigation() {
     const pathname = usePathname();
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -81,6 +94,7 @@ export function Navigation() {
                         active={isActive(item.href)}
                     />
                 ))}
+                <CreditsLink />
             </nav>
 
             {/* ── Mobile top bar ────────────────────────────────────── */}
@@ -138,6 +152,7 @@ export function Navigation() {
                         onClick={() => setMobileOpen(false)}
                     />
                 ))}
+                <CreditsLink onClick={() => setMobileOpen(false)} />
             </nav>
         </>
     );

@@ -6,9 +6,11 @@ import { CopyVerseAction } from "@/components/reader/CopyVerseAction";
 import { HighlightVerseAction } from "@/components/reader/HighlightVerseAction";
 import { NoteEditor } from "@/components/reader/NoteEditor";
 import { NoteVerseAction } from "@/components/reader/NoteVerseAction";
+import { OriginalVerseAction } from "@/components/reader/OriginalVerseAction";
 import { VerseActionBar } from "@/components/reader/VerseActionBar";
 import { VerseText } from "@/components/reader/VerseText";
 import { useVerseAnnotations } from "@/components/reader/useVerseAnnotations";
+import { useWordStudy } from "@/components/reader/useWordStudy";
 import {
     addBookmarkAction,
     removeBookmarkAction,
@@ -57,6 +59,11 @@ export function ChapterVerses({
     const bookmarks = useVerseAnnotations(initialBookmarks);
     const highlights = useVerseAnnotations(initialHighlights);
     const notes = useVerseAnnotations(initialNotes);
+    const wordStudy = useWordStudy({
+        bookSlug,
+        chapterNumber,
+        translation: translation.slug,
+    });
     // The editor keeps its verse while closing so the drawer can animate out.
     const [noteVerse, setNoteVerse] = useState<number | null>(null);
     const [noteOpen, setNoteOpen] = useState(false);
@@ -138,12 +145,16 @@ export function ChapterVerses({
 
     function toggle(number: number, viaKeyboard: boolean) {
         const next = number === selected ? null : number;
+        if (wordStudy.verse !== null && wordStudy.verse !== next) {
+            wordStudy.stop();
+        }
         focusToolbar.current = viaKeyboard && next !== null;
         setSelected(next);
     }
 
     function close() {
         const number = selected;
+        wordStudy.stop();
         const focusInToolbar = toolbarRef.current?.contains(
             document.activeElement,
         );
@@ -191,6 +202,7 @@ export function ChapterVerses({
                         bookmarked={bookmarks.get(verse.number) !== undefined}
                         highlight={highlights.get(verse.number)?.color ?? null}
                         hasNote={notes.get(verse.number) !== undefined}
+                        study={wordStudy.render(verse.number, verse.text)}
                         onToggle={toggle}
                     />
                 ))}
@@ -212,6 +224,11 @@ export function ChapterVerses({
                             setHighlight(selectedVerse.number, color)
                         }
                         signInHref={signInHref}
+                    />
+                    <OriginalVerseAction
+                        active={wordStudy.verse === selectedVerse.number}
+                        loading={wordStudy.isLoading(selectedVerse.number)}
+                        onToggle={() => wordStudy.toggle(selectedVerse.number)}
                     />
                     <NoteVerseAction
                         hasNote={notes.get(selectedVerse.number) !== undefined}
