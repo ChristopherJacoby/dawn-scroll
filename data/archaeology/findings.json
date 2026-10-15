@@ -1,0 +1,435 @@
+{
+  "$comment": "Launch archaeology findings, in canonical order of each finding's first reference. Generate SQL with: node scripts/generate-archaeology-seed.mjs > data/archaeology/findings.seed.sql",
+  "findings": [
+    {
+      "slug": "tall-el-hammam",
+      "title": "Tall el-Hammam and the Search for Sodom",
+      "summary": "A large Bronze Age city northeast of the Dead Sea that was destroyed suddenly around 1650 BC. Its excavator identifies it as Sodom; most scholars who look for Sodom favor other sites or doubt it can be located.",
+      "siteName": "Tall el-Hammam, Jordan",
+      "lat": 31.8403,
+      "lng": 35.6731,
+      "credibility": "debated",
+      "credibilityNote": "The excavation is real and extensive, and the destruction layer is well attested. Two things are contested. The identification with Sodom rests on reading Genesis 13:10–12 as placing the cities north of the Dead Sea, and it requires a later date for Abraham than most chronologies use. A 2021 paper attributing the destruction to a cosmic airburst drew strong criticism and was later corrected.",
+      "description": [
+        "Tall el-Hammam lies on the plain east of the Jordan River, a few miles northeast of the Dead Sea. Since 2005 a team led by Steven Collins of Trinity Southwest University has excavated it with Jordan’s Department of Antiquities. In the Middle Bronze Age it was one of the largest cities in the southern Levant, with massive fortifications. It ended in a violent destruction followed by centuries of near-abandonment.",
+        "Collins argues that it is Sodom. Genesis 13:10–12 says Lot looked out from near Bethel over “all the plain of Jordan” (the kikkar) and settled among its cities. Collins reads the kikkar as the round plain north of the Dead Sea, where Tall el-Hammam is the dominant site. Most earlier proposals put Sodom southeast of the Dead Sea, at sites such as Bab edh-Dhra. Collins’s identification also requires dating Abraham several centuries later than the usual biblical chronology.",
+        "In 2021 a team including Collins published a paper in Scientific Reports arguing that a cosmic airburst destroyed the city, citing melted pottery, shocked quartz and scattered human remains. Other scientists challenged the evidence and the paper’s images, and the journal published a correction. Genesis 19:24–28 describes fire and brimstone falling on the cities, so the claim drew wide attention. Neither the airburst nor the Sodom identification has gained general acceptance."
+      ],
+      "refs": [
+        { "book": "genesis", "from": "13:10", "to": "13:12" },
+        { "book": "genesis", "from": "19:24", "to": "19:28" }
+      ],
+      "timeline": [
+        { "year": -1650, "label": "c. 1650 BC", "event": "The Middle Bronze Age city is destroyed (the excavators’ date)." },
+        { "year": 2005, "label": "2005", "event": "Excavation begins under Steven Collins." },
+        { "year": 2013, "label": "2013", "event": "Collins and Latayne Scott publish Discovering the City of Sodom." },
+        { "year": 2021, "label": "2021", "event": "The airburst paper is published in Scientific Reports." }
+      ],
+      "sources": [
+        { "citation": "Collins, Steven, and Latayne C. Scott. Discovering the City of Sodom. New York: Howard Books, 2013.", "url": null },
+        { "citation": "Bunch, Ted E., et al. “A Tunguska Sized Airburst Destroyed Tall el-Hammam a Middle Bronze Age City in the Jordan Valley near the Dead Sea.” Scientific Reports 11 (2021): 18632.", "url": "https://doi.org/10.1038/s41598-021-97778-3" },
+        { "citation": "Wood, Bryant G. “The Discovery of the Sin Cities of Sodom and Gomorrah.” Bible and Spade 12, no. 3 (1999): 67–80.", "url": null },
+        { "citation": "Rast, Walter E., and R. Thomas Schaub. Bab edh-Dhra: Excavations in the Cemetery Directed by Paul W. Lapp (1965–67). Winona Lake: Eisenbrauns, 1989.", "url": null }
+      ]
+    },
+    {
+      "slug": "exodus-route",
+      "title": "Tracing the Exodus Route",
+      "summary": "Scholars have proposed northern, central, southern and Arabian routes for Israel’s journey from Egypt to Sinai. Egyptian sites shed light on the setting, but archaeology has confirmed no route or campsite.",
+      "siteName": "Jebel Musa, southern Sinai, Egypt",
+      "lat": 28.5392,
+      "lng": 33.9753,
+      "credibility": "unverified",
+      "credibilityNote": "Egyptian archaeology confirms parts of the setting, such as the city of Pi-Ramesses and Egypt’s fortified road across northern Sinai. But no campsite or trail of a large group has been identified, and none of the proposed routes or locations for Mount Sinai is confirmed. Scholars disagree on whether a people living in tents would leave such traces.",
+      "description": [
+        "Exodus and Numbers give a detailed itinerary: from Rameses to Succoth, then Etham and Pi-hahiroth, across the sea, and on through the wilderness to Mount Sinai and Kadesh-barnea (Exodus 12:37; 13:20; 14:2; Numbers 33). Many of these places cannot be located with confidence today.",
+        "Some of the setting can be tested. Excavations at Qantir in the eastern Nile Delta have uncovered Pi-Ramesses, the capital Ramesses II built in the 13th century BC, which many identify with the store city Raamses of Exodus 1:11. James Hoffmeier’s excavations at Tell el-Borg uncovered forts on the “Ways of Horus,” Egypt’s military road along the coast. That road matches “the way of the land of the Philistines,” which Exodus 13:17 says Israel avoided.",
+        "Mount Sinai has been placed at Jebel Musa in southern Sinai, venerated since at least the 4th century, with St. Catherine’s Monastery at its foot. Other proposals put it in northern Sinai, in the Negev (Har Karkom), or at Jebel al-Lawz in Saudi Arabia, a site promoted by amateur explorers and rejected by most scholars. Excavations at Kadesh-barnea (Tell el-Qudeirat), where Israel spent much of the wilderness period, found Iron Age fortresses but nothing from earlier centuries.",
+        "Scholars disagree on what this absence means. Some argue that a large migration would leave traces. Others note that nomadic camps rarely survive and that the Egyptian setting fits the story well. Still others see the itinerary as reflecting the geography of a later period."
+      ],
+      "refs": [
+        { "book": "exodus", "from": "12:37", "to": "12:37" },
+        { "book": "exodus", "from": "13:17", "to": "13:22" },
+        { "book": "exodus", "from": "19:1", "to": "19:2" },
+        { "book": "numbers", "from": "33:1", "to": "33:49" }
+      ],
+      "timeline": [
+        { "year": -1446, "label": "c. 1446 BC", "event": "The Exodus, by the early date drawn from 1 Kings 6:1." },
+        { "year": -1250, "label": "c. 1250 BC", "event": "The Exodus, by the later date, in the reign of Ramesses II." },
+        { "year": 330, "label": "4th century AD", "event": "Christian monks venerate Jebel Musa as Mount Sinai." },
+        { "year": 565, "label": "c. AD 565", "event": "St. Catherine’s Monastery is completed under Emperor Justinian." },
+        { "year": 1976, "label": "1976–1982", "event": "Rudolph Cohen excavates Tell el-Qudeirat (Kadesh-barnea)." },
+        { "year": 1999, "label": "1999–2008", "event": "James Hoffmeier excavates Tell el-Borg in northern Sinai." }
+      ],
+      "sources": [
+        { "citation": "Hoffmeier, James K. Ancient Israel in Sinai: The Evidence for the Authenticity of the Wilderness Tradition. New York: Oxford University Press, 2005.", "url": null },
+        { "citation": "Finkelstein, Israel, and Neil Asher Silberman. The Bible Unearthed. New York: Free Press, 2001.", "url": null },
+        { "citation": "Cohen, Rudolph. “Did I Excavate Kadesh-Barnea?” Biblical Archaeology Review 7, no. 3 (1981): 20–33.", "url": null },
+        { "citation": "Franz, Gordon. “Is Mount Sinai in Saudi Arabia?” Bible and Spade 13, no. 4 (2000).", "url": null }
+      ]
+    },
+    {
+      "slug": "red-sea-chariot-wheels",
+      "title": "Red Sea “Chariot Wheels”",
+      "summary": "Since 1978, divers have reported coral-covered shapes resembling chariot wheels in the Gulf of Aqaba near Nuweiba. No object has ever been recovered and examined, and archaeologists, including many who accept the Exodus, do not consider the claim evidence.",
+      "siteName": "Nuweiba, Gulf of Aqaba, Egypt",
+      "lat": 28.9706,
+      "lng": 34.6544,
+      "credibility": "unverified",
+      "credibilityNote": "The claim rests on underwater photographs and video of encrusted shapes, and on reports about objects that have never been made available for study. No excavation, recovered artifact, laboratory analysis or peer-reviewed publication supports it. A wheel-like shape in coral is not enough to identify a chariot, its date or its origin.",
+      "description": [
+        "Exodus 14 tells how Israel crossed the sea on dry ground and how the returning waters covered Pharaoh’s chariots and horsemen. Where the crossing happened is unknown. The Hebrew yam suph (“Sea of Reeds,” traditionally “Red Sea”) has been placed at lakes near the Suez isthmus, at the Gulf of Suez and at the Gulf of Aqaba.",
+        "In 1978 Ron Wyatt, an American nurse anesthetist and amateur explorer, began reporting chariot wheels and bones on the floor of the Gulf of Aqaba off Nuweiba, a beach on the Sinai coast. He said Egypt’s antiquities director had examined one gilded wheel and dated it to the 18th Dynasty. No record of that examination has been produced, and the wheel was never shown. Later divers and filmmakers have published images of wheel-like and axle-like coral formations at the site.",
+        "Archaeologists, including evangelical scholars at the Associates for Biblical Research, have rejected the claim. No artifacts have been raised for testing, Egyptian authorities have confirmed no finds, and coral grows over many shapes, natural and man-made. The Nuweiba crossing is tied to identifying Mount Sinai with Jebel al-Lawz in Saudi Arabia, which most scholars also reject."
+      ],
+      "refs": [
+        { "book": "exodus", "from": "14:21", "to": "14:31" },
+        { "book": "exodus", "from": "15:4", "to": "15:5" }
+      ],
+      "timeline": [
+        { "year": 1978, "label": "1978", "event": "Ron Wyatt reports chariot wheels off Nuweiba." },
+        { "year": 1999, "label": "1999", "event": "Wyatt dies; none of the objects he described has been produced." },
+        { "year": 2000, "label": "2000", "event": "Lennart Möller’s The Exodus Case promotes the Nuweiba crossing." }
+      ],
+      "sources": [
+        { "citation": "Hoffmeier, James K. Israel in Egypt: The Evidence for the Authenticity of the Exodus Tradition. New York: Oxford University Press, 1997.", "url": null },
+        { "citation": "Standish, Russell R., and Colin D. Standish. Holy Relics or Revelation: Recent Astounding Archaeological Claims Evaluated. Hartland Publications, 1999.", "url": null },
+        { "citation": "Möller, Lennart. The Exodus Case. Copenhagen: Scandinavia Publishing House, 2000.", "url": null },
+        { "citation": "Franz, Gordon. “Is Mount Sinai in Saudi Arabia?” Bible and Spade 13, no. 4 (2000).", "url": null }
+      ]
+    },
+    {
+      "slug": "ark-of-the-covenant",
+      "title": "The Ark of the Covenant: What Became of It?",
+      "summary": "The Bible’s record of the Ark ends before the Babylonians destroyed Jerusalem in 586 BC, and no archaeological trace of it has been found. Traditions place it in Ethiopia, on Mount Nebo or beneath Jerusalem; none can be checked.",
+      "siteName": "Temple Mount, Jerusalem",
+      "lat": 31.7781,
+      "lng": 35.2354,
+      "credibility": "unverified",
+      "credibilityNote": "There is no physical evidence of the Ark itself, and no claim to have found or to hold it has been opened to independent examination. Archaeology can show what kind of object the Ark was, since carrying chests and portable shrines are known from Egypt, and it can study places linked to it, but it cannot tell what became of it.",
+      "description": [
+        "The Ark was a gold-covered wooden chest, carried on poles, that held the tablets of the covenant (Exodus 25:10–22). The Bible follows it from the wilderness to Shiloh, into Philistine hands, to Kiriath-jearim for twenty years, and finally into Solomon’s Temple (1 Samuel 4–7; 2 Samuel 6; 1 Kings 8). Its last narrative mention is Josiah’s order, around 622 BC, to put it back in the Temple (2 Chronicles 35:3).",
+        "When the Babylonians destroyed the Temple in 586 BC, 2 Kings 25:13–17 lists the bronze objects they carried off but does not mention the Ark. Jeremiah 3:16 speaks of a day when it will no longer be remembered or made again. Later traditions fill the gap. 2 Maccabees 2:4–8 says Jeremiah hid it in a cave on Mount Nebo, and rabbinic tradition says it was hidden beneath the Temple. The Ethiopian Orthodox Church holds that it was brought to Ethiopia and is kept at the Church of Our Lady Mary of Zion in Aksum, where only one guardian monk may see it.",
+        "Modern claims include Ron Wyatt’s report of finding the Ark in a cave near Golgotha, which was never substantiated. Archaeology has instead examined places in the Ark’s story. A 2017 excavation at Kiriath-jearim uncovered a large 8th-century BC platform on the hilltop. Egyptian finds, such as the carrying chest of Anubis from Tutankhamun’s tomb, show the kind of object the Bible describes."
+      ],
+      "refs": [
+        { "book": "exodus", "from": "25:10", "to": "25:22" },
+        { "book": "1-samuel", "from": "7:1", "to": "7:2" },
+        { "book": "1-kings", "from": "8:1", "to": "8:9" },
+        { "book": "2-chronicles", "from": "35:3", "to": "35:3" },
+        { "book": "jeremiah", "from": "3:16", "to": "3:16" }
+      ],
+      "timeline": [
+        { "year": -960, "label": "c. 960 BC", "event": "Solomon brings the Ark into the Temple (1 Kings 8)." },
+        { "year": -622, "label": "c. 622 BC", "event": "Josiah orders the Ark returned to the Temple (2 Chronicles 35:3)." },
+        { "year": -586, "label": "586 BC", "event": "The Babylonians destroy the Temple; the Ark is not mentioned among the spoils." },
+        { "year": 2017, "label": "2017", "event": "Excavation at Kiriath-jearim, where the Ark rested for twenty years." }
+      ],
+      "sources": [
+        { "citation": "Munro-Hay, Stuart. The Quest for the Ark of the Covenant: The True History of the Tablets of Moses. London: I.B. Tauris, 2005.", "url": null },
+        { "citation": "Finkelstein, Israel, Thomas Römer, Christophe Nicolle, et al. “Excavations at Kiriath-jearim near Jerusalem, 2017: Preliminary Report.” Semitica 60 (2018): 31–83.", "url": null },
+        { "citation": "Cline, Eric H. From Eden to Exile: Unraveling Mysteries of the Bible. Washington, DC: National Geographic, 2007.", "url": null }
+      ]
+    },
+    {
+      "slug": "jericho-walls",
+      "title": "The Walls of Jericho",
+      "summary": "Excavations at Tell es-Sultan have found a city destroyed by fire, with collapsed mudbrick walls. Archaeologists have argued for nearly a century over whether that destruction matches the date of Joshua’s conquest.",
+      "siteName": "Tell es-Sultan, Jericho",
+      "lat": 31.8711,
+      "lng": 35.444,
+      "credibility": "debated",
+      "credibilityNote": "The excavations are well documented; the disagreement is over dating. Garstang, and later Bryant Wood, dated the destroyed city (City IV) to about 1400 BC, close to the conquest date implied by 1 Kings 6:1. Kenyon’s pottery analysis and later radiocarbon tests dated it to about 1550 BC, leaving little or no walled city for Joshua. The answer depends both on the archaeological dating and on the date assigned to the Exodus.",
+      "description": [
+        "Jericho is one of the oldest continuously settled places on earth, with remains reaching back before 8000 BC. Joshua 6 tells how its walls fell after Israel marched around the city for seven days, and how the city was burned (6:20, 24).",
+        "John Garstang excavated the mound from 1930 to 1936. He reported a fallen double wall and a burned city that he dated to around 1400 BC, and took them as confirmation of Joshua. Kathleen Kenyon dug from 1952 to 1958 with more refined methods. She concluded that Garstang’s walls were about a thousand years older, and that the last walled city (City IV) was destroyed around 1550 BC, with only slight occupation afterward.",
+        "In 1990 Bryant Wood re-examined the pottery and argued for a destruction around 1400 BC after all. He pointed to collapsed mudbrick at the foot of the city’s revetment wall, a destructive fire, and storage jars full of grain, which suggest a short siege soon after harvest, as Joshua 2:6 and 3:15 imply. A 1995 radiocarbon study of charred grain gave dates in the 16th century BC, supporting Kenyon. An Italian–Palestinian expedition has excavated at the site since 1997.",
+        "Scholars who hold a 13th-century Exodus generally see no walled city for Joshua to conquer, while those who hold a 15th-century date read the destruction as Joshua’s. Others treat Joshua 6 as a theological retelling rather than a battle report. Tell es-Sultan was inscribed as a UNESCO World Heritage Site in 2023."
+      ],
+      "refs": [
+        { "book": "joshua", "from": "6:1", "to": "6:27" },
+        { "book": "1-kings", "from": "16:34", "to": "16:34" }
+      ],
+      "timeline": [
+        { "year": -1550, "label": "c. 1550 BC", "event": "City IV is destroyed, by Kenyon’s dating and the radiocarbon results." },
+        { "year": -1400, "label": "c. 1400 BC", "event": "City IV is destroyed, by Garstang’s and Wood’s dating." },
+        { "year": 1930, "label": "1930–1936", "event": "John Garstang excavates." },
+        { "year": 1952, "label": "1952–1958", "event": "Kathleen Kenyon excavates." },
+        { "year": 1990, "label": "1990", "event": "Bryant Wood argues for a destruction around 1400 BC." },
+        { "year": 1995, "label": "1995", "event": "Radiocarbon dates of charred grain are published." },
+        { "year": 1997, "label": "1997", "event": "An Italian–Palestinian expedition begins work." },
+        { "year": 2023, "label": "2023", "event": "Tell es-Sultan becomes a UNESCO World Heritage Site." }
+      ],
+      "sources": [
+        { "citation": "Kenyon, Kathleen M. Digging Up Jericho. London: Ernest Benn, 1957.", "url": null },
+        { "citation": "Wood, Bryant G. “Did the Israelites Conquer Jericho? A New Look at the Archaeological Evidence.” Biblical Archaeology Review 16, no. 2 (1990): 44–58.", "url": null },
+        { "citation": "Bienkowski, Piotr. “Jericho Was Destroyed in the Middle Bronze Age, Not the Late Bronze Age.” Biblical Archaeology Review 16, no. 5 (1990): 45–46, 69.", "url": null },
+        { "citation": "Bruins, Hendrik J., and Johannes van der Plicht. “Tell es-Sultan (Jericho): Radiocarbon Results of Short-Lived Cereal and Multiyear Charcoal Samples from the End of the Middle Bronze Age.” Radiocarbon 37, no. 2 (1995): 213–220.", "url": null },
+        { "citation": "UNESCO World Heritage Centre. “Ancient Jericho/Tell es-Sultan.”", "url": "https://whc.unesco.org/en/list/1687" }
+      ]
+    },
+    {
+      "slug": "mesha-stele",
+      "title": "The Mesha Stele (Moabite Stone)",
+      "summary": "A basalt monument in which Mesha, king of Moab, boasts of throwing off Israel’s rule around 840 BC. It names Omri king of Israel and Israel’s God, YHWH, and tells the revolt of 2 Kings 3 from Moab’s side.",
+      "siteName": "Dhiban (biblical Dibon), Jordan",
+      "lat": 31.5003,
+      "lng": 35.7767,
+      "credibility": "established",
+      "credibilityNote": "Europeans saw the stone intact in place, and a paper squeeze was taken before it was broken, so its text is securely known; it is one of the most studied inscriptions of the Iron Age. Its account parallels 2 Kings 3 closely in setting and people, though the two describe the war’s outcome differently. A proposed reading of “House of David” in line 31 is possible but debated, because the letters there are damaged.",
+      "description": [
+        "In 1868 F. A. Klein, an Anglican missionary, was shown a black basalt slab bearing 34 lines of writing at Dhiban, east of the Dead Sea. While European agents competed to acquire it, local people heated the stone and broke it apart with cold water in 1869. A squeeze (paper impression) made for Charles Clermont-Ganneau before the breakage, together with most of the pieces later recovered, allowed the text to be reconstructed. The restored stele is in the Louvre.",
+        "Mesha says that “Omri was king of Israel and oppressed Moab many days,” and that his son continued to do so, until Mesha rebelled with the help of his god Chemosh. He describes taking Israelite towns such as Nebo and Ataroth, and dragging “the vessels of YHWH” before Chemosh. It is one of the earliest known mentions of the divine name outside the Bible.",
+        "2 Kings 1:1 and 3:4–27 tell of the same rebellion. Mesha, a sheep-breeder who paid Israel a heavy tribute, revolted after Ahab’s death, and Israel, Judah and Edom marched against him. The Bible says the coalition was winning until Mesha sacrificed his eldest son on the wall, and “there was great indignation against Israel,” so they withdrew. Mesha’s stone records only his victories. Read together, the two accounts give an unusually full picture of one 9th-century war."
+      ],
+      "refs": [
+        { "book": "2-kings", "from": "1:1", "to": "1:1" },
+        { "book": "2-kings", "from": "3:4", "to": "3:27" }
+      ],
+      "timeline": [
+        { "year": -840, "label": "c. 840 BC", "event": "Mesha sets up the stele at Dibon." },
+        { "year": 1868, "label": "1868", "event": "F. A. Klein sees the stone at Dhiban." },
+        { "year": 1869, "label": "1869", "event": "The stone is broken; a squeeze taken earlier preserves the text." },
+        { "year": 1873, "label": "1873", "event": "The reassembled stele enters the Louvre." },
+        { "year": 1994, "label": "1994", "event": "André Lemaire proposes reading “House of David” in line 31." }
+      ],
+      "sources": [
+        { "citation": "Musée du Louvre. “Stèle de Mésha, roi de Moab” (AO 5066).", "url": null },
+        { "citation": "Dearman, Andrew, ed. Studies in the Mesha Inscription and Moab. Atlanta: Scholars Press, 1989.", "url": null },
+        { "citation": "Lemaire, André. “‘House of David’ Restored in Moabite Inscription.” Biblical Archaeology Review 20, no. 3 (1994): 30–37.", "url": null },
+        { "citation": "Finkelstein, Israel, Nadav Na’aman, and Thomas Römer. “Restoring Line 31 in the Mesha Stele: The ‘House of David’ or Biblical Balak?” Tel Aviv 46, no. 1 (2019): 3–11.", "url": null }
+      ]
+    },
+    {
+      "slug": "tel-dan-stele",
+      "title": "The Tel Dan Stele: “House of David”",
+      "summary": "Pieces of a 9th-century BC Aramaic victory monument, found at Tel Dan in 1993 and 1994. Its phrase “House of David” is the earliest known reference to David outside the Bible.",
+      "siteName": "Tel Dan, northern Israel",
+      "lat": 33.2486,
+      "lng": 35.6525,
+      "credibility": "established",
+      "credibilityNote": "The fragments come from a controlled excavation and were published in a peer-reviewed journal; their authenticity is not seriously disputed. Most scholars read bytdwd as “House of David,” a dynasty name like “House of Omri,” and early alternative readings have found little support. The stele shows that a dynasty claiming David as its founder ruled Judah by the 9th century BC; it says nothing about the details of David’s own life.",
+      "description": [
+        "In July 1993 a team led by Avraham Biran was excavating near the city gate at Tel Dan when it found a broken basalt slab reused in a later wall. Two more fragments turned up in 1994. The text is in Aramaic. Most scholars think Hazael, king of Aram-Damascus, set it up in the second half of the 9th century BC to celebrate victories over his neighbors.",
+        "The writer boasts that he killed “[Jo]ram son of [Ahab], king of Israel” and “[Ahaz]iah son of [Jehoram], king of the House of David.” The names are partly restored, but the restoration is widely accepted, because the surviving letters and the context fit those two kings, who reigned at the same time.",
+        "The stele bears on 2 Kings 8–9 in two ways. It shows that Israel and Judah were kingdoms known to their neighbors, with Judah’s royal line named after David. It also differs from the Bible. 2 Kings 9 says Jehu killed Joram and Ahaziah, while the stele gives the credit to the Aramean king. Some scholars suggest Jehu acted as Hazael’s ally, or that each side claimed the same event. The Bible itself says Hazael had just fought Joram at Ramoth-gilead (2 Kings 8:28–29).",
+        "The fragments are displayed at the Israel Museum in Jerusalem."
+      ],
+      "refs": [
+        { "book": "2-kings", "from": "8:28", "to": "8:29" },
+        { "book": "2-kings", "from": "9:14", "to": "9:28" }
+      ],
+      "timeline": [
+        { "year": -841, "label": "c. 841 BC", "event": "Jehu seizes Israel’s throne; Joram of Israel and Ahaziah of Judah are killed (2 Kings 9)." },
+        { "year": -835, "label": "Late 9th century BC", "event": "Hazael of Damascus has the stele carved." },
+        { "year": 1993, "label": "1993", "event": "The first fragment is found at Tel Dan." },
+        { "year": 1994, "label": "1994", "event": "Two more fragments are found." }
+      ],
+      "sources": [
+        { "citation": "Biran, Avraham, and Joseph Naveh. “An Aramaic Stele Fragment from Tel Dan.” Israel Exploration Journal 43, no. 2–3 (1993): 81–98.", "url": null },
+        { "citation": "Biran, Avraham, and Joseph Naveh. “The Tel Dan Inscription: A New Fragment.” Israel Exploration Journal 45, no. 1 (1995): 1–18.", "url": null },
+        { "citation": "Schniedewind, William M. “Tel Dan Stela: New Light on Aramaic and Jehu’s Revolt.” Bulletin of the American Schools of Oriental Research 302 (1996): 75–90.", "url": null },
+        { "citation": "Hagelia, Hallvard. The Dan Debate: The Tel Dan Inscription in Recent Research. Sheffield: Sheffield Phoenix Press, 2009.", "url": null }
+      ]
+    },
+    {
+      "slug": "siege-of-lachish",
+      "title": "The Assyrian Siege of Lachish",
+      "summary": "Sennacherib’s 701 BC campaign against Judah is recorded in his own annals, carved in palace reliefs of the siege of Lachish, and visible in the siege ramp still at the site. The Bible tells of the same campaign in 2 Kings 18–19, Isaiah 36–37 and 2 Chronicles 32.",
+      "siteName": "Tel Lachish, Israel",
+      "lat": 31.565,
+      "lng": 34.849,
+      "credibility": "established",
+      "credibilityNote": "Three independent lines of evidence agree: Assyrian texts, Assyrian palace art and excavation at Lachish. They show that Sennacherib invaded Judah, took Lachish, and besieged Jerusalem without capturing it, as the Bible reports. Both the annals and 2 Kings record Hezekiah’s tribute, with the same 30 talents of gold. They differ on how the campaign ended: Sennacherib reports only success, while 2 Kings 19 reports a disaster for his army.",
+      "description": [
+        "In 701 BC Sennacherib of Assyria marched on Judah after King Hezekiah rebelled. His annals survive on clay prisms such as the Taylor Prism in the British Museum. They claim he took 46 walled cities and shut Hezekiah up in Jerusalem “like a bird in a cage.” They do not claim Jerusalem fell. They record Hezekiah’s tribute, including 30 talents of gold, the same figure given in 2 Kings 18:14.",
+        "Lachish, Judah’s second city, is the centerpiece of a series of wall reliefs from Sennacherib’s palace at Nineveh, excavated by Austen Henry Layard in the 1840s and now in the British Museum. They show battering rams on a ramp, defenders on the walls, captives led away, and Sennacherib on his throne receiving the spoil of Lachish. 2 Kings 18:14, 17 and 19:8 place Sennacherib at Lachish.",
+        "Excavations at Tel Lachish, above all those led by David Ussishkin from 1973 to 1987, uncovered the Assyrian siege ramp, the earliest known anywhere, along with a counter-ramp built by the defenders, arrowheads, sling stones and a thick destruction layer. Storage-jar handles stamped lmlk (“belonging to the king”), linked with Hezekiah’s preparations, were found in that layer.",
+        "The sources part ways at the end of the campaign. 2 Kings 19:35–36 says the angel of the LORD struck the Assyrian camp and Sennacherib returned home, while his annals report only success and tribute. Historians debate what happened, but all the sources agree Jerusalem was not taken."
+      ],
+      "refs": [
+        { "book": "2-kings", "from": "18:13", "to": "19:37" },
+        { "book": "2-chronicles", "from": "32:1", "to": "32:23" },
+        { "book": "isaiah", "from": "36:1", "to": "37:38" }
+      ],
+      "timeline": [
+        { "year": -701, "label": "701 BC", "event": "Sennacherib invades Judah; Lachish falls and Jerusalem is besieged." },
+        { "year": -691, "label": "691 BC", "event": "The Taylor Prism records the campaign in Sennacherib’s annals." },
+        { "year": 1830, "label": "1830", "event": "Colonel Robert Taylor acquires the prism near Nineveh." },
+        { "year": 1849, "label": "c. 1849", "event": "Layard uncovers the Lachish reliefs at Nineveh." },
+        { "year": 1973, "label": "1973–1987", "event": "David Ussishkin’s excavations expose the siege ramp." }
+      ],
+      "sources": [
+        { "citation": "Ussishkin, David. The Conquest of Lachish by Sennacherib. Tel Aviv: Tel Aviv University, Institute of Archaeology, 1982.", "url": null },
+        { "citation": "Ussishkin, David. The Renewed Archaeological Excavations at Lachish (1973–1994). 5 vols. Tel Aviv: Emery and Claire Yass Publications in Archaeology, 2004.", "url": null },
+        { "citation": "British Museum. “The Taylor Prism” (1855,1004.1).", "url": null },
+        { "citation": "Pritchard, James B., ed. Ancient Near Eastern Texts Relating to the Old Testament. 3rd ed. Princeton: Princeton University Press, 1969.", "url": null }
+      ]
+    },
+    {
+      "slug": "hezekiahs-tunnel",
+      "title": "Hezekiah’s Tunnel and the Siloam Inscription",
+      "summary": "A 533-meter tunnel cut through bedrock to bring the Gihon Spring’s water inside Jerusalem, with a Hebrew inscription describing the moment the two digging crews met. It matches the Bible’s report that Hezekiah “made a pool, and a conduit, and brought water into the city.”",
+      "siteName": "City of David, Jerusalem",
+      "lat": 31.7726,
+      "lng": 35.2358,
+      "credibility": "established",
+      "credibilityNote": "The tunnel can be walked today and the inscription is in a museum; neither is in doubt. Radiometric dating of plaster and stalactites in the tunnel, published in 2003, points to about 700 BC, fitting Hezekiah’s reign, and most scholars accept the attribution. A minority have argued for an earlier or a later date, and the inscription itself names no king.",
+      "description": [
+        "The Gihon Spring, Jerusalem’s main water source, rises in the Kidron Valley below the eastern side of the City of David. Hezekiah’s Tunnel carries its water through the hill to the Pool of Siloam on the other side. It winds for about 533 meters, with a drop of only about 30 centimeters along its length.",
+        "In 1880 a boy wading in the tunnel noticed an inscription near its southern end. Written in paleo-Hebrew script, it describes the last moments of the work. Two crews, digging toward each other with picks, heard each other’s voices through the rock and broke through “axe against axe,” and the water flowed 1,200 cubits to the pool. The inscription was later cut out of the wall and is now in the Istanbul Archaeology Museums.",
+        "2 Kings 20:20 and 2 Chronicles 32:2–4, 30 say Hezekiah stopped the springs outside the city and brought the Gihon’s water down to the west side of the City of David, as Jerusalem prepared for the Assyrian invasion of 701 BC. A 2003 study in Nature dated organic material in the tunnel’s plaster and in its stalactites to around 700 BC."
+      ],
+      "refs": [
+        { "book": "2-kings", "from": "20:20", "to": "20:20" },
+        { "book": "2-chronicles", "from": "32:2", "to": "32:4" },
+        { "book": "2-chronicles", "from": "32:30", "to": "32:30" },
+        { "book": "isaiah", "from": "22:9", "to": "22:11" }
+      ],
+      "timeline": [
+        { "year": -705, "label": "c. 705–701 BC", "event": "Hezekiah prepares Jerusalem’s defenses and water supply." },
+        { "year": -701, "label": "701 BC", "event": "Sennacherib invades Judah; Jerusalem is besieged but not taken." },
+        { "year": 1838, "label": "1838", "event": "Edward Robinson traces the tunnel’s full length." },
+        { "year": 1880, "label": "1880", "event": "The Siloam Inscription is discovered." },
+        { "year": 2003, "label": "2003", "event": "Radiometric dating of the tunnel is published in Nature." }
+      ],
+      "sources": [
+        { "citation": "Frumkin, Amos, Aryeh Shimron, and Jeff Rosenbaum. “Radiometric Dating of the Siloam Tunnel, Jerusalem.” Nature 425 (2003): 169–171.", "url": "https://doi.org/10.1038/nature01952" },
+        { "citation": "Robinson, Edward. Biblical Researches in Palestine, Mount Sinai and Arabia Petraea. Vol. 1. Boston: Crocker & Brewster, 1841.", "url": null },
+        { "citation": "Rogerson, John, and Philip R. Davies. “Was the Siloam Tunnel Built by Hezekiah?” Biblical Archaeologist 59, no. 3 (1996): 138–149.", "url": null },
+        { "citation": "Hendel, Ronald S. “The Date of the Siloam Inscription: A Rejoinder to Rogerson and Davies.” Biblical Archaeologist 59, no. 4 (1996): 233–237.", "url": null }
+      ]
+    },
+    {
+      "slug": "cyrus-cylinder",
+      "title": "The Cyrus Cylinder",
+      "summary": "A clay cylinder in which Cyrus the Great of Persia describes conquering Babylon in 539 BC and returning displaced peoples and their gods to their homelands. It illustrates the policy behind the decree in Ezra 1 that let the Jews return and rebuild the Temple.",
+      "siteName": "Babylon, Iraq",
+      "lat": 32.5364,
+      "lng": 44.4209,
+      "credibility": "established",
+      "credibilityNote": "The cylinder is a securely excavated and well-understood royal text. Its connection to Ezra is indirect: it shows Cyrus restoring sanctuaries and returning peoples, but it concerns Babylonian cities and gods and does not mention Judah or the Jews. Most historians see it as consistent with the decree in Ezra 1:2–4, not as a copy of it.",
+      "description": [
+        "Hormuzd Rassam found the cylinder in 1879 at Babylon, in the foundations of the Esagila, the temple of Marduk, where it had been buried as a foundation deposit. Written in Babylonian cuneiform, it presents Cyrus as chosen by Marduk to replace the impious Nabonidus, and as entering Babylon peacefully in 539 BC.",
+        "Cyrus says he returned the gods of several cities to their shrines and “gathered all their people and returned them to their settlements.” Ezra 1:1–4 and 2 Chronicles 36:22–23 report a proclamation in Cyrus’s first year allowing the Jews to return to Jerusalem and rebuild the house of the LORD. Ezra 6:3–5 quotes a record of the decree that was later found in the archives at Ecbatana.",
+        "Isaiah 44:28 and 45:1 call Cyrus the LORD’s “shepherd” and “anointed.” The cylinder is written from a Babylonian point of view, but it shows that the return of the exiles fits a wider Persian policy of restoring local cults. It is in the British Museum."
+      ],
+      "refs": [
+        { "book": "2-chronicles", "from": "36:22", "to": "36:23" },
+        { "book": "ezra", "from": "1:1", "to": "1:4" },
+        { "book": "ezra", "from": "6:3", "to": "6:5" },
+        { "book": "isaiah", "from": "44:28", "to": "45:1" }
+      ],
+      "timeline": [
+        { "year": -539, "label": "539 BC", "event": "Cyrus takes Babylon." },
+        { "year": -538, "label": "c. 538 BC", "event": "Cyrus’s first year over Babylon; the decree of Ezra 1." },
+        { "year": 1879, "label": "1879", "event": "Hormuzd Rassam finds the cylinder at Babylon." },
+        { "year": 2010, "label": "2010", "event": "Fragments of a second copy of the text are identified in the British Museum." }
+      ],
+      "sources": [
+        { "citation": "British Museum. “The Cyrus Cylinder” (1880,0617.1941).", "url": "https://www.britishmuseum.org/collection/object/W_1880-0617-1941" },
+        { "citation": "Finkel, Irving, ed. The Cyrus Cylinder: The King of Persia’s Proclamation from Ancient Babylon. London: I.B. Tauris, 2013.", "url": null },
+        { "citation": "Kuhrt, Amélie. “The Cyrus Cylinder and Achaemenid Imperial Policy.” Journal for the Study of the Old Testament 8, no. 25 (1983): 83–97.", "url": null }
+      ]
+    },
+    {
+      "slug": "caiaphas-ossuary",
+      "title": "The Caiaphas Ossuary",
+      "summary": "An ornate bone box found in a Jerusalem tomb in 1990, inscribed “Joseph son of Caiaphas.” Many scholars think it held the bones of the high priest who handed Jesus over to Pilate.",
+      "siteName": "Peace Forest, Jerusalem",
+      "lat": 31.7598,
+      "lng": 35.2288,
+      "credibility": "supported",
+      "credibilityNote": "The tomb and the ossuary come from a documented salvage excavation and are not in doubt. That this Joseph son of Caiaphas is the high priest is probable rather than certain. The name matches Josephus’s “Joseph who was called Caiaphas,” and the box is richly decorated, but the inscription gives no title, and a few scholars question the reading of the family name.",
+      "description": [
+        "In November 1990, construction work in Jerusalem’s Peace Forest broke into the roof of a 1st-century burial cave. Zvi Greenhut of the Israel Antiquities Authority found about a dozen ossuaries, limestone boxes in which bones were gathered about a year after burial. The most elaborate, carved with rosettes, is inscribed “Yehosef bar Qayafa,” Joseph son of Caiaphas, and held the bones of six people, including a man of about sixty.",
+        "The Gospels name Caiaphas as the high priest when Jesus was arrested and questioned (Matthew 26:57; John 11:49–53; 18:13–14, 24). Josephus gives his full name as Joseph Caiaphas, high priest from about AD 18 to 36. A decorated ossuary bearing that name, in a family tomb of the right period, fits him well.",
+        "The bones were reburied, and the ossuary is displayed in the Israel Museum in Jerusalem."
+      ],
+      "refs": [
+        { "book": "matthew", "from": "26:57", "to": "26:66" },
+        { "book": "luke", "from": "3:2", "to": "3:2" },
+        { "book": "john", "from": "11:49", "to": "11:53" },
+        { "book": "john", "from": "18:12", "to": "18:14" },
+        { "book": "john", "from": "18:24", "to": "18:24" }
+      ],
+      "timeline": [
+        { "year": 18, "label": "c. AD 18", "event": "Joseph Caiaphas becomes high priest." },
+        { "year": 30, "label": "c. AD 30–33", "event": "Jesus is brought before Caiaphas." },
+        { "year": 36, "label": "c. AD 36", "event": "Caiaphas is removed from office." },
+        { "year": 1990, "label": "1990", "event": "The family tomb is discovered in the Peace Forest." },
+        { "year": 1992, "label": "1992", "event": "Greenhut and Ronny Reich publish the find." }
+      ],
+      "sources": [
+        { "citation": "Greenhut, Zvi. “Burial Cave of the Caiaphas Family.” Biblical Archaeology Review 18, no. 5 (1992): 28–36, 76.", "url": null },
+        { "citation": "Reich, Ronny. “Caiaphas Name Inscribed on Bone Boxes.” Biblical Archaeology Review 18, no. 5 (1992): 38–44, 76.", "url": null },
+        { "citation": "Horbury, William. “The ‘Caiaphas’ Ossuaries and Joseph Caiaphas.” Palestine Exploration Quarterly 126, no. 1 (1994): 32–48.", "url": null },
+        { "citation": "Josephus. Jewish Antiquities 18.35, 18.95.", "url": null }
+      ]
+    },
+    {
+      "slug": "pilate-stone",
+      "title": "The Pilate Stone",
+      "summary": "A limestone block found at Caesarea in 1961 that bears the name of Pontius Pilate and his title, prefect of Judea. It is the only known inscription from his lifetime that clearly names him.",
+      "siteName": "Caesarea Maritima, Israel",
+      "lat": 32.4979,
+      "lng": 34.8909,
+      "credibility": "established",
+      "credibilityNote": "Found in a documented excavation and displayed in the Israel Museum, the inscription is universally accepted. It confirms Pilate as a real Roman official in Judea who held the title praefectus, consistent with the Gospels, Josephus and Philo. Debate centers on details, such as what the building called the Tiberieum was.",
+      "description": [
+        "In 1961 an Italian expedition led by Antonio Frova was excavating the Roman theater at Caesarea Maritima, the seat of Roman government in Judea. A limestone block, reused as a step in a later rebuilding, carried part of a Latin dedication. Its lines read, in part, “Tiberieum … [Po]ntius Pilatus … [Praef]ectus Iuda[ea]e”: Pontius Pilate, prefect of Judea, had dedicated a building called a Tiberieum, in honor of the emperor Tiberius.",
+        "All four Gospels name Pilate as the governor who sentenced Jesus, and Luke 3:1 dates John the Baptist’s ministry to the time when “Pontius Pilate being governor of Judaea.” Josephus and Philo also write about him. The stone settles the title of his office. Before Claudius, Rome’s governors of Judea were prefects (praefectus), a military title, not procurators, as the later historian Tacitus called him.",
+        "The original is in the Israel Museum in Jerusalem; a replica stands at Caesarea."
+      ],
+      "refs": [
+        { "book": "matthew", "from": "27:1", "to": "27:2" },
+        { "book": "mark", "from": "15:1", "to": "15:15" },
+        { "book": "luke", "from": "3:1", "to": "3:1" },
+        { "book": "john", "from": "19:13", "to": "19:16" }
+      ],
+      "timeline": [
+        { "year": 26, "label": "AD 26", "event": "Pilate becomes prefect of Judea." },
+        { "year": 30, "label": "c. AD 30–33", "event": "Jesus is tried before Pilate." },
+        { "year": 36, "label": "AD 36/37", "event": "Pilate is recalled to Rome." },
+        { "year": 1961, "label": "1961", "event": "Antonio Frova’s team finds the stone in the theater at Caesarea." }
+      ],
+      "sources": [
+        { "citation": "Frova, Antonio. “L’iscrizione di Ponzio Pilato a Cesarea.” Rendiconti dell’Istituto Lombardo 95 (1961): 419–434.", "url": null },
+        { "citation": "Taylor, Joan E. “Pontius Pilate and the Imperial Cult in Roman Judaea.” New Testament Studies 52, no. 4 (2006): 555–582.", "url": null },
+        { "citation": "Bond, Helen K. Pontius Pilate in History and Interpretation. Cambridge: Cambridge University Press, 1998.", "url": null },
+        { "citation": "Josephus. Jewish Antiquities 18.55–64.", "url": null }
+      ]
+    },
+    {
+      "slug": "pool-of-siloam",
+      "title": "The Pool of Siloam",
+      "summary": "A large stepped pool from the time of Jesus, uncovered by accident in Jerusalem in 2004. It is the pool where John’s Gospel says Jesus sent a blind man to wash.",
+      "siteName": "City of David, Jerusalem",
+      "lat": 31.7706,
+      "lng": 35.2351,
+      "credibility": "established",
+      "credibilityNote": "Israel Antiquities Authority archaeologists excavated the pool and dated it by coins and pottery to the late Second Temple period. Its identification as the Siloam pool of John 9 is widely accepted, because it lies at the outlet of the Siloam water system and was in use in the 1st century AD. Only part of it has been excavated so far.",
+      "description": [
+        "In 2004 workers repairing a sewer pipe south of the Old City exposed stone steps. Archaeologists Ronny Reich and Eli Shukron found that the steps belonged to a large pool, more than 50 meters long, with flights of steps separated by landings. Coins in the plaster and fill date its use to the 1st centuries BC and AD, ending around the Roman destruction of Jerusalem in AD 70.",
+        "John 9 tells how Jesus put clay on a blind man’s eyes and told him, “Go, wash in the pool of Siloam,” and the man came back seeing. The small pool shown to visitors for centuries dates from Byzantine times. The discovery shows a large public pool at the place the Gospel implies, probably used by pilgrims for ritual washing before they went up to the Temple. Along with the Pool of Bethesda (John 5:2), it has strengthened confidence that John’s Gospel knows Jerusalem’s real places.",
+        "Excavation of the rest of the pool began in 2022."
+      ],
+      "refs": [
+        { "book": "nehemiah", "from": "3:15", "to": "3:15" },
+        { "book": "john", "from": "9:6", "to": "9:11" }
+      ],
+      "timeline": [
+        { "year": -100, "label": "c. 100 BC", "event": "The pool is built or rebuilt, by the coins in its plaster." },
+        { "year": 30, "label": "c. AD 30", "event": "Jesus sends a blind man to wash in the pool (John 9)." },
+        { "year": 70, "label": "AD 70", "event": "The Romans destroy Jerusalem; the pool falls out of use." },
+        { "year": 2004, "label": "2004", "event": "Steps are uncovered during sewer repairs; Reich and Shukron excavate." },
+        { "year": 2022, "label": "2022", "event": "Excavation of the rest of the pool begins." }
+      ],
+      "sources": [
+        { "citation": "Shanks, Hershel. “The Siloam Pool: Where Jesus Cured the Blind Man.” Biblical Archaeology Review 31, no. 5 (2005): 16–23.", "url": null },
+        { "citation": "Reich, Ronny, and Eli Shukron. “The Pool of Siloam in Jerusalem of the Late Second Temple Period and Its Surroundings.” In Jesus and Archaeology, edited by James H. Charlesworth. Grand Rapids: Eerdmans, 2006.", "url": null },
+        { "citation": "von Wahlde, Urban C. “The Pool of Siloam: The Importance of the New Discoveries for Our Understanding of Ritual Immersion in Late Second Temple Judaism and the Gospel of John.” In John, Jesus, and History, vol. 2, edited by Paul N. Anderson, Felix Just and Tom Thatcher. Atlanta: Society of Biblical Literature, 2009.", "url": null }
+      ]
+    }
+  ]
+}
