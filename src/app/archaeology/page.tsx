@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { CredibilityBadge } from "@/components/archaeology/CredibilityBadge";
 import { FindingCard } from "@/components/archaeology/FindingCard";
 import { FindingFilters } from "@/components/archaeology/FindingFilters";
@@ -57,6 +58,8 @@ export default async function ArchaeologyPage({
         const text = query.toString();
         return text ? `/archaeology?${text}` : "/archaeology";
     };
+    // A page past the end (an old link, or the catalog shrank): go to the last.
+    if (page > pages) redirect(pageHref(pages));
 
     return (
         <div className="flex min-h-full w-full flex-col bg-reading-bg">
@@ -104,18 +107,21 @@ export default async function ArchaeologyPage({
                 </details>
 
                 <FindingFilters
-                    // Remount when the URL changes so the selects match it.
-                    key={`${book}-${credibility}`}
                     books={books}
                     book={book}
                     credibility={credibility}
                 />
 
+                {/* Always rendered, so every change (even to none) is announced. */}
+                <p className="sr-only" aria-live="polite">
+                    {total === 0
+                        ? "No findings match"
+                        : total === 1
+                          ? "1 finding"
+                          : `${total} findings`}
+                </p>
                 {findings.length > 0 ? (
                     <>
-                        <p className="sr-only" aria-live="polite">
-                            {total === 1 ? "1 finding" : `${total} findings`}
-                        </p>
                         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                             {findings.map((finding) => (
                                 <li key={finding.slug} className="flex">

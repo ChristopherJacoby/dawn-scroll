@@ -1,15 +1,18 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useOptimistic, useTransition } from "react";
 import { CREDIBILITY, CREDIBILITY_ORDER } from "@/lib/archaeology/credibility";
 import type { CredibilityRating } from "@/lib/archaeology/types";
 import { cn } from "@/lib/cn";
 
-interface FindingFiltersProps {
-    books: { slug: string; name: string }[];
+interface Filters {
     book: string | null;
     credibility: CredibilityRating | null;
+}
+
+interface FindingFiltersProps extends Filters {
+    books: { slug: string; name: string }[];
 }
 
 const selectClass = cn(
@@ -19,7 +22,9 @@ const selectClass = cn(
 
 /**
  * Book and credibility filters. Changing one navigates to the filtered
- * URL; without JavaScript the form submits the same query.
+ * URL; without JavaScript the form submits the same query. The selects
+ * are controlled (shown optimistically while the page loads, then from
+ * the URL), so they never remount and keyboard focus stays put.
  */
 export function FindingFilters({
     books,
@@ -28,14 +33,15 @@ export function FindingFilters({
 }: FindingFiltersProps) {
     const router = useRouter();
     const [pending, startTransition] = useTransition();
+    const [shown, setShown] = useOptimistic<Filters>({ book, credibility });
 
-    function apply(form: HTMLFormElement) {
+    function apply(next: Filters) {
         const params = new URLSearchParams();
-        for (const [key, value] of new FormData(form)) {
-            if (typeof value === "string" && value) params.set(key, value);
-        }
+        if (next.book) params.set("book", next.book);
+        if (next.credibility) params.set("credibility", next.credibility);
         const query = params.toString();
         startTransition(() => {
+            setShown(next);
             router.replace(query ? `/archaeology?${query}` : "/archaeology", {
                 scroll: false,
             });
@@ -45,10 +51,9 @@ export function FindingFilters({
     return (
         <form
             action="/archaeology"
-            onChange={(event) => apply(event.currentTarget)}
             onSubmit={(event) => {
                 event.preventDefault();
-                apply(event.currentTarget);
+                apply(shown);
             }}
             aria-busy={pending}
             className="flex flex-wrap items-end gap-3 font-sans"
@@ -57,7 +62,10 @@ export function FindingFilters({
                 Book
                 <select
                     name="book"
-                    defaultValue={book ?? ""}
+                    value={shown.book ?? ""}
+                    onChange={(event) =>
+                        apply({ ...shown, book: event.target.value || null })
+                    }
                     className={selectClass}
                 >
                     <option value="">All books</option>
@@ -72,7 +80,15 @@ export function FindingFilters({
                 Credibility
                 <select
                     name="credibility"
-                    defaultValue={credibility ?? ""}
+                    value={shown.credibility ?? ""}
+                    onChange={(event) =>
+                        apply({
+                            ...shown,
+                            credibility:
+                                (event.target.value as CredibilityRating) ||
+                                null,
+                        })
+                    }
                     className={selectClass}
                 >
                     <option value="">Any rating</option>

@@ -66,11 +66,19 @@ function mapSummary(row: SummaryRow): FindingSummary {
     };
 }
 
+const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+// chapter_start/chapter_end are smallint; larger numbers can't match.
+const MAX_CHAPTER = 32767;
+
 /** Ids of findings with a reference in this book (and chapter, if given). */
 async function findingIdsForPassage(
     bookSlug: string,
     chapter?: number,
 ): Promise<number[]> {
+    if (!SLUG.test(bookSlug)) return [];
+    if (chapter !== undefined && !(chapter >= 1 && chapter <= MAX_CHAPTER)) {
+        return [];
+    }
     let query = createPublicClient()
         .from("finding_scripture_refs")
         .select("finding_id, books!inner(slug)")
@@ -104,16 +112,34 @@ export async function listFindings({
     const ids = book ? await findingIdsForPassage(book) : null;
     if (ids?.length === 0) return { findings: [], total: 0 };
 
-    let query = createPublicClient()
+    const client = createPublicClient();
+    // Builders are lazy: the count query only runs if it's awaited.
+    let pageQuery = client
         .from("findings")
         .select(SUMMARY_COLUMNS, { count: "exact" })
         .order("sort_order")
         .order("position", { referencedTable: "finding_scripture_refs" })
         .range((page - 1) * pageSize, page * pageSize - 1);
-    if (ids) query = query.in("id", ids);
-    if (credibility) query = query.eq("credibility_rating", credibility);
+    let countQuery = client
+        .from("findings")
+        .select("id", { count: "exact", head: true });
+    if (ids) {
+        pageQuery = pageQuery.in("id", ids);
+        countQuery = countQuery.in("id", ids);
+    }
+    if (credibility) {
+        pageQuery = pageQuery.eq("credibility_rating", credibility);
+        countQuery = countQuery.eq("credibility_rating", credibility);
+    }
 
-    const { data, error, count } = await query;
+    const { data, error, count } = await pageQuery;
+    // PGRST103: the page starts past the last row. That's an empty page,
+    // not an error; count the matches so callers can still paginate.
+    if (error?.code === "PGRST103") {
+        const total = await countQuery;
+        if (total.error) throw total.error;
+        return { findings: [], total: total.count ?? 0 };
+    }
     if (error) throw error;
     return {
         findings: (data as unknown as SummaryRow[]).map(mapSummary),
