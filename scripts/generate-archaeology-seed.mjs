@@ -50,6 +50,12 @@ function parsePoint(slug, book, text) {
 }
 
 const nonEmpty = (value) => typeof value === "string" && /\S/.test(value);
+// Mirror the table's length checks so content fails here, not mid-push.
+const tooLong = (slug, field, value, max) => {
+  if (typeof value === "string" && value.length > max) fail(slug, `${field} is over ${max} characters`);
+};
+const isCoordinate = (value, limit) =>
+  typeof value === "number" && Number.isFinite(value) && Math.abs(value) <= limit;
 const seen = new Set();
 
 for (const f of findings) {
@@ -63,7 +69,12 @@ for (const f of findings) {
     fail(slug, "description must be a list of paragraphs");
   }
   if (!RATINGS.has(f.credibility)) fail(slug, `bad rating "${f.credibility}"`);
-  if (!(Math.abs(f.lat) <= 90 && Math.abs(f.lng) <= 180)) fail(slug, "bad coordinates");
+  if (!isCoordinate(f.lat, 90) || !isCoordinate(f.lng, 180)) fail(slug, "bad coordinates");
+  tooLong(slug, "title", f.title, 120);
+  tooLong(slug, "summary", f.summary, 400);
+  tooLong(slug, "description", (f.description ?? []).join("\n\n"), 6000);
+  tooLong(slug, "siteName", f.siteName, 120);
+  tooLong(slug, "credibilityNote", f.credibilityNote, 1000);
   if (!f.refs?.length) fail(slug, "no scripture refs");
   if (!(f.sources?.length >= 3)) fail(slug, "needs at least 3 sources");
   if (!f.timeline?.length) fail(slug, "no timeline");
@@ -78,6 +89,7 @@ for (const f of findings) {
   });
   for (const s of f.sources ?? []) {
     if (!nonEmpty(s.citation)) fail(slug, "source without a citation");
+    tooLong(slug, "citation", s.citation, 600);
     if (s.url !== null && !/^https:\/\/\S+$/.test(s.url ?? "")) {
       fail(slug, `bad source url "${s.url}"`);
     }
@@ -87,6 +99,8 @@ for (const f of findings) {
       fail(slug, `bad timeline entry "${t.label}"`);
     }
     if (i > 0 && t.year < list[i - 1].year) fail(slug, `timeline out of order at "${t.label}"`);
+    tooLong(slug, "timeline label", t.label, 60);
+    tooLong(slug, "timeline event", t.event, 300);
   });
 }
 
