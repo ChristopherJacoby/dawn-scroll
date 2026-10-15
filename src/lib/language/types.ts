@@ -14,6 +14,8 @@ export interface StrongsEntry {
     definition: string;
     /** How the KJV renders the word, per Strong's. */
     kjvUsage: string | null;
+    /** Dawnscroll's note on how the English rendering differs, if any. */
+    driftNote: string | null;
 }
 
 /** One grammatical feature of a word, e.g. { name: "Case", value: "Nominative" }. */

@@ -121,6 +121,15 @@ export function WordStudyCard({
                 </dl>
             )}
 
+            {entry?.driftNote && (
+                <div className="flex flex-col gap-1 rounded-md border-l-2 border-reading-accent bg-reading-bg-subtle px-3 py-2 text-sm">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-reading-text-muted">
+                        Translation note
+                    </p>
+                    <p className="leading-relaxed">{entry.driftNote}</p>
+                </div>
+            )}
+
             {entry ? (
                 <div className="flex flex-col gap-2 border-t border-reading-divider pt-3 text-sm">
                     {entry.lemma !== shown && (
