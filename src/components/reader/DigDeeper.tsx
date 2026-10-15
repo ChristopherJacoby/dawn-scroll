@@ -2,6 +2,7 @@
 
 import * as Popover from "@radix-ui/react-popover";
 import { Landmark } from "lucide-react";
+import { useId } from "react";
 import { FindingCard } from "@/components/archaeology/FindingCard";
 import type { FindingSummary } from "@/lib/archaeology/types";
 import { cn } from "@/lib/cn";
@@ -11,6 +12,7 @@ import { cn } from "@/lib/cn";
  * it opens their summary cards.
  */
 export function DigDeeper({ findings }: { findings: FindingSummary[] }) {
+    const headingId = useId();
     const label =
         findings.length === 1
             ? `Dig deeper: ${findings[0].title}`
@@ -33,13 +35,17 @@ export function DigDeeper({ findings }: { findings: FindingSummary[] }) {
             </Popover.Trigger>
             <Popover.Portal>
                 <Popover.Content
+                    aria-labelledby={headingId}
                     side="bottom"
                     align="start"
                     sideOffset={6}
                     collisionPadding={12}
                     className="z-30 flex max-h-[min(28rem,60vh)] w-[min(24rem,calc(100vw-2rem))] flex-col gap-2 overflow-y-auto rounded-lg border border-reading-border-strong bg-reading-surface p-2 shadow-lg focus:outline-none"
                 >
-                    <p className="px-2 pt-1 font-sans text-xs font-medium uppercase tracking-wide text-reading-text-muted">
+                    <p
+                        id={headingId}
+                        className="px-2 pt-1 font-sans text-xs font-medium uppercase tracking-wide text-reading-text-muted"
+                    >
                         Archaeology
                     </p>
                     {findings.map((finding) => (
