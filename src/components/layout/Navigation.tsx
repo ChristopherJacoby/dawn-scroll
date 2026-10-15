@@ -9,7 +9,7 @@ import {
     Bookmark,
     Highlighter,
     NotebookPen,
-    Compass,
+    Landmark,
     Search,
     Settings,
     User,
@@ -25,7 +25,7 @@ const navItems = [
     { href: "/highlights", icon: Highlighter, label: "Highlights" },
     { href: "/notes", icon: NotebookPen, label: "Notes" },
     { href: "/plans", icon: CalendarCheck, label: "Plans" },
-    { href: "/explore", icon: Compass, label: "Explore" },
+    { href: "/archaeology", icon: Landmark, label: "Archaeology" },
     { href: "/account", icon: User, label: "Account" },
     { href: "/settings", icon: Settings, label: "Settings" },
 ];
