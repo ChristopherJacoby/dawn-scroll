@@ -46,3 +46,7 @@ next-env.d.ts
 
 # Claude Code local (per-machine) settings
 .claude/settings.local.json
+
+# original-language import: downloads and build output
+/data/original-language/raw/
+/data/original-language/out/
