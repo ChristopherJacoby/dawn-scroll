@@ -50,3 +50,6 @@ next-env.d.ts
 # original-language import: downloads and build output
 /data/original-language/raw/
 /data/original-language/out/
+
+# MapLibre worker, copied from node_modules on install
+/public/maplibre/
