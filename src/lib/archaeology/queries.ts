@@ -3,6 +3,7 @@ import { createPublicClient } from "@/lib/supabase/public";
 import type {
     CredibilityRating,
     Finding,
+    FindingImage,
     FindingScriptureRef,
     FindingSummary,
 } from "./types";
@@ -15,6 +16,18 @@ interface RefRow {
     books: { slug: string; name: string };
 }
 
+interface ImageRow {
+    path: string;
+    width: number;
+    height: number;
+    alt: string;
+    caption: string;
+    credit: string;
+    license: string;
+    license_url: string | null;
+    source_url: string;
+}
+
 interface SummaryRow {
     id: number;
     slug: string;
@@ -25,6 +38,7 @@ interface SummaryRow {
     location_lng: number | string;
     credibility_rating: CredibilityRating;
     finding_scripture_refs: RefRow[];
+    finding_images: ImageRow[];
 }
 
 interface FindingRow extends SummaryRow {
@@ -37,7 +51,30 @@ interface FindingRow extends SummaryRow {
 
 const REFS =
     "finding_scripture_refs(position, chapter_start, verse_start, chapter_end, verse_end, books!inner(slug, name))";
-const SUMMARY_COLUMNS = `id, slug, title, summary, site_name, location_lat, location_lng, credibility_rating, ${REFS}`;
+const IMAGES =
+    "finding_images(position, path, width, height, alt, caption, credit, license, license_url, source_url)";
+const SUMMARY_COLUMNS = `id, slug, title, summary, site_name, location_lat, location_lng, credibility_rating, ${REFS}, ${IMAGES}`;
+
+/** Public URL of an object in the "findings" storage bucket. */
+function imageUrl(path: string): string {
+    const base = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const encoded = path.split("/").map(encodeURIComponent).join("/");
+    return `${base}/storage/v1/object/public/findings/${encoded}`;
+}
+
+function mapImage(row: ImageRow): FindingImage {
+    return {
+        url: imageUrl(row.path),
+        width: row.width,
+        height: row.height,
+        alt: row.alt,
+        caption: row.caption,
+        credit: row.credit,
+        license: row.license,
+        licenseUrl: row.license_url,
+        sourceUrl: row.source_url,
+    };
+}
 
 function mapRef(row: RefRow): FindingScriptureRef {
     return {
@@ -63,6 +100,7 @@ function mapSummary(row: SummaryRow): FindingSummary {
         },
         credibility: row.credibility_rating,
         refs: row.finding_scripture_refs.map(mapRef),
+        image: row.finding_images[0] ? mapImage(row.finding_images[0]) : null,
     };
 }
 
@@ -119,6 +157,7 @@ export async function listFindings({
         .select(SUMMARY_COLUMNS, { count: "exact" })
         .order("sort_order")
         .order("position", { referencedTable: "finding_scripture_refs" })
+        .order("position", { referencedTable: "finding_images" })
         .range((page - 1) * pageSize, page * pageSize - 1);
     let countQuery = client
         .from("findings")
@@ -159,7 +198,8 @@ export async function getChapterFindings(
         .select(SUMMARY_COLUMNS)
         .in("id", ids)
         .order("sort_order")
-        .order("position", { referencedTable: "finding_scripture_refs" });
+        .order("position", { referencedTable: "finding_scripture_refs" })
+        .order("position", { referencedTable: "finding_images" });
     if (error) throw error;
     return (data as unknown as SummaryRow[]).map(mapSummary);
 }
@@ -173,6 +213,7 @@ export async function getFinding(slug: string): Promise<Finding | null> {
         )
         .eq("slug", slug)
         .order("position", { referencedTable: "finding_scripture_refs" })
+        .order("position", { referencedTable: "finding_images" })
         .order("position", { referencedTable: "finding_sources" })
         .order("position", { referencedTable: "finding_timeline" })
         .maybeSingle();
@@ -184,6 +225,7 @@ export async function getFinding(slug: string): Promise<Finding | null> {
         description: row.description.split(/\n{2,}/),
         credibilityNote: row.credibility_note,
         reviewedOn: row.reviewed_on,
+        images: row.finding_images.map(mapImage),
         sources: row.finding_sources.map(({ citation, url }) => ({
             citation,
             url,

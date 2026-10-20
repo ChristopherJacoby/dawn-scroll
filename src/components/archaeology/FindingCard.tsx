@@ -1,4 +1,5 @@
 import { ArrowRight, MapPin } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { CredibilityBadge } from "@/components/archaeology/CredibilityBadge";
 import { formatScriptureRef } from "@/lib/archaeology/refs";
@@ -9,7 +10,10 @@ interface FindingCardProps {
     finding: FindingSummary;
     /** Heading level, so the card fits the page outline it sits in. */
     as?: "h2" | "h3";
-    /** Show the site and scripture references (the hub does; the reader doesn't). */
+    /**
+     * Show the photo, site and scripture references (hub cards). The photo's
+     * credit is on the finding page the card links to.
+     */
     showContext?: boolean;
     className?: string;
 }
@@ -29,6 +33,18 @@ export function FindingCard({
                 className,
             )}
         >
+            {showContext && finding.image && (
+                <div className="relative -mx-4 -mt-4 aspect-[3/2] overflow-hidden rounded-t-lg border-b border-reading-divider bg-reading-bg-subtle">
+                    <Image
+                        src={finding.image.url}
+                        // Decorative here: the title names what's pictured.
+                        alt=""
+                        fill
+                        sizes="(min-width: 1024px) 20rem, (min-width: 640px) 50vw, 100vw"
+                        className="object-cover"
+                    />
+                </div>
+            )}
             <div className="flex items-start justify-between gap-3">
                 <Heading
                     id={`finding-${finding.slug}`}

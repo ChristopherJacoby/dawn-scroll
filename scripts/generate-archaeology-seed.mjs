@@ -102,6 +102,25 @@ for (const f of findings) {
     tooLong(slug, "timeline label", t.label, 60);
     tooLong(slug, "timeline event", t.event, 300);
   });
+  for (const image of f.images ?? []) {
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9-]+)*\.(?:jpg|png|webp)$/.test(image.path ?? "")) {
+      fail(slug, `bad image path "${image.path}"`);
+    }
+    for (const field of ["alt", "caption", "credit", "license"]) {
+      if (!nonEmpty(image[field])) fail(slug, `image ${image.path} is missing ${field}`);
+    }
+    if (!Number.isInteger(image.width) || !Number.isInteger(image.height) || image.width < 1 || image.height < 1) {
+      fail(slug, `image ${image.path} needs integer width and height`);
+    }
+    if (image.licenseUrl !== null && !/^https?:\/\/\S+$/.test(image.licenseUrl ?? "")) {
+      fail(slug, `image ${image.path} has a bad licenseUrl`);
+    }
+    if (!/^https:\/\/\S+$/.test(image.sourceUrl ?? "")) fail(slug, `image ${image.path} has a bad sourceUrl`);
+    tooLong(slug, "image alt", image.alt, 300);
+    tooLong(slug, "image caption", image.caption, 400);
+    tooLong(slug, "image credit", image.credit, 200);
+    tooLong(slug, "image license", image.license, 60);
+  }
 }
 
 if (errors.length) {
@@ -144,6 +163,7 @@ const out = [
   `delete from public.finding_scripture_refs where finding_id in (select id from public.findings where slug in (${slugList}));`,
   `delete from public.finding_sources where finding_id in (select id from public.findings where slug in (${slugList}));`,
   `delete from public.finding_timeline where finding_id in (select id from public.findings where slug in (${slugList}));`,
+  `delete from public.finding_images where finding_id in (select id from public.findings where slug in (${slugList}));`,
   "",
   "insert into public.finding_scripture_refs (finding_id, position, book_id, chapter_start, verse_start, chapter_end, verse_end)",
   "select f.id, v.position, b.id, v.cs, v.vs, v.ce, v.ve",
@@ -180,5 +200,23 @@ const out = [
   "join public.findings f on f.slug = v.slug;",
   "",
 ];
+
+const images = findings.flatMap((f) =>
+  (f.images ?? []).map((m, i) => [
+    q(f.slug), i + 1, q(m.path), m.width, m.height, q(m.alt), q(m.caption),
+    q(m.credit), q(m.license), q(m.licenseUrl), q(m.sourceUrl),
+  ]),
+);
+if (images.length) {
+  out.push(
+    "insert into public.finding_images (finding_id, position, path, width, height, alt, caption, credit, license, license_url, source_url)",
+    "select f.id, v.position, v.path, v.width, v.height, v.alt, v.caption, v.credit, v.license, v.license_url, v.source_url",
+    "from (values",
+    rows(images),
+    ") as v (slug, position, path, width, height, alt, caption, credit, license, license_url, source_url)",
+    "join public.findings f on f.slug = v.slug;",
+    "",
+  );
+}
 
 process.stdout.write(out.join("\n"));
