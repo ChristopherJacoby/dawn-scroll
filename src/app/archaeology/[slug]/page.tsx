@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, BookOpen, MapPin } from "lucide-react";
 import { CredibilityBadge } from "@/components/archaeology/CredibilityBadge";
+import { FindingFigure } from "@/components/archaeology/FindingPhoto";
 import { CREDIBILITY } from "@/lib/archaeology/credibility";
 import { getFinding } from "@/lib/archaeology/queries";
 import { formatScriptureRef, scriptureRefHref } from "@/lib/archaeology/refs";
@@ -70,6 +71,19 @@ export default async function FindingPage({ params }: FindingPageProps) {
                         {finding.summary}
                     </p>
                 </header>
+
+                {finding.images.length > 0 && (
+                    <div className="flex flex-col gap-6">
+                        {finding.images.map((image, i) => (
+                            <FindingFigure
+                                key={image.url}
+                                image={image}
+                                preload={i === 0}
+                                sizes="(min-width: 768px) 42rem, 100vw"
+                            />
+                        ))}
+                    </div>
+                )}
 
                 <section
                     aria-label="Description"

@@ -32,6 +32,20 @@ export interface FindingTimeline {
     event: string;
 }
 
+/** A photo of a finding, with the attribution its license requires. */
+export interface FindingImage {
+    url: string;
+    width: number;
+    height: number;
+    alt: string;
+    caption: string;
+    credit: string;
+    license: string;
+    licenseUrl: string | null;
+    /** Where the image came from (e.g. its Wikimedia Commons page). */
+    sourceUrl: string;
+}
+
 /** What cards and the in-reader trigger need. */
 export interface FindingSummary {
     slug: string;
@@ -41,6 +55,8 @@ export interface FindingSummary {
     location: { lat: number; lng: number };
     credibility: CredibilityRating;
     refs: FindingScriptureRef[];
+    /** The lead photo, if any. */
+    image: FindingImage | null;
 }
 
 /** A finding with everything its detail page shows. */
@@ -52,4 +68,6 @@ export interface Finding extends FindingSummary {
     timeline: FindingTimeline[];
     /** When the content was last checked (YYYY-MM-DD). */
     reviewedOn: string;
+    /** All photos, lead photo first. */
+    images: FindingImage[];
 }

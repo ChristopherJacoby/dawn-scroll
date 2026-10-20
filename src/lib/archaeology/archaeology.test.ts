@@ -71,6 +71,7 @@ describe("findingMarkers", () => {
         location: { lat: 0, lng: 0 },
         credibility: "established",
         refs,
+        image: null,
     });
 
     it("marks each finding once, at its earliest verse in the chapter", () => {

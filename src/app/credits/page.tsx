@@ -62,6 +62,19 @@ const CREDITS: { heading: string; items: Credit[] }[] = [
         ],
     },
     {
+        heading: "Photos",
+        items: [
+            {
+                name: "Wikimedia Commons",
+                href: "https://commons.wikimedia.org",
+                use: "Photos of the archaeological finds.",
+                license: "Public domain, CC0, CC BY 4.0 or CC BY-SA 4.0",
+                attribution:
+                    "Each photo is credited, with its license, on its finding’s page.",
+            },
+        ],
+    },
+    {
         heading: "Maps",
         items: [
             {
