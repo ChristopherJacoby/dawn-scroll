@@ -103,6 +103,20 @@ for (const q of questions) {
     }
   }
 
+  // Duplicates would fail mid-push (related_questions' key) or collide as
+  // React keys on the detail page.
+  const duplicates = (label, values) => {
+    const seenValues = new Set();
+    for (const value of values) {
+      if (seenValues.has(value)) fail(slug, `duplicate ${label} "${String(value).slice(0, 60)}"`);
+      seenValues.add(value);
+    }
+  };
+  duplicates("related question", q.related ?? []);
+  duplicates("claim", (q.claims ?? []).map((c) => c.claim));
+  duplicates("quote", (q.quotes ?? []).map((x) => x.quote));
+  duplicates("source", (q.sources ?? []).map((s) => s.citation));
+
   for (const related of q.related ?? []) {
     if (related === slug) fail(slug, "relates to itself");
     else if (!slugs.has(related)) fail(slug, `related question "${related}" doesn't exist`);
@@ -119,17 +133,17 @@ for (const q of questions) {
   for (let n = 1; n <= count; n += 1) if (!cited.has(n)) fail(slug, `source ${n} is never cited`);
 }
 
-// Quotes are compared ignoring case, punctuation style and spacing: curly vs
-// straight quotes, dash variants, and the capital a pull-quote starts with.
+// Quotes are compared ignoring case, spacing and punctuation style: curly vs
+// straight quotes, hyphens and dashes (PDFs break words across lines with
+// them), and editorial brackets, so "[T]here" matches a quote's "There".
 const normalize = (text) =>
   text
     .normalize("NFKC")
-    .replace(/[‘’‚′]/g, "'")
-    .replace(/[“”„″]/g, '"')
-    .replace(/[‐-―−]/g, "-")
-    .replace(/[∼~]/g, "~")
-    .replace(/-\s*\n\s*/g, "")
-    .replace(/[\s ]+/g, " ")
+    .replace(/[\u2018\u2019\u201a\u2032]/g, "'")
+    .replace(/[\u201c\u201d\u201e\u2033]/g, '"')
+    .replace(/[-\u00ad\u2010-\u2015\u2212\[\]]/g, "")
+    .replace(/[\u223c~]/g, "~")
+    .replace(/[\s\u00a0]+/g, " ")
     .replace(/^\W+|\W+$/g, "")
     .toLowerCase();
 
@@ -167,7 +181,9 @@ if (process.argv.includes("--check-urls")) {
   const urls = new Set(questions.flatMap((q) => (q.sources ?? []).flatMap((s) => (s.url ? [s.url] : []))));
   for (const url of urls) {
     try {
-      texts.set(url, normalize(sourceText(url)));
+      const text = normalize(sourceText(url));
+      if (text.length < 200) throw new Error("has almost no extractable text, so its quotes can't be verified");
+      texts.set(url, text);
     } catch (error) {
       errors.push(`${url}: ${error.message.split("\n")[0]}`);
     }
@@ -176,7 +192,7 @@ if (process.argv.includes("--check-urls")) {
     for (const quote of q.quotes ?? []) {
       const url = q.sources?.[quote.source - 1]?.url;
       const text = url && texts.get(url);
-      if (text && !text.includes(normalize(quote.quote).replace(/^\[?t\]?here/, "here"))) {
+      if (text && !text.includes(normalize(quote.quote))) {
         fail(q.slug, `quote by ${quote.speaker} not found verbatim at ${url}`);
       }
     }
