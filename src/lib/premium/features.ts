@@ -74,11 +74,12 @@ export function allows(
 /** Stripe statuses that grant access, while the paid period lasts. */
 const ACTIVE_STATUSES = new Set(["active", "trialing"]);
 
+/** Fails closed: without a known period end, a subscription grants nothing. */
 export function isActiveSubscription(
     status: string,
     currentPeriodEnd: string | null,
     now: Date = new Date(),
 ): boolean {
-    if (!ACTIVE_STATUSES.has(status)) return false;
-    return currentPeriodEnd === null || new Date(currentPeriodEnd) > now;
+    if (!ACTIVE_STATUSES.has(status) || currentPeriodEnd === null) return false;
+    return new Date(currentPeriodEnd) > now;
 }

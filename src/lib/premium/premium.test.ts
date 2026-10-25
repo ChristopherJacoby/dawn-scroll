@@ -43,6 +43,9 @@ describe("isActiveSubscription", () => {
             isActiveSubscription("trialing", "2026-11-01T00:00:00Z", now),
         ).toBe(true);
     });
+    it("fails closed without a period end", () => {
+        expect(isActiveSubscription("active", null, now)).toBe(false);
+    });
     it("denies lapsed periods and other statuses", () => {
         expect(
             isActiveSubscription("active", "2026-10-01T00:00:00Z", now),

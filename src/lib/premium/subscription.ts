@@ -33,6 +33,9 @@ const NONE: Omit<SubscriptionStatus, "premiumEnabled"> = {
 export const getSubscriptionStatus = cache(
     async (): Promise<SubscriptionStatus> => {
         const premiumEnabled = isPremiumEnabled();
+        // With Premium off nothing depends on the answer, so do no I/O: an
+        // auth or database outage can never trip a gate.
+        if (!premiumEnabled) return { premiumEnabled, ...NONE };
         const user = await getUser();
         if (!user) return { premiumEnabled, ...NONE };
         const supabase = await createClient();

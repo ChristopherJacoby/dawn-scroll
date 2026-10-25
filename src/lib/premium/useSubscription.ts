@@ -11,9 +11,9 @@ interface ClientStatus {
 }
 
 /**
- * The visitor's premium access, for client components. While loading (or
- * if the status can't be fetched) nothing counts as premium; `canUse`
- * still allows free features and everything while Premium is off.
+ * The visitor's premium access, for client components. Check `isLoading`
+ * before acting on `canUse`: until the status arrives (or if it can't be
+ * fetched) premium features count as unavailable, failing closed.
  */
 export function useSubscription() {
     const [status, setStatus] = useState<ClientStatus | null>(null);
