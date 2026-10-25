@@ -52,6 +52,11 @@ export async function POST(request: Request) {
     if (rejected) return rejected;
     const user = await getUser();
     if (!user) return unauthorized();
+    // Unconfirmed addresses could be throwaway accounts made to multiply
+    // the daily limit.
+    if (!user.email_confirmed_at) {
+        return jsonError("Confirm your email address to ask the Scholar.", 403);
+    }
     if (!isAiConfigured())
         return jsonError("Scholar chat isn't available yet.", 503);
 
@@ -69,17 +74,22 @@ export async function POST(request: Request) {
     const limit = isPremium
         ? config.dailyLimit.premium
         : config.dailyLimit.free;
-    const used = await claimAiRequest(user.id, "scholar", limit);
-    if (used === null) {
-        return jsonError(
-            `You've asked ${limit} questions today, the daily limit. Come back tomorrow.`,
-            429,
-        );
+    const claim = await claimAiRequest(user.id, "scholar", limit);
+    if (!claim.ok) {
+        return claim.reason === "user-limit"
+            ? jsonError(
+                  `You've asked ${limit} questions today, the daily limit. Come back tomorrow.`,
+                  429,
+              )
+            : jsonError(
+                  "The Scholar has answered all it can for today. Come back tomorrow.",
+                  503,
+              );
     }
 
     const { turns } = parsed;
     const userId = user.id;
-    const remaining = limit - used;
+    const remaining = limit - claim.used;
     const [passage, sources] = await Promise.all([
         parsed.passage
             ? passageContext(parsed.passage).catch(() => null)

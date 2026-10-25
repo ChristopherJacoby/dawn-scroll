@@ -1,7 +1,12 @@
 import "server-only";
 import Anthropic from "@anthropic-ai/sdk";
 import type { AiMode } from "./config";
-import { getChatProvider, type ChatEvent, type ChatRequest } from "./provider";
+import {
+    getChatProvider,
+    type ChatEvent,
+    type ChatRequest,
+    type TokenUsage,
+} from "./provider";
 import { recordAiTokens } from "./usage";
 
 export type AiErrorCode = "unavailable" | "busy" | "aborted" | "failed";
@@ -68,27 +73,35 @@ function logError(message: string, error: unknown) {
 
 /**
  * Streams one reply, then records its token usage against the user in
- * ai_usage. Errors arrive as AiError; a failure to record is logged only,
- * so a bookkeeping hiccup never costs the user a finished answer.
+ * ai_usage, including a reply cut short by an error or the reader leaving
+ * (the API bills those too). Errors arrive as AiError; a failure to record
+ * is logged only, so a bookkeeping hiccup never costs the user an answer.
  */
 export async function* streamChat(
     userId: string,
     mode: AiMode,
     request: ChatRequest,
     signal?: AbortSignal,
-): AsyncGenerator<ChatEvent> {
+): AsyncGenerator<Exclude<ChatEvent, { type: "usage" }>> {
+    let usage: TokenUsage | null = null;
     try {
         for await (const event of getChatProvider().stream(request, signal)) {
-            if (event.type === "done") {
-                await recordAiTokens(userId, mode, event.usage).catch((error) =>
-                    logError("Failed to record AI usage", error),
-                );
+            if (event.type === "usage") {
+                usage = event.usage;
+                continue;
             }
+            if (event.type === "done") usage = event.usage;
             yield event;
         }
     } catch (error) {
         const aiError = toAiError(error);
         if (aiError.code !== "aborted") logError("AI request failed", error);
         throw aiError;
+    } finally {
+        if (usage) {
+            await recordAiTokens(userId, mode, usage).catch((error) =>
+                logError("Failed to record AI usage", error),
+            );
+        }
     }
 }

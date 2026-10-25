@@ -20,6 +20,8 @@ export interface TokenUsage {
 
 export type ChatEvent =
     | { type: "text"; text: string }
+    /** Usage so far, cumulative; lets an interrupted reply still be counted. */
+    | { type: "usage"; usage: TokenUsage }
     | { type: "done"; usage: TokenUsage; stopReason: string | null };
 
 export interface ChatProvider {
@@ -30,6 +32,26 @@ export interface ChatProvider {
 }
 
 let anthropic: Anthropic | null = null;
+
+interface ApiUsage {
+    input_tokens: number | null;
+    output_tokens: number | null;
+    cache_creation_input_tokens: number | null;
+    cache_read_input_tokens: number | null;
+}
+
+/** Folds API usage into ours; cache writes count as input. Missing fields keep `previous`. */
+function toUsage(u: ApiUsage, previous?: TokenUsage): TokenUsage {
+    return {
+        inputTokens:
+            u.input_tokens !== null
+                ? u.input_tokens + (u.cache_creation_input_tokens ?? 0)
+                : (previous?.inputTokens ?? 0),
+        outputTokens: u.output_tokens ?? previous?.outputTokens ?? 0,
+        cacheReadTokens:
+            u.cache_read_input_tokens ?? previous?.cacheReadTokens ?? 0,
+    };
+}
 
 /** Claude via the Messages API, streamed. */
 const anthropicProvider: ChatProvider = {
@@ -68,23 +90,26 @@ const anthropicProvider: ChatProvider = {
             },
             { signal },
         );
+        let usage: TokenUsage | undefined;
         for await (const event of stream) {
             if (
                 event.type === "content_block_delta" &&
                 event.delta.type === "text_delta"
             ) {
                 yield { type: "text", text: event.delta.text };
+            } else if (event.type === "message_start") {
+                usage = toUsage(event.message.usage);
+                yield { type: "usage", usage };
+            } else if (event.type === "message_delta") {
+                usage = toUsage(event.usage, usage);
+                yield { type: "usage", usage };
             }
         }
         const message = await stream.finalMessage();
         yield {
             type: "done",
             stopReason: message.stop_reason,
-            usage: {
-                inputTokens: message.usage.input_tokens,
-                outputTokens: message.usage.output_tokens,
-                cacheReadTokens: message.usage.cache_read_input_tokens ?? 0,
-            },
+            usage: toUsage(message.usage),
         };
     },
 };

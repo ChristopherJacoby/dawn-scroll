@@ -30,11 +30,19 @@ export type ChatStreamEvent =
 export const CHAT_LIMITS = {
     /** A user message. */
     questionChars: 2000,
-    /** Everything sent, after trimming to the recent history. */
-    totalChars: 40000,
+    /** A reply carried in the history; longer ones are cut. */
+    replyChars: 16000,
+    /**
+     * Everything sent, after trimming to the recent history. Counted in
+     * UTF-8 bytes, which tracks tokens better than characters do for
+     * non-Latin scripts.
+     */
+    totalBytes: 40000,
     /** Messages in a request body, before trimming. */
     messages: 200,
 };
+
+const encoder = new TextEncoder();
 
 export type ParsedChatBody =
     | { ok: true; turns: ChatTurn[]; passage: PassageRef | null }
@@ -89,29 +97,38 @@ export function parseChatBody(body: unknown, maxTurns: number): ParsedChatBody {
         ) {
             return { ok: false, error: "Each message needs a role and text." };
         }
-        // A reply stopped before any text arrived carries nothing.
-        if (m.role === "assistant" && !m.content.trim()) continue;
-        turns.push({ role: m.role, content: m.content });
+        if (m.role === "user") {
+            // The app never sends a longer question, so the history is
+            // either from another client or forged.
+            if (m.content.length > CHAT_LIMITS.questionChars) {
+                return {
+                    ok: false,
+                    error: `Keep questions under ${CHAT_LIMITS.questionChars} characters.`,
+                };
+            }
+            turns.push({ role: "user", content: m.content });
+        } else if (m.content.trim()) {
+            // (A reply stopped before any text arrived carries nothing.)
+            turns.push({
+                role: "assistant",
+                content: m.content.slice(0, CHAT_LIMITS.replyChars),
+            });
+        }
     }
     const question = turns.at(-1);
     if (question?.role !== "user" || !question.content.trim()) {
         return { ok: false, error: "Ask a question." };
     }
-    if (question.content.length > CHAT_LIMITS.questionChars) {
-        return {
-            ok: false,
-            error: `Keep questions under ${CHAT_LIMITS.questionChars} characters.`,
-        };
-    }
     let recent = turns.slice(-maxTurns);
     while (recent[0].role !== "user") recent = recent.slice(1);
     // Drop the oldest turns until the history fits.
-    let total = recent.reduce((sum, t) => sum + t.content.length, 0);
-    while (total > CHAT_LIMITS.totalChars && recent.length > 1) {
-        total -= recent[0].content.length;
+    const size = (t: ChatTurn) => encoder.encode(t.content).length;
+    let total = recent.reduce((sum, t) => sum + size(t), 0);
+    while (total > CHAT_LIMITS.totalBytes && recent.length > 1) {
+        total -= size(recent[0]);
         recent = recent.slice(1);
         while (recent[0].role !== "user") {
-            total -= recent[0].content.length;
+            total -= size(recent[0]);
             recent = recent.slice(1);
         }
     }

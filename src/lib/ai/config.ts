@@ -28,6 +28,8 @@ export function aiConfig() {
         dailyLimit: {
             free: positiveInt(process.env.AI_DAILY_LIMIT_FREE, 10),
             premium: positiveInt(process.env.AI_DAILY_LIMIT_PREMIUM, 100),
+            /** All users together, per mode: a ceiling on daily spend. */
+            global: positiveInt(process.env.AI_DAILY_LIMIT_GLOBAL, 500),
         },
     } as const;
 }

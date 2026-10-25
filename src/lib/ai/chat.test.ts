@@ -61,6 +61,33 @@ describe("parseChatBody", () => {
         expect(result.ok).toBe(false);
     });
 
+    it("rejects overlong earlier questions and cuts overlong replies", () => {
+        const long = "x".repeat(CHAT_LIMITS.questionChars + 1);
+        expect(
+            parseChatBody(
+                { messages: [user(long), assistant("a"), user("b")] },
+                12,
+            ).ok,
+        ).toBe(false);
+        const result = parseChatBody(
+            { messages: [user("a"), assistant("y".repeat(20000)), user("b")] },
+            12,
+        );
+        expect(result.ok && result.turns[1].content.length).toBe(
+            CHAT_LIMITS.replyChars,
+        );
+    });
+
+    it("measures the history in bytes", () => {
+        // Three bytes per character: 14,000 characters is over the limit.
+        const wide = "語".repeat(14000);
+        const result = parseChatBody(
+            { messages: [user("old"), assistant(wide), user("new")] },
+            12,
+        );
+        expect(result.ok && result.turns).toEqual([user("new")]);
+    });
+
     it("drops empty replies left by a stopped answer", () => {
         const result = parseChatBody(
             { messages: [user("A"), assistant(""), user("B")] },
@@ -86,20 +113,20 @@ describe("parseChatBody", () => {
     });
 
     it("drops the oldest turns when the history is too long", () => {
-        const long = "x".repeat(CHAT_LIMITS.totalChars - 10);
+        const long = "x".repeat(15000);
         const messages = [
             user("old"),
             assistant(long),
             user("mid"),
-            assistant("ok"),
+            assistant(long),
+            user("later"),
+            assistant(long),
             user("new"),
         ];
         const result = parseChatBody({ messages }, 12);
-        expect(result.ok && result.turns).toEqual([
-            user("mid"),
-            assistant("ok"),
-            user("new"),
-        ]);
+        expect(
+            result.ok && result.turns.map((t) => t.content.slice(0, 5)),
+        ).toEqual(["mid", "xxxxx", "later", "xxxxx", "new"]);
     });
 
     it("validates the passage", () => {
