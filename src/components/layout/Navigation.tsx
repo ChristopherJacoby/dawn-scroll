@@ -12,6 +12,7 @@ import {
     Landmark,
     MessageCircleQuestion,
     Search,
+    ScrollText,
     Sprout,
     Settings,
     User,
@@ -23,6 +24,8 @@ import { cn } from "@/lib/cn";
 const navItems = [
     { href: "/reader", icon: BookOpen, label: "Reader" },
     { href: "/search", icon: Search, label: "Search" },
+    // Shown only once AI chat is configured (see Navigation's props).
+    { href: "/scholar", icon: ScrollText, label: "Scholar", ai: true },
     { href: "/bookmarks", icon: Bookmark, label: "Bookmarks" },
     { href: "/highlights", icon: Highlighter, label: "Highlights" },
     { href: "/notes", icon: NotebookPen, label: "Notes" },
@@ -82,9 +85,10 @@ function CreditsLink({ onClick }: { onClick?: () => void }) {
     );
 }
 
-export function Navigation() {
+export function Navigation({ aiEnabled }: { aiEnabled: boolean }) {
     const pathname = usePathname();
     const [mobileOpen, setMobileOpen] = useState(false);
+    const items = navItems.filter((item) => aiEnabled || !item.ai);
 
     const isActive = (href: string) => pathname.startsWith(href);
 
@@ -95,7 +99,7 @@ export function Navigation() {
                 <p className="mb-4 px-3 font-serif text-lg text-reading-text">
                     Dawnscroll
                 </p>
-                {navItems.map((item) => (
+                {items.map((item) => (
                     <NavItem
                         key={item.href}
                         {...item}
@@ -152,7 +156,7 @@ export function Navigation() {
                         <X size={18} />
                     </button>
                 </div>
-                {navItems.map((item) => (
+                {items.map((item) => (
                     <NavItem
                         key={item.href}
                         {...item}

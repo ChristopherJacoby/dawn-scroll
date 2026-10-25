@@ -12,8 +12,12 @@ import { passageContext } from "@/lib/ai/passage";
 import { SCHOLAR_SYSTEM_PROMPT } from "@/lib/ai/prompts/scholar";
 import { retrieveContext } from "@/lib/ai/retrieval";
 import { logAiError } from "@/lib/ai/log";
-import { type AiClaim, claimAiRequest, releaseAiRequest } from "@/lib/ai/usage";
-import { getSubscriptionStatus } from "@/lib/premium/subscription";
+import {
+    type AiClaim,
+    claimAiRequest,
+    dailyLimit,
+    releaseAiRequest,
+} from "@/lib/ai/usage";
 
 // A long, high-effort answer can stream for minutes; cut off early, the
 // reply would just stop mid-sentence.
@@ -69,14 +73,10 @@ export async function POST(request: Request) {
     );
     if (!parsed.ok) return jsonError(parsed.error, 400);
 
-    // The premium limit needs an active subscription with Premium switched
-    // on; while it's off (isPremium is always false) everyone gets the
-    // free limit.
     let limit: number;
     let claim: AiClaim;
     try {
-        const { isPremium } = await getSubscriptionStatus();
-        limit = isPremium ? config.dailyLimit.premium : config.dailyLimit.free;
+        limit = await dailyLimit();
         claim = await claimAiRequest(user.id, "scholar", limit);
     } catch (error) {
         logAiError("Couldn't claim an AI request", error);

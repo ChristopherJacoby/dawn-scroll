@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ScrollText } from "lucide-react";
 import { ChapterPrefetch } from "@/components/reader/ChapterPrefetch";
 import { ChapterVerses } from "@/components/reader/ChapterVerses";
 import { ReaderSelectors } from "@/components/reader/ReaderSelectors";
 import { ReadingModeToggle } from "@/components/reader/ReadingModeToggle";
 import { VerseAnchorScroll } from "@/components/reader/VerseAnchorScroll";
+import { buttonVariants } from "@/components/ui/Button";
+import { isAiConfigured } from "@/lib/ai/config";
 import { getChapterFindings } from "@/lib/archaeology/queries";
 import { getUser } from "@/lib/auth";
 import {
@@ -78,6 +80,7 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
         : [{}, {}, {}];
 
     const reference = `${passage.book.name} ${passage.chapter.chapterNumber}`;
+    const aiEnabled = isAiConfigured();
 
     return (
         <div className="flex min-h-full w-full flex-col bg-reading-bg">
@@ -92,7 +95,26 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                                 {reference}
                             </h1>
                         </div>
-                        <ReadingModeToggle />
+                        <div className="flex items-center gap-2">
+                            {aiEnabled && (
+                                <Link
+                                    href={`/scholar?book=${passage.book.slug}&chapter=${passage.chapter.chapterNumber}`}
+                                    className={buttonVariants({
+                                        variant: "secondary",
+                                        size: "sm",
+                                    })}
+                                >
+                                    <ScrollText
+                                        className="h-4 w-4"
+                                        aria-hidden="true"
+                                    />
+                                    <span className="sr-only sm:not-sr-only">
+                                        Ask about this passage
+                                    </span>
+                                </Link>
+                            )}
+                            <ReadingModeToggle />
+                        </div>
                     </div>
                     <ReaderSelectors
                         books={books}
@@ -151,6 +173,7 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                     highlights={highlights}
                     notes={notes}
                     findings={findings}
+                    aiEnabled={aiEnabled}
                 />
             </article>
 

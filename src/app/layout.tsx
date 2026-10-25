@@ -10,6 +10,7 @@ import {
 import { Providers } from "@/components/Providers";
 import { Navigation } from "@/components/layout/Navigation";
 import type { ReadingPreferences } from "@/context/reading-mode";
+import { isAiConfigured } from "@/lib/ai/config";
 import { getUser } from "@/lib/auth";
 import { getUserSettings } from "@/lib/settings";
 import "./globals.css";
@@ -95,7 +96,7 @@ export default async function RootLayout({
                 )}
                 <Providers account={account}>
                     <div className="flex min-h-full">
-                        <Navigation />
+                        <Navigation aiEnabled={isAiConfigured()} />
                         {/* pt-14 offsets the fixed mobile top bar; removed on md+ */}
                         <main className="flex flex-1 flex-col pt-14 md:pt-0 print:pt-0">
                             {children}

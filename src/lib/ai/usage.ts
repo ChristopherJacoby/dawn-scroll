@@ -1,5 +1,6 @@
 import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getSubscriptionStatus } from "@/lib/premium/subscription";
 import { aiConfig, type AiMode } from "./config";
 import type { TokenUsage } from "./provider";
 
@@ -55,4 +56,34 @@ export async function recordAiTokens(
         p_cache_read: usage.cacheReadTokens,
     });
     if (error) throw error;
+}
+
+/**
+ * The signed-in user's daily question limit. The premium limit needs an
+ * active subscription with Premium switched on; while it's off (isPremium
+ * is always false) everyone gets the free limit, so enabling AI before
+ * Stripe can't hand out premium-sized usage.
+ */
+export async function dailyLimit(): Promise<number> {
+    const { isPremium } = await getSubscriptionStatus();
+    const { dailyLimit } = aiConfig();
+    return isPremium ? dailyLimit.premium : dailyLimit.free;
+}
+
+/** Questions the user has left today in a mode, for display. */
+export async function remainingToday(
+    userId: string,
+    mode: AiMode,
+): Promise<{ remaining: number; limit: number }> {
+    const limit = await dailyLimit();
+    const { data, error } = await createAdminClient()
+        .from("ai_usage")
+        .select("requests")
+        .eq("user_id", userId)
+        .eq("mode", mode)
+        // ai_usage days are the database's current_date, which is UTC.
+        .eq("day", new Date().toISOString().slice(0, 10))
+        .maybeSingle();
+    if (error) throw error;
+    return { remaining: Math.max(0, limit - (data?.requests ?? 0)), limit };
 }
