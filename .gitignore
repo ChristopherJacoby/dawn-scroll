@@ -53,3 +53,5 @@ next-env.d.ts
 
 # MapLibre worker, copied from node_modules on install
 /public/maplibre/
+/data/translations/raw/
+/data/translations/out/

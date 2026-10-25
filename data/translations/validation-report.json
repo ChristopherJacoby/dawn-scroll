@@ -1,0 +1,89 @@
+{
+  "generatedAt": "2026-10-25T14:12:25.419Z",
+  "comparedWith": "data/kjv/kjv.normalized.json",
+  "translations": {
+    "asv": {
+      "source": {
+        "key": "ebible-eng-asv",
+        "url": "https://ebible.org/Scriptures/eng-asv_vpl.zip",
+        "sha256": "ff77ff182f4fbeb6d3368d0e9a31b8dba24c6976daa94a7af08efeb137355894"
+      },
+      "ok": true,
+      "errors": [],
+      "totals": {
+        "books": 66,
+        "chapters": 1189,
+        "verses": 31086
+      },
+      "differencesFromKjv": {
+        "missing": [
+          "acts.15.34",
+          "acts.24.7",
+          "acts.28.29",
+          "acts.8.37",
+          "john.5.4",
+          "luke.17.36",
+          "luke.23.17",
+          "mark.11.26",
+          "mark.15.28",
+          "mark.7.16",
+          "mark.9.44",
+          "mark.9.46",
+          "matthew.17.21",
+          "matthew.18.11",
+          "matthew.23.14",
+          "romans.16.24"
+        ],
+        "extra": []
+      }
+    },
+    "ylt": {
+      "source": {
+        "key": "ebible-engylt",
+        "url": "https://ebible.org/Scriptures/engylt_vpl.zip",
+        "sha256": "5ecf86738ccd6508ab49186b615949c074bdde1a774347d0d1917ac3aba8bd15"
+      },
+      "ok": true,
+      "errors": [],
+      "totals": {
+        "books": 66,
+        "chapters": 1189,
+        "verses": 31102
+      },
+      "differencesFromKjv": {
+        "missing": [],
+        "extra": []
+      }
+    },
+    "web": {
+      "source": {
+        "key": "ebible-engwebp",
+        "url": "https://ebible.org/Scriptures/engwebp_vpl.zip",
+        "sha256": "d681320dbaec25ba2b6ad7151cd71737c10efc24a6545ffe1aa50b5ef0ca4b8d"
+      },
+      "ok": true,
+      "errors": [],
+      "totals": {
+        "books": 66,
+        "chapters": 1189,
+        "verses": 31098
+      },
+      "differencesFromKjv": {
+        "missing": [
+          "acts.15.34",
+          "acts.24.7",
+          "acts.8.37",
+          "luke.17.36",
+          "romans.16.25",
+          "romans.16.26",
+          "romans.16.27"
+        ],
+        "extra": [
+          "romans.14.24",
+          "romans.14.25",
+          "romans.14.26"
+        ]
+      }
+    }
+  }
+}
