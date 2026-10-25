@@ -8,7 +8,7 @@ import {
 import { getUser } from "@/lib/auth";
 import { checkoutSessionParams } from "@/lib/premium/checkout";
 import { isPlanKey } from "@/lib/premium/plans";
-import { getSubscriptionStatus } from "@/lib/premium/subscription";
+import { getSubscriptionRecord } from "@/lib/premium/subscription";
 import { getPriceId, getStripe } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -39,7 +39,9 @@ export async function POST(request: Request) {
     if (!stripe) return jsonError("Subscriptions aren't available yet.", 503);
 
     try {
-        const current = await getSubscriptionStatus();
+        // Read the record directly: whether Premium gating is on or not, a
+        // subscriber shouldn't be able to buy a second subscription.
+        const current = await getSubscriptionRecord();
         if (current.isPremium) {
             return jsonError("You already have Premium.", 409);
         }

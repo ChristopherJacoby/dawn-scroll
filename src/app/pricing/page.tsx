@@ -12,7 +12,7 @@ import {
     PLANS,
     TRIAL_DAYS,
 } from "@/lib/premium/plans";
-import { getSubscriptionStatus } from "@/lib/premium/subscription";
+import { getSubscriptionRecord } from "@/lib/premium/subscription";
 import { cn } from "@/lib/cn";
 
 export const metadata: Metadata = {
@@ -28,7 +28,7 @@ export default async function PricingPage({
 }) {
     const [user, status, params] = await Promise.all([
         getUser(),
-        getSubscriptionStatus().catch(() => null),
+        getSubscriptionRecord().catch(() => null),
         searchParams,
     ]);
     const checkoutAvailable = Boolean(process.env.STRIPE_SECRET_KEY);
