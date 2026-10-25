@@ -10,8 +10,8 @@ export default function ReaderNotFound() {
                     Passage unavailable
                 </h1>
                 <p className="mt-3 max-w-xl text-sm leading-6 text-reading-text-muted">
-                    The requested KJV passage is not available. The book,
-                    chapter, or loaded translation data may be missing.
+                    The requested passage is not available. The book, chapter,
+                    or loaded translation data may be missing.
                 </p>
                 <Link
                     href="/read/john/1"

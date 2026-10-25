@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import type { VerseRefInput } from "@/lib/verse-ref";
 import type {
@@ -11,6 +12,8 @@ import type {
     Translation,
     Verse,
 } from "./types";
+
+export const DEFAULT_TRANSLATION = "kjv";
 
 interface BookRow {
     id: number;
@@ -189,35 +192,41 @@ export async function getBibleBooks(): Promise<BookWithChapters[]> {
     });
 }
 
-export async function getEnabledTranslation(
-    slug = "kjv",
-): Promise<Translation | null> {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-        .from("translations")
-        .select(
-            "id, slug, abbreviation, name, language_code, versification, is_public_domain, is_enabled",
-        )
-        .eq("slug", slug)
-        .eq("is_enabled", true)
-        .maybeSingle();
+const TRANSLATION_COLUMNS =
+    "id, slug, abbreviation, name, language_code, versification, is_public_domain, is_enabled";
 
-    if (error) throw error;
-    return data ? mapTranslation(data as TranslationRow) : null;
-}
+/**
+ * Translations readers can pick, KJV (the default) first. RLS hides
+ * disabled ones. Memoized per server render.
+ */
+export const getEnabledTranslations = cache(
+    async (): Promise<Translation[]> => {
+        const supabase = await createClient();
+        const { data, error } = await supabase
+            .from("translations")
+            .select(TRANSLATION_COLUMNS)
+            .eq("is_enabled", true)
+            .order("abbreviation", { ascending: true });
+        if (error) throw error;
+        return ((data ?? []) as TranslationRow[])
+            .map(mapTranslation)
+            .sort(
+                (a, b) =>
+                    Number(b.slug === DEFAULT_TRANSLATION) -
+                    Number(a.slug === DEFAULT_TRANSLATION),
+            );
+    },
+);
 
-export async function getKjvChapter(
+/** A chapter's verses in `translation`, or null when it doesn't exist. */
+export async function getChapter(
     bookSlug: string,
     chapterNumber: number,
+    translation: Translation,
 ): Promise<BibleChapter | null> {
     if (!Number.isInteger(chapterNumber) || chapterNumber < 1) return null;
 
-    const [books, translation] = await Promise.all([
-        getBibleBooks(),
-        getEnabledTranslation("kjv"),
-    ]);
-    if (!translation) return null;
-
+    const books = await getBibleBooks();
     const sortedBooks = [...books].sort(byBookOrder);
     const bookIndex = sortedBooks.findIndex((item) => item.slug === bookSlug);
     if (bookIndex === -1) return null;
