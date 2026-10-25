@@ -1,7 +1,8 @@
 import type Stripe from "stripe";
 import { jsonError } from "@/lib/api";
+import { isActiveSubscription } from "@/lib/premium/features";
 import {
-    eventTarget,
+    eventSubscriptionId,
     HANDLED_EVENTS,
     subscriptionRow,
 } from "@/lib/premium/webhook";
@@ -35,7 +36,7 @@ export async function POST(request: Request) {
     if (!HANDLED_EVENTS.has(event.type))
         return Response.json({ received: true });
 
-    const { subscriptionId, userId: eventUserId } = eventTarget(event);
+    const subscriptionId = eventSubscriptionId(event);
     if (!subscriptionId) return Response.json({ received: true });
 
     try {
@@ -44,23 +45,38 @@ export async function POST(request: Request) {
         const row = subscriptionRow(subscription);
         const admin = createAdminClient();
 
-        // Find the user: from the event, else by the customer saved at checkout.
-        let userId = eventUserId;
-        if (!userId) {
-            const { data, error } = await admin
-                .from("subscriptions")
-                .select("user_id")
-                .eq("stripe_customer_id", row.stripe_customer_id)
-                .maybeSingle();
-            if (error) throw error;
-            userId = data?.user_id ?? null;
-        }
+        // The user is found only through the Stripe customer that checkout
+        // created for them and saved first. Event fields such as
+        // client_reference_id or metadata are not trusted: a payment link
+        // can set them to anyone.
+        const { data: current, error: findError } = await admin
+            .from("subscriptions")
+            .select(
+                "user_id, stripe_subscription_id, status, current_period_end",
+            )
+            .eq("stripe_customer_id", row.stripe_customer_id)
+            .maybeSingle();
+        if (findError) throw findError;
         // Unknown customer (e.g. created outside this app): nothing to record.
-        if (!userId) return Response.json({ received: true });
+        if (!current) return Response.json({ received: true });
+
+        // A late event about an old subscription must not replace a
+        // different subscription the user is still paying for.
+        const replacesOther =
+            current.stripe_subscription_id !== null &&
+            current.stripe_subscription_id !== row.stripe_subscription_id;
+        if (
+            replacesOther &&
+            isActiveSubscription(current.status, current.current_period_end) &&
+            !isActiveSubscription(row.status, row.current_period_end)
+        ) {
+            return Response.json({ received: true });
+        }
 
         const { error } = await admin
             .from("subscriptions")
-            .upsert({ user_id: userId, ...row }, { onConflict: "user_id" });
+            .update(row)
+            .eq("user_id", current.user_id);
         if (error) throw error;
         return Response.json({ received: true });
     } catch {

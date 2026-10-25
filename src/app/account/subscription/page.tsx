@@ -5,7 +5,7 @@ import { buttonVariants } from "@/components/ui/Button";
 import { requireAuth } from "@/lib/auth";
 import { formatCalendarDate } from "@/lib/dates";
 import { PLANS } from "@/lib/premium/plans";
-import { getSubscriptionStatus } from "@/lib/premium/subscription";
+import { getSubscriptionRecord } from "@/lib/premium/subscription";
 
 export const metadata: Metadata = {
     title: "Subscription | Dawnscroll",
@@ -29,7 +29,7 @@ export default async function SubscriptionPage({
 }) {
     await requireAuth("/account/subscription");
     const [status, params] = await Promise.all([
-        getSubscriptionStatus(),
+        getSubscriptionRecord(),
         searchParams,
     ]);
     const hasSubscription = status.status !== "none";

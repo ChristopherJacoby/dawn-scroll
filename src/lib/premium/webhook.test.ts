@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import { describe, expect, it } from "vitest";
-import { eventTarget, subscriptionRow } from "./webhook";
+import { eventSubscriptionId, subscriptionRow } from "./webhook";
 
 const subscription = (overrides: Partial<Stripe.Subscription> = {}) =>
     ({
@@ -52,28 +52,29 @@ describe("subscriptionRow", () => {
             }),
         );
         expect(other.plan).toBeNull();
+        expect(other.status).toBe("incomplete");
     });
 });
 
-describe("eventTarget", () => {
-    it("reads the user from a checkout session and from subscription metadata", () => {
+describe("eventSubscriptionId", () => {
+    it("reads the subscription from checkout sessions and subscription events", () => {
         expect(
-            eventTarget({
+            eventSubscriptionId({
                 type: "checkout.session.completed",
                 data: {
                     object: {
                         subscription: "sub_9",
-                        client_reference_id: "user-9",
+                        client_reference_id: "anyone",
                     },
                 },
             } as unknown as Stripe.Event),
-        ).toEqual({ subscriptionId: "sub_9", userId: "user-9" });
+        ).toBe("sub_9");
         expect(
-            eventTarget({
+            eventSubscriptionId({
                 type: "customer.subscription.updated",
                 data: { object: subscription() },
             } as unknown as Stripe.Event),
-        ).toEqual({ subscriptionId: "sub_1", userId: "user-1" });
+        ).toBe("sub_1");
     });
 });
 

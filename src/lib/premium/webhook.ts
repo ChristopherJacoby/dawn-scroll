@@ -30,6 +30,7 @@ export function subscriptionRow(
     subscription: Stripe.Subscription,
 ): SubscriptionRow {
     const item = subscription.items.data[0];
+    const plan = planForLookupKey(item?.price.lookup_key ?? null);
     const customer =
         typeof subscription.customer === "string"
             ? subscription.customer
@@ -37,11 +38,13 @@ export function subscriptionRow(
     return {
         stripe_customer_id: customer,
         stripe_subscription_id: subscription.id,
-        // An unrecognized status grants nothing rather than failing the write.
-        status: KNOWN_STATUSES.has(subscription.status)
-            ? subscription.status
-            : "incomplete",
-        plan: planForLookupKey(item?.price.lookup_key ?? null),
+        // Unknown statuses, and prices that aren't one of our plans, grant
+        // nothing rather than failing the write.
+        status:
+            KNOWN_STATUSES.has(subscription.status) && plan !== null
+                ? subscription.status
+                : "incomplete",
+        plan,
         current_period_end: item
             ? new Date(item.current_period_end * 1000).toISOString()
             : null,
@@ -57,29 +60,14 @@ export const HANDLED_EVENTS = new Set([
     "customer.subscription.deleted",
 ]);
 
-/**
- * The subscription an event is about, and the user it belongs to when the
- * event says (checkout sessions carry it as client_reference_id;
- * subscriptions carry it in metadata, set at checkout).
- */
-export function eventTarget(event: Stripe.Event): {
-    subscriptionId: string | null;
-    userId: string | null;
-} {
+/** The subscription an event is about, if any. */
+export function eventSubscriptionId(event: Stripe.Event): string | null {
     if (event.type === "checkout.session.completed") {
-        const session = event.data.object as Stripe.Checkout.Session;
-        const subscription = session.subscription;
-        return {
-            subscriptionId:
-                typeof subscription === "string"
-                    ? subscription
-                    : (subscription?.id ?? null),
-            userId: session.client_reference_id,
-        };
+        const subscription = (event.data.object as Stripe.Checkout.Session)
+            .subscription;
+        return typeof subscription === "string"
+            ? subscription
+            : (subscription?.id ?? null);
     }
-    const subscription = event.data.object as Stripe.Subscription;
-    return {
-        subscriptionId: subscription.id,
-        userId: subscription.metadata?.user_id ?? null,
-    };
+    return (event.data.object as Stripe.Subscription).id;
 }
