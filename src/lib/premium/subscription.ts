@@ -29,15 +29,15 @@ const NONE: Omit<SubscriptionStatus, "premiumEnabled"> = {
     cancelAtPeriodEnd: false,
 };
 
-/** The signed-in user's subscription (or none). Memoized per render. */
-export const getSubscriptionStatus = cache(
-    async (): Promise<SubscriptionStatus> => {
-        const premiumEnabled = isPremiumEnabled();
-        // With Premium off nothing depends on the answer, so do no I/O: an
-        // auth or database outage can never trip a gate.
-        if (!premiumEnabled) return { premiumEnabled, ...NONE };
+/**
+ * The signed-in user's subscription record, whether or not Premium is
+ * switched on: for showing plan details and preventing double purchases.
+ * Memoized per render.
+ */
+export const getSubscriptionRecord = cache(
+    async (): Promise<Omit<SubscriptionStatus, "premiumEnabled">> => {
         const user = await getUser();
-        if (!user) return { premiumEnabled, ...NONE };
+        if (!user) return NONE;
         const supabase = await createClient();
         const { data, error } = await supabase
             .from("subscriptions")
@@ -45,18 +45,31 @@ export const getSubscriptionStatus = cache(
             .eq("user_id", user.id)
             .maybeSingle();
         if (error) throw error;
-        if (!data) return { premiumEnabled, ...NONE };
+        if (!data) return NONE;
         return {
-            premiumEnabled,
-            isPremium: isActiveSubscription(
-                data.status,
-                data.current_period_end,
-            ),
+            // A subscription to a price that isn't one of our plans grants
+            // nothing.
+            isPremium:
+                data.plan !== null &&
+                isActiveSubscription(data.status, data.current_period_end),
             status: data.status,
             plan: data.plan as PlanKey | null,
             currentPeriodEnd: data.current_period_end,
             cancelAtPeriodEnd: data.cancel_at_period_end,
         };
+    },
+);
+
+/**
+ * The visitor's premium access, for gating. With Premium off nothing
+ * depends on the answer, so it does no I/O: an auth or database outage can
+ * never trip a gate. Memoized per render.
+ */
+export const getSubscriptionStatus = cache(
+    async (): Promise<SubscriptionStatus> => {
+        const premiumEnabled = isPremiumEnabled();
+        if (!premiumEnabled) return { premiumEnabled, ...NONE };
+        return { premiumEnabled, ...(await getSubscriptionRecord()) };
     },
 );
 
