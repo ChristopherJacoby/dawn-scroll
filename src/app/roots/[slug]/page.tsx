@@ -161,7 +161,10 @@ export default async function TraditionPage({ params }: TraditionPageProps) {
                         </h2>
                         <p className="text-sm text-reading-text-muted">
                             Each claim is rated against the evidence.{" "}
-                            <Link href="/roots" className="text-reading-link">
+                            <Link
+                                href="/roots#ratings"
+                                className="text-reading-link"
+                            >
                                 About the ratings
                             </Link>
                         </p>

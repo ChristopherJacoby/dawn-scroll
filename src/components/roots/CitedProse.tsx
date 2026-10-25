@@ -7,7 +7,7 @@ export function CitedProse({ text }: { text: string }) {
             <sup key={i} className="ml-px font-sans text-[0.7em]">
                 <a
                     href={`#source-${segment.cite}`}
-                    className="text-reading-link no-underline hover:underline"
+                    className="px-0.5 py-1 text-reading-link no-underline hover:underline"
                 >
                     [<span className="sr-only">source </span>
                     {segment.cite}]

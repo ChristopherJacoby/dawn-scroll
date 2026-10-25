@@ -35,7 +35,10 @@ export default async function RootsPage() {
                     <summary className="cursor-pointer font-medium text-reading-text">
                         How the ratings work
                     </summary>
-                    <dl className="mt-3 flex flex-col gap-3">
+                    <dl
+                        id="ratings"
+                        className="mt-3 flex scroll-mt-20 flex-col gap-3"
+                    >
                         {CLAIM_RATING_ORDER.map((rating) => (
                             <div
                                 key={rating}
