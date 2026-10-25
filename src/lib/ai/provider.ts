@@ -1,11 +1,7 @@
 import "server-only";
 import Anthropic from "@anthropic-ai/sdk";
+import type { ChatTurn } from "./chat";
 import { aiConfig, FALLBACK_MODELS } from "./config";
-
-export interface ChatTurn {
-    role: "user" | "assistant";
-    content: string;
-}
 
 export interface ChatRequest {
     /** Stable instructions for the mode; cached across requests. */
@@ -93,17 +89,28 @@ const anthropicProvider: ChatProvider = {
     },
 };
 
-/** Canned, streamed replies for development and tests: no key, no cost. */
+/**
+ * Canned, streamed replies for development and tests: no key, no cost.
+ * Echoes what the request carried so the plumbing can be checked.
+ */
 export const mockProvider: ChatProvider = {
-    async *stream({ turns, context }) {
+    async *stream({ turns, context }, signal) {
         const question = turns.at(-1)?.content ?? "";
-        const sources = (context?.match(/^\[(.+?)\]/gm) ?? []).slice(0, 2);
-        const reply = `(Mock reply) You asked: "${question.slice(0, 80)}". ${
+        const passage = context?.match(/<passage reference="([^"]+)">/)?.[1];
+        const sources = [...(context?.matchAll(/^\[([^\]]+)\]/gm) ?? [])]
+            .map((m) => m[1])
+            .slice(0, 3);
+        const reply = [
+            `**Mock reply.** You asked: "${question.slice(0, 80)}"`,
+            passage ? `You're reading ${passage}.` : "No passage was attached.",
             sources.length
-                ? `Relevant sources include ${sources.join(" and ")}.`
-                : "No sources were retrieved."
-        } See John 3:16 for an example citation.`;
+                ? `Retrieved sources:\n${sources.map((s) => `- ${s}`).join("\n")}`
+                : "No sources were retrieved.",
+            "Example citations: John 3:16 and Leviticus 23:34-36. Example link: [the Pilate Stone](/archaeology/pilate-stone).",
+        ].join("\n\n");
         for (const word of reply.split(/(?<= )/)) {
+            if (signal?.aborted) throw new Anthropic.APIUserAbortError();
+            await new Promise((resolve) => setTimeout(resolve, 15));
             yield { type: "text", text: word };
         }
         yield {

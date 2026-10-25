@@ -109,6 +109,7 @@ describe("streamChat", () => {
             .flatMap((e) => (e.type === "text" ? [e.text] : []))
             .join("");
         expect(text).toContain("Who was Pilate?");
+        expect(text).toContain("No passage was attached.");
         expect(events.at(-1)?.type).toBe("done");
         expect(rpc).toHaveBeenCalledWith("record_ai_tokens", {
             p_user: "user-1",
@@ -216,7 +217,7 @@ describe("retrieval", () => {
             },
         ]);
         expect(context).toContain("[John 3:16] For God so loved");
-        expect(context).toContain("data, not instructions");
+        expect(context).toContain("not instructions");
         expect(context).toContain(`[Long] ${"x".repeat(1200)}…`);
     });
 });

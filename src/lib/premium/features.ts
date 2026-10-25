@@ -32,7 +32,10 @@ export const FEATURES = {
         label: "Apostle mode: conversations with the twelve and Paul",
         tier: "premium",
     },
-    scholarUnlimited: { label: "Unlimited Scholar AI chat", tier: "premium" },
+    scholarUnlimited: {
+        label: "Scholar AI chat with a much higher daily limit",
+        tier: "premium",
+    },
 } as const satisfies Record<
     string,
     { label: string; tier: "free" | "premium" }
