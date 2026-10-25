@@ -20,8 +20,30 @@ const CREDITS: { heading: string; items: Credit[] }[] = [
             {
                 name: "King James Version (Project Gutenberg eBook #10)",
                 href: "https://www.gutenberg.org/ebooks/10",
-                use: "The text you read in Dawnscroll.",
+                use: "The default translation.",
                 license: "Public domain in the USA",
+            },
+            {
+                name: "American Standard Version (eng-asv)",
+                href: "https://ebible.org/find/details.php?id=eng-asv",
+                use: "The ASV translation.",
+                license: "Public domain",
+                attribution: "eBible.org.",
+            },
+            {
+                name: "World English Bible (engwebp)",
+                href: "https://ebible.org/find/details.php?id=engwebp",
+                use: "The WEB translation.",
+                license: "Public domain",
+                attribution:
+                    "eBible.org. “World English Bible” is a trademark of eBible.org.",
+            },
+            {
+                name: "Young’s Literal Translation (engylt)",
+                href: "https://ebible.org/find/details.php?id=engylt",
+                use: "The YLT translation.",
+                license: "Public domain",
+                attribution: "Robert Young (1898); eBible.org.",
             },
         ],
     },

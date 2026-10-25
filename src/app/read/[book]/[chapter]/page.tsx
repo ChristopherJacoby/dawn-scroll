@@ -9,7 +9,12 @@ import { ReadingModeToggle } from "@/components/reader/ReadingModeToggle";
 import { VerseAnchorScroll } from "@/components/reader/VerseAnchorScroll";
 import { getChapterFindings } from "@/lib/archaeology/queries";
 import { getUser } from "@/lib/auth";
-import { getBibleBooks, getKjvChapter } from "@/lib/bible/queries";
+import {
+    getBibleBooks,
+    getChapter,
+    getEnabledTranslations,
+} from "@/lib/bible/queries";
+import { getPreferredTranslation } from "@/lib/bible/translation-preference";
 import { getChapterBookmarkIds } from "@/lib/bookmarks";
 import { getChapterHighlights } from "@/lib/highlights";
 import { getChapterNotes } from "@/lib/notes";
@@ -33,12 +38,14 @@ export async function generateMetadata({
     const chapterNumber = parseChapter(chapter);
     if (!chapterNumber) return { title: "Passage unavailable | Dawnscroll" };
 
-    const passage = await getKjvChapter(book, chapterNumber);
+    const translation = await getPreferredTranslation();
+    const passage =
+        translation && (await getChapter(book, chapterNumber, translation));
     if (!passage) return { title: "Passage unavailable | Dawnscroll" };
 
     return {
-        title: `${passage.book.name} ${passage.chapter.chapterNumber} KJV | Dawnscroll`,
-        description: `Read ${passage.book.name} ${passage.chapter.chapterNumber} in the King James Version.`,
+        title: `${passage.book.name} ${passage.chapter.chapterNumber} ${passage.translation.abbreviation} | Dawnscroll`,
+        description: `Read ${passage.book.name} ${passage.chapter.chapterNumber} in the ${passage.translation.name}.`,
     };
 }
 
@@ -47,9 +54,13 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
     const chapterNumber = parseChapter(chapter);
     if (!chapterNumber) notFound();
 
-    const [books, passage, user, findings] = await Promise.all([
+    const translation = await getPreferredTranslation();
+    if (!translation) notFound();
+
+    const [books, translations, passage, user, findings] = await Promise.all([
         getBibleBooks(),
-        getKjvChapter(book, chapterNumber),
+        getEnabledTranslations(),
+        getChapter(book, chapterNumber, translation),
         getUser(),
         // Findings are extra; the chapter still renders without them.
         getChapterFindings(book, chapterNumber).catch(() => []),
@@ -75,7 +86,7 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                     <div className="flex items-start justify-between gap-4">
                         <div className="flex flex-col gap-2">
                             <p className="text-xs font-medium uppercase tracking-wide text-reading-text-muted">
-                                {passage.translation.abbreviation}
+                                {passage.translation.name}
                             </p>
                             <h1 className="font-serif text-4xl leading-tight text-reading-text md:text-5xl">
                                 {reference}
@@ -87,6 +98,12 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                         books={books}
                         currentBookSlug={passage.book.slug}
                         currentChapter={passage.chapter.chapterNumber}
+                        translations={translations.map((t) => ({
+                            slug: t.slug,
+                            abbreviation: t.abbreviation,
+                            name: t.name,
+                        }))}
+                        currentTranslation={passage.translation.slug}
                     />
                 </div>
             </header>
@@ -96,12 +113,15 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                 className="mx-auto w-full max-w-4xl px-5 py-8 md:px-10 md:py-12"
             >
                 <h2 id="reader-heading" className="sr-only">
-                    {reference} King James Version
+                    {reference} {passage.translation.name}
                 </h2>
                 <VerseAnchorScroll
                     key={`${passage.book.slug}-${passage.chapter.chapterNumber}`}
                 />
                 <ChapterPrefetch
+                    // Switching translation evicts the prefetched chapters;
+                    // remounting fetches them again in the new one.
+                    key={passage.translation.slug}
                     previousHref={
                         passage.previous
                             ? `/read/${passage.previous.bookSlug}/${passage.previous.chapterNumber}`
@@ -114,7 +134,7 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                     }
                 />
                 <ChapterVerses
-                    key={`verses-${passage.book.slug}-${passage.chapter.chapterNumber}`}
+                    key={`verses-${passage.book.slug}-${passage.chapter.chapterNumber}-${passage.translation.slug}`}
                     bookSlug={passage.book.slug}
                     bookName={passage.book.name}
                     chapterNumber={passage.chapter.chapterNumber}
