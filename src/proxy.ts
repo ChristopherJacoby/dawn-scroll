@@ -8,9 +8,9 @@ export async function proxy(request: NextRequest) {
 export const config = {
     // Skip static assets and images; everything else gets a session refresh.
     matcher: [
-        // api/language, api/archaeology and api/roots serve public,
-        // edge-cached reference data: no session refresh there, so a cached
+        // api/language, api/archaeology, api/roots and api/questions serve
+        // public, edge-cached reference data: no session refresh there, so a cached
         // response can never carry a Set-Cookie.
-        "/((?!_next/static|_next/image|favicon.ico|api/language|api/archaeology|api/roots|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
+        "/((?!_next/static|_next/image|favicon.ico|api/language|api/archaeology|api/roots|api/questions|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
     ],
 };

@@ -10,6 +10,7 @@ import {
     Highlighter,
     NotebookPen,
     Landmark,
+    MessageCircleQuestion,
     Search,
     Sprout,
     Settings,
@@ -28,6 +29,11 @@ const navItems = [
     { href: "/plans", icon: CalendarCheck, label: "Plans" },
     { href: "/archaeology", icon: Landmark, label: "Archaeology" },
     { href: "/roots", icon: Sprout, label: "Roots" },
+    {
+        href: "/questions",
+        icon: MessageCircleQuestion,
+        label: "Hard Questions",
+    },
     { href: "/account", icon: User, label: "Account" },
     { href: "/settings", icon: Settings, label: "Settings" },
 ];
@@ -85,7 +91,7 @@ export function Navigation() {
     return (
         <>
             {/* ── Desktop sidebar (md+) ─────────────────────────────── */}
-            <nav className="hidden md:flex h-screen w-56 shrink-0 sticky top-0 flex-col gap-1 border-r border-reading-divider bg-reading-surface px-3 py-6">
+            <nav className="hidden md:flex print:hidden h-screen w-56 shrink-0 sticky top-0 flex-col gap-1 border-r border-reading-divider bg-reading-surface px-3 py-6">
                 <p className="mb-4 px-3 font-serif text-lg text-reading-text">
                     Dawnscroll
                 </p>
@@ -100,7 +106,7 @@ export function Navigation() {
             </nav>
 
             {/* ── Mobile top bar ────────────────────────────────────── */}
-            <div className="md:hidden fixed top-0 left-0 right-0 z-30 flex h-14 items-center gap-3 border-b border-reading-divider bg-reading-surface px-4">
+            <div className="md:hidden print:hidden fixed top-0 left-0 right-0 z-30 flex h-14 items-center gap-3 border-b border-reading-divider bg-reading-surface px-4">
                 <button
                     onClick={() => setMobileOpen(true)}
                     className="rounded-lg p-1.5 text-reading-text-muted transition-colors hover:bg-reading-bg-subtle hover:text-reading-text"

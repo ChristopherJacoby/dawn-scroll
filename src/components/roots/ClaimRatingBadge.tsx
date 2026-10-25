@@ -14,16 +14,19 @@ const ICONS: Record<ClaimRating, React.ElementType> = {
 /** The rating as an icon plus its label; the label alone carries meaning. */
 export function ClaimRatingBadge({
     rating,
+    scale = CLAIM_RATINGS,
     className,
 }: {
     rating: ClaimRating;
+    /** Labels and descriptions; Roots' wording unless given. */
+    scale?: Record<ClaimRating, { label: string; description: string }>;
     className?: string;
 }) {
     const Icon = ICONS[rating];
     const strong = rating === "established" || rating === "supported";
     return (
         <span
-            title={CLAIM_RATINGS[rating].description}
+            title={scale[rating].description}
             className={cn(
                 "inline-flex shrink-0 items-center gap-1 rounded px-1.5 py-0.5 font-sans text-xs font-semibold",
                 strong
@@ -33,7 +36,7 @@ export function ClaimRatingBadge({
             )}
         >
             <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-            {CLAIM_RATINGS[rating].label}
+            {scale[rating].label}
         </span>
     );
 }
