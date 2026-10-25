@@ -97,7 +97,7 @@ export default async function RootLayout({
                     <div className="flex min-h-full">
                         <Navigation />
                         {/* pt-14 offsets the fixed mobile top bar; removed on md+ */}
-                        <main className="flex flex-1 flex-col pt-14 md:pt-0">
+                        <main className="flex flex-1 flex-col pt-14 md:pt-0 print:pt-0">
                             {children}
                         </main>
                     </div>
