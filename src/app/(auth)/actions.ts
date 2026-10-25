@@ -162,7 +162,7 @@ export async function forgotPassword(
 
     const supabase = await createClient();
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${await siteOrigin()}/auth/confirm`,
+        redirectTo: `${await siteOrigin()}/auth/confirm?next=${encodeURIComponent("/reset-password")}`,
     });
 
     // Rate limits are the only error worth distinguishing; anything else
