@@ -11,6 +11,7 @@ import {
     NotebookPen,
     Landmark,
     Search,
+    Sprout,
     Settings,
     User,
     Menu,
@@ -26,6 +27,7 @@ const navItems = [
     { href: "/notes", icon: NotebookPen, label: "Notes" },
     { href: "/plans", icon: CalendarCheck, label: "Plans" },
     { href: "/archaeology", icon: Landmark, label: "Archaeology" },
+    { href: "/roots", icon: Sprout, label: "Roots" },
     { href: "/account", icon: User, label: "Account" },
     { href: "/settings", icon: Settings, label: "Settings" },
 ];

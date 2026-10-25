@@ -7,22 +7,13 @@ import { FindingFigure } from "@/components/archaeology/FindingPhoto";
 import { CREDIBILITY } from "@/lib/archaeology/credibility";
 import { getFinding } from "@/lib/archaeology/queries";
 import { formatScriptureRef, scriptureRefHref } from "@/lib/archaeology/refs";
+import { formatCalendarDate } from "@/lib/dates";
 
 interface FindingPageProps {
     params: Promise<{ slug: string }>;
 }
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-
-/** "2026-10-14" → "October 14, 2026" (a calendar date, so no time zone). */
-function formatReviewed(date: string): string {
-    return new Date(`${date}T00:00:00Z`).toLocaleDateString("en-US", {
-        timeZone: "UTC",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    });
-}
 
 async function load(slug: string) {
     return SLUG.test(slug) ? getFinding(slug) : null;
@@ -201,7 +192,7 @@ export default async function FindingPage({ params }: FindingPageProps) {
                         ))}
                     </ol>
                     <p className="text-xs text-reading-text-muted">
-                        Last reviewed {formatReviewed(finding.reviewedOn)}.
+                        Last reviewed {formatCalendarDate(finding.reviewedOn)}.
                     </p>
                 </section>
             </article>
