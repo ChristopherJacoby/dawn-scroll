@@ -276,16 +276,19 @@ export async function getChapter(
     };
 }
 
-export async function searchKjv(
+/** Full-text search in one enabled translation, best matches first. */
+export async function searchVerses(
     query: string,
+    translationSlug: string,
     limit = 20,
 ): Promise<SearchResult[]> {
     const trimmed = query.trim();
     if (!trimmed) return [];
 
     const supabase = await createClient();
-    const { data, error } = await supabase.rpc("search_kjv_verses", {
+    const { data, error } = await supabase.rpc("search_verses", {
         search_query: trimmed,
+        search_translation: translationSlug,
         result_limit: limit,
     });
 
