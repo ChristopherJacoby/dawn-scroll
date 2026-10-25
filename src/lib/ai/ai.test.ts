@@ -71,6 +71,14 @@ describe("toAiError", () => {
             headers,
         );
         expect(toAiError(overloaded).code).toBe("busy");
+        const streamError = new Anthropic.APIError(
+            undefined,
+            {},
+            "Internal",
+            headers,
+            "api_error",
+        );
+        expect(toAiError(streamError).code).toBe("busy");
     });
 
     it("treats key, billing and connection problems as unavailable", () => {

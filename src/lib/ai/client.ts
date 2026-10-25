@@ -7,6 +7,7 @@ import {
     type ChatRequest,
     type TokenUsage,
 } from "./provider";
+import { logAiError } from "./log";
 import { recordAiTokens } from "./usage";
 
 export type AiErrorCode = "unavailable" | "busy" | "aborted" | "failed";
@@ -36,14 +37,18 @@ export function toAiError(error: unknown): AiError {
     }
     if (error instanceof Anthropic.APIError) {
         // Errors sent mid-stream have no status, only the body's type.
-        const type = (error.error as { error?: { type?: string } } | undefined)
-            ?.error?.type;
+        const type =
+            error.type ??
+            (error.error as { error?: { type?: string } } | undefined)?.error
+                ?.type;
         const status = error.status ?? 0;
         if (
             status === 429 ||
             status >= 500 ||
             type === "overloaded_error" ||
-            type === "rate_limit_error"
+            type === "rate_limit_error" ||
+            type === "api_error" ||
+            type === "timeout_error"
         ) {
             return new AiError(
                 "busy",
@@ -54,7 +59,9 @@ export function toAiError(error: unknown): AiError {
             status === 401 ||
             status === 402 ||
             status === 403 ||
-            type === "billing_error"
+            type === "billing_error" ||
+            type === "authentication_error" ||
+            type === "permission_error"
         ) {
             return new AiError(
                 "unavailable",
@@ -63,12 +70,6 @@ export function toAiError(error: unknown): AiError {
         }
     }
     return new AiError("failed", "Something went wrong. Try again.");
-}
-
-/** Server log (Vercel function logs) for failures users only see generically. */
-function logError(message: string, error: unknown) {
-    // eslint-disable-next-line no-console -- server-side diagnostics
-    console.error(message, error);
 }
 
 /**
@@ -95,12 +96,12 @@ export async function* streamChat(
         }
     } catch (error) {
         const aiError = toAiError(error);
-        if (aiError.code !== "aborted") logError("AI request failed", error);
+        if (aiError.code !== "aborted") logAiError("AI request failed", error);
         throw aiError;
     } finally {
         if (usage) {
             await recordAiTokens(userId, mode, usage).catch((error) =>
-                logError("Failed to record AI usage", error),
+                logAiError("Failed to record AI usage", error),
             );
         }
     }

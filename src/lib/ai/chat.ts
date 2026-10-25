@@ -20,6 +20,10 @@ export interface ChatRequestBody {
     passage?: PassageRef;
 }
 
+/**
+ * `done` or `error` ends the stream; an `error` may follow some `text`.
+ * A stream that ends without either was cut off.
+ */
 export type ChatStreamEvent =
     /** First event: questions left today, including this one's deduction. */
     | { type: "meta"; remaining: number; limit: number }
@@ -33,7 +37,8 @@ export const CHAT_LIMITS = {
     /** A reply carried in the history; longer ones are cut. */
     replyChars: 16000,
     /**
-     * Everything sent, after trimming to the recent history. Counted in
+     * The conversation, after trimming to the recent history (the passage
+     * and sources are bounded separately). Counted in
      * UTF-8 bytes, which tracks tokens better than characters do for
      * non-Latin scripts.
      */
@@ -72,8 +77,9 @@ function parsePassage(value: unknown): PassageRef | null | undefined {
 
 /**
  * Validates a chat request body and trims it to the most recent
- * `maxTurns` messages, starting on a user turn. The last message must be
- * the user's new question.
+ * `maxTurns` messages (the new question included), starting on a user
+ * turn. The last message must be the user's question; a history ending in
+ * an empty reply (an answer stopped before any text) asks it again.
  */
 export function parseChatBody(body: unknown, maxTurns: number): ParsedChatBody {
     const { messages, passage } = (body ?? {}) as Partial<
@@ -98,6 +104,9 @@ export function parseChatBody(body: unknown, maxTurns: number): ParsedChatBody {
             return { ok: false, error: "Each message needs a role and text." };
         }
         if (m.role === "user") {
+            // Blank questions are never sent; one left in a history (after
+            // a rejected send) would make the API reject every later request.
+            if (!m.content.trim()) continue;
             // The app never sends a longer question, so the history is
             // either from another client or forged.
             if (m.content.length > CHAT_LIMITS.questionChars) {

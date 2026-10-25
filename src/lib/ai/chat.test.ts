@@ -88,6 +88,14 @@ describe("parseChatBody", () => {
         expect(result.ok && result.turns).toEqual([user("new")]);
     });
 
+    it("drops blank earlier questions", () => {
+        const result = parseChatBody(
+            { messages: [user("  "), user("Who was Herod?")] },
+            12,
+        );
+        expect(result.ok && result.turns).toEqual([user("Who was Herod?")]);
+    });
+
     it("drops empty replies left by a stopped answer", () => {
         const result = parseChatBody(
             { messages: [user("A"), assistant(""), user("B")] },

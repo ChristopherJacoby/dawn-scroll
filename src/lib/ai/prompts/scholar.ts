@@ -3,7 +3,7 @@
  * Doctrine, theology and prophecy are later phases (see the plan's AI chat
  * phasing), so this version declines to argue them.
  *
- * Keep this text stable: it's the cached prefix of every Scholar request.
+ * Keep this text stable: it begins the cacheable prefix of every request.
  * Per-request material (the passage being read, retrieved sources) goes
  * in the request's context instead.
  */

@@ -29,6 +29,18 @@ export async function claimAiRequest(
     return { ok: true, used };
 }
 
+/** Gives back a claimed request, when the AI service failed before answering. */
+export async function releaseAiRequest(
+    userId: string,
+    mode: AiMode,
+): Promise<void> {
+    const { error } = await createAdminClient().rpc("release_ai_request", {
+        p_user: userId,
+        p_mode: mode,
+    });
+    if (error) throw error;
+}
+
 /** Adds a reply's token usage to today's totals, for watching spend. */
 export async function recordAiTokens(
     userId: string,

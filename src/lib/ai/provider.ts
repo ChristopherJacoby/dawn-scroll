@@ -4,7 +4,7 @@ import type { ChatTurn } from "./chat";
 import { aiConfig, FALLBACK_MODELS } from "./config";
 
 export interface ChatRequest {
-    /** Stable instructions for the mode; cached across requests. */
+    /** Stable instructions for the mode: the start of the cacheable prefix. */
     system: string;
     /** The conversation, ending with the user's new message. */
     turns: ChatTurn[];
@@ -60,12 +60,28 @@ const anthropicProvider: ChatProvider = {
         // with backoff before the stream starts.
         anthropic ??= new Anthropic({ maxRetries: 3 });
         const config = aiConfig();
-        const messages: Anthropic.Beta.BetaMessageParam[] = turns.map((t) => ({
-            role: t.role,
-            content: t.content,
-        }));
+        // Prompt caching only applies once the prefix passes the model's
+        // minimum length, which the system prompt alone doesn't. A second
+        // breakpoint on the latest reply lets longer conversations reuse
+        // everything before the new question from the previous request.
+        const lastReply = turns.findLastIndex((t) => t.role === "assistant");
+        const messages: Anthropic.Beta.BetaMessageParam[] = turns.map(
+            (t, i) => ({
+                role: t.role,
+                content:
+                    i === lastReply
+                        ? [
+                              {
+                                  type: "text",
+                                  text: t.content,
+                                  cache_control: { type: "ephemeral" },
+                              },
+                          ]
+                        : t.content,
+            }),
+        );
         // Grounding goes in a system message after the user's turn: it
-        // carries operator authority without disturbing the cached prefix.
+        // carries operator authority and stays out of the cached prefix.
         if (context) messages.push({ role: "system", content: context });
         const fallback = FALLBACK_MODELS.has(config.model);
         const stream = anthropic.beta.messages.stream(
