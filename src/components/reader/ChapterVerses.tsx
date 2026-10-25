@@ -239,16 +239,11 @@ export function ChapterVerses({
                         }
                         signInHref={signInHref}
                     />
-                    {/* Strong's tags map KJV words only. */}
-                    {translation.slug === "kjv" && (
-                        <OriginalVerseAction
-                            active={wordStudy.verse === selectedVerse.number}
-                            loading={wordStudy.isLoading(selectedVerse.number)}
-                            onToggle={() =>
-                                wordStudy.toggle(selectedVerse.number)
-                            }
-                        />
-                    )}
+                    <OriginalVerseAction
+                        active={wordStudy.verse === selectedVerse.number}
+                        loading={wordStudy.isLoading(selectedVerse.number)}
+                        onToggle={() => wordStudy.toggle(selectedVerse.number)}
+                    />
                     <NoteVerseAction
                         hasNote={notes.get(selectedVerse.number) !== undefined}
                         onOpen={() => {
