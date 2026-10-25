@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { AskVerseAction } from "@/components/reader/AskVerseAction";
 import { BookmarkVerseAction } from "@/components/reader/BookmarkVerseAction";
 import { CopyVerseAction } from "@/components/reader/CopyVerseAction";
 import { DigDeeper } from "@/components/reader/DigDeeper";
@@ -43,6 +44,8 @@ interface ChapterVersesProps {
     notes: Record<number, VerseNote>;
     /** Archaeological findings with a reference in this chapter. */
     findings: FindingSummary[];
+    /** Whether Scholar chat is available, for the Ask action. */
+    aiEnabled: boolean;
 }
 
 /**
@@ -60,6 +63,7 @@ export function ChapterVerses({
     highlights: initialHighlights,
     notes: initialNotes,
     findings,
+    aiEnabled,
 }: ChapterVersesProps) {
     const [selected, setSelected] = useState<number | null>(null);
     const bookmarks = useVerseAnnotations(initialBookmarks);
@@ -244,6 +248,13 @@ export function ChapterVerses({
                         loading={wordStudy.isLoading(selectedVerse.number)}
                         onToggle={() => wordStudy.toggle(selectedVerse.number)}
                     />
+                    {aiEnabled && (
+                        <AskVerseAction
+                            bookSlug={bookSlug}
+                            chapterNumber={chapterNumber}
+                            verse={selectedVerse.number}
+                        />
+                    )}
                     <NoteVerseAction
                         hasNote={notes.get(selectedVerse.number) !== undefined}
                         onOpen={() => {

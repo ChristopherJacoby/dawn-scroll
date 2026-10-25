@@ -29,7 +29,8 @@ export type ChatStreamEvent =
     | { type: "meta"; remaining: number; limit: number }
     | { type: "text"; text: string }
     | { type: "done"; truncated: boolean }
-    | { type: "error"; message: string };
+    /** `retryable`: whether asking again could help (not for refusals). */
+    | { type: "error"; message: string; retryable: boolean };
 
 export const CHAT_LIMITS = {
     /** A user message. */
