@@ -1,14 +1,10 @@
 import "server-only";
 import Anthropic from "@anthropic-ai/sdk";
+import type { ChatTurn } from "./chat";
 import { aiConfig, FALLBACK_MODELS } from "./config";
 
-export interface ChatTurn {
-    role: "user" | "assistant";
-    content: string;
-}
-
 export interface ChatRequest {
-    /** Stable instructions for the mode; cached across requests. */
+    /** Stable instructions for the mode: the start of the cacheable prefix. */
     system: string;
     /** The conversation, ending with the user's new message. */
     turns: ChatTurn[];
@@ -24,6 +20,8 @@ export interface TokenUsage {
 
 export type ChatEvent =
     | { type: "text"; text: string }
+    /** Usage so far, cumulative; lets an interrupted reply still be counted. */
+    | { type: "usage"; usage: TokenUsage }
     | { type: "done"; usage: TokenUsage; stopReason: string | null };
 
 export interface ChatProvider {
@@ -35,6 +33,26 @@ export interface ChatProvider {
 
 let anthropic: Anthropic | null = null;
 
+interface ApiUsage {
+    input_tokens: number | null;
+    output_tokens: number | null;
+    cache_creation_input_tokens: number | null;
+    cache_read_input_tokens: number | null;
+}
+
+/** Folds API usage into ours; cache writes count as input. Missing fields keep `previous`. */
+function toUsage(u: ApiUsage, previous?: TokenUsage): TokenUsage {
+    return {
+        inputTokens:
+            u.input_tokens !== null
+                ? u.input_tokens + (u.cache_creation_input_tokens ?? 0)
+                : (previous?.inputTokens ?? 0),
+        outputTokens: u.output_tokens ?? previous?.outputTokens ?? 0,
+        cacheReadTokens:
+            u.cache_read_input_tokens ?? previous?.cacheReadTokens ?? 0,
+    };
+}
+
 /** Claude via the Messages API, streamed. */
 const anthropicProvider: ChatProvider = {
     async *stream({ system, turns, context }, signal) {
@@ -42,12 +60,28 @@ const anthropicProvider: ChatProvider = {
         // with backoff before the stream starts.
         anthropic ??= new Anthropic({ maxRetries: 3 });
         const config = aiConfig();
-        const messages: Anthropic.Beta.BetaMessageParam[] = turns.map((t) => ({
-            role: t.role,
-            content: t.content,
-        }));
+        // Prompt caching only applies once the prefix passes the model's
+        // minimum length, which the system prompt alone doesn't. A second
+        // breakpoint on the latest reply lets longer conversations reuse
+        // everything before the new question from the previous request.
+        const lastReply = turns.findLastIndex((t) => t.role === "assistant");
+        const messages: Anthropic.Beta.BetaMessageParam[] = turns.map(
+            (t, i) => ({
+                role: t.role,
+                content:
+                    i === lastReply
+                        ? [
+                              {
+                                  type: "text",
+                                  text: t.content,
+                                  cache_control: { type: "ephemeral" },
+                              },
+                          ]
+                        : t.content,
+            }),
+        );
         // Grounding goes in a system message after the user's turn: it
-        // carries operator authority without disturbing the cached prefix.
+        // carries operator authority and stays out of the cached prefix.
         if (context) messages.push({ role: "system", content: context });
         const fallback = FALLBACK_MODELS.has(config.model);
         const stream = anthropic.beta.messages.stream(
@@ -72,38 +106,52 @@ const anthropicProvider: ChatProvider = {
             },
             { signal },
         );
+        let usage: TokenUsage | undefined;
         for await (const event of stream) {
             if (
                 event.type === "content_block_delta" &&
                 event.delta.type === "text_delta"
             ) {
                 yield { type: "text", text: event.delta.text };
+            } else if (event.type === "message_start") {
+                usage = toUsage(event.message.usage);
+                yield { type: "usage", usage };
+            } else if (event.type === "message_delta") {
+                usage = toUsage(event.usage, usage);
+                yield { type: "usage", usage };
             }
         }
         const message = await stream.finalMessage();
         yield {
             type: "done",
             stopReason: message.stop_reason,
-            usage: {
-                inputTokens: message.usage.input_tokens,
-                outputTokens: message.usage.output_tokens,
-                cacheReadTokens: message.usage.cache_read_input_tokens ?? 0,
-            },
+            usage: toUsage(message.usage),
         };
     },
 };
 
-/** Canned, streamed replies for development and tests: no key, no cost. */
+/**
+ * Canned, streamed replies for development and tests: no key, no cost.
+ * Echoes what the request carried so the plumbing can be checked.
+ */
 export const mockProvider: ChatProvider = {
-    async *stream({ turns, context }) {
+    async *stream({ turns, context }, signal) {
         const question = turns.at(-1)?.content ?? "";
-        const sources = (context?.match(/^\[(.+?)\]/gm) ?? []).slice(0, 2);
-        const reply = `(Mock reply) You asked: "${question.slice(0, 80)}". ${
+        const passage = context?.match(/<passage reference="([^"]+)">/)?.[1];
+        const sources = [...(context?.matchAll(/^\[([^\]]+)\]/gm) ?? [])]
+            .map((m) => m[1])
+            .slice(0, 3);
+        const reply = [
+            `**Mock reply.** You asked: "${question.slice(0, 80)}"`,
+            passage ? `You're reading ${passage}.` : "No passage was attached.",
             sources.length
-                ? `Relevant sources include ${sources.join(" and ")}.`
-                : "No sources were retrieved."
-        } See John 3:16 for an example citation.`;
+                ? `Retrieved sources:\n${sources.map((s) => `- ${s}`).join("\n")}`
+                : "No sources were retrieved.",
+            "Example citations: John 3:16 and Leviticus 23:34-36. Example link: [the Pilate Stone](/archaeology/pilate-stone).",
+        ].join("\n\n");
         for (const word of reply.split(/(?<= )/)) {
+            if (signal?.aborted) throw new Anthropic.APIUserAbortError();
+            await new Promise((resolve) => setTimeout(resolve, 15));
             yield { type: "text", text: word };
         }
         yield {

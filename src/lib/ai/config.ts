@@ -23,11 +23,13 @@ export function aiConfig() {
         effort: effort && EFFORTS.includes(effort) ? effort : "medium",
         /** Covers thinking and the answer; a hard ceiling on cost per reply. */
         maxTokens: positiveInt(process.env.AI_MAX_TOKENS, 8000),
-        /** Prior turns sent with each request. */
+        /** Messages sent with each request, the new question included. */
         maxHistoryTurns: positiveInt(process.env.AI_MAX_HISTORY_TURNS, 12),
         dailyLimit: {
             free: positiveInt(process.env.AI_DAILY_LIMIT_FREE, 10),
             premium: positiveInt(process.env.AI_DAILY_LIMIT_PREMIUM, 100),
+            /** All users together, per mode: a ceiling on daily spend. */
+            global: positiveInt(process.env.AI_DAILY_LIMIT_GLOBAL, 500),
         },
     } as const;
 }

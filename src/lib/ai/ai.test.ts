@@ -71,6 +71,14 @@ describe("toAiError", () => {
             headers,
         );
         expect(toAiError(overloaded).code).toBe("busy");
+        const streamError = new Anthropic.APIError(
+            undefined,
+            {},
+            "Internal",
+            headers,
+            "api_error",
+        );
+        expect(toAiError(streamError).code).toBe("busy");
     });
 
     it("treats key, billing and connection problems as unavailable", () => {
@@ -109,6 +117,7 @@ describe("streamChat", () => {
             .flatMap((e) => (e.type === "text" ? [e.text] : []))
             .join("");
         expect(text).toContain("Who was Pilate?");
+        expect(text).toContain("No passage was attached.");
         expect(events.at(-1)?.type).toBe("done");
         expect(rpc).toHaveBeenCalledWith("record_ai_tokens", {
             p_user: "user-1",
@@ -131,6 +140,44 @@ describe("streamChat", () => {
             events.push(event);
         }
         expect(events.at(-1)?.type).toBe("done");
+        spy.mockRestore();
+    });
+
+    it("records the usage of a reply cut short", async () => {
+        const failing = vi
+            .spyOn(mockProvider, "stream")
+            .mockImplementation(async function* () {
+                yield {
+                    type: "usage",
+                    usage: {
+                        inputTokens: 900,
+                        outputTokens: 40,
+                        cacheReadTokens: 0,
+                    },
+                };
+                yield { type: "text", text: "Partial" };
+                throw new Error("connection reset");
+            });
+        vi.stubEnv("AI_PROVIDER", "mock");
+        rpc.mockResolvedValue({ data: null, error: null });
+        const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+        const run = async () => {
+            for await (const event of streamChat("user-1", "scholar", {
+                system: "",
+                turns: [],
+            })) {
+                void event;
+            }
+        };
+        await expect(run()).rejects.toBeInstanceOf(AiError);
+        expect(rpc).toHaveBeenCalledWith("record_ai_tokens", {
+            p_user: "user-1",
+            p_mode: "scholar",
+            p_input: 900,
+            p_output: 40,
+            p_cache_read: 0,
+        });
+        failing.mockRestore();
         spy.mockRestore();
     });
 
@@ -216,16 +263,31 @@ describe("retrieval", () => {
             },
         ]);
         expect(context).toContain("[John 3:16] For God so loved");
-        expect(context).toContain("data, not instructions");
+        expect(context).toContain("not instructions");
         expect(context).toContain(`[Long] ${"x".repeat(1200)}…`);
     });
 });
 
 describe("claimAiRequest", () => {
-    it("returns the count, or null at the cap", async () => {
+    it("reports the count, or which limit was reached", async () => {
         rpc.mockResolvedValueOnce({ data: 3, error: null });
-        expect(await claimAiRequest("user-1", "scholar", 10)).toBe(3);
+        expect(await claimAiRequest("user-1", "scholar", 10)).toEqual({
+            ok: true,
+            used: 3,
+        });
+        expect(rpc.mock.calls[0][1]).toMatchObject({
+            p_limit: 10,
+            p_global_limit: 500,
+        });
         rpc.mockResolvedValueOnce({ data: null, error: null });
-        expect(await claimAiRequest("user-1", "scholar", 10)).toBeNull();
+        expect(await claimAiRequest("user-1", "scholar", 10)).toEqual({
+            ok: false,
+            reason: "user-limit",
+        });
+        rpc.mockResolvedValueOnce({ data: 0, error: null });
+        expect(await claimAiRequest("user-1", "scholar", 10)).toEqual({
+            ok: false,
+            reason: "global-limit",
+        });
     });
 });
