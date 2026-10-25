@@ -38,14 +38,18 @@ export async function GET(request: NextRequest) {
     }
 
     try {
-        const translations = await getEnabledTranslations();
+        // Unknown and disabled translations match nothing in SQL anyway;
+        // the list only turns that into a clear error, so fetch both at once.
+        const [translations, results] = await Promise.all([
+            getEnabledTranslations(),
+            searchVerses(query, translation, limit),
+        ]);
         if (!translations.some((t) => t.slug === translation)) {
             return Response.json(
                 { error: "That translation isn't available." },
                 { status: 400 },
             );
         }
-        const results = await searchVerses(query, translation, limit);
         return Response.json({ query, translation, results });
     } catch {
         return Response.json(
