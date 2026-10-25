@@ -9,9 +9,9 @@ const BOOKS = new Map([
 describe("parseVpl", () => {
     it("parses verses, normalizes whitespace, and records blank lines", () => {
         const raw = [
-            "﻿MAT 17:20 He said to them, “Because of your unbelief.",
+            "\uFEFFMAT 17:20 He said to them, “Because of your unbelief.",
             "MAT 17:21 ",
-            "JOH 3:16 For God so loved the  world,",
+            "JOH 3:16 For God so  loved the\tworld, ‘walk.’\u00a0”",
             "",
         ].join("\r\n");
         const result = parseVpl(raw, BOOKS);
@@ -28,7 +28,7 @@ describe("parseVpl", () => {
                 book: "john",
                 chapter: 3,
                 verse: 16,
-                text: "For God so loved the world,",
+                text: "For God so loved the world, ‘walk.’\u00a0”",
             },
         ]);
     });

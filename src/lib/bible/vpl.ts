@@ -23,9 +23,15 @@ export interface VplParseResult {
 export const verseKey = (book: string, chapter: number, verse: number) =>
     `${book}.${chapter}.${verse}`;
 
-/** Collapse whitespace (including no-break spaces) and normalize to NFC. */
+/**
+ * Collapse whitespace and normalize to NFC. No-break spaces are kept: the
+ * WEB uses them between nested closing quotes so `’ ”` never wraps apart.
+ */
 export function normalizeVerseText(text: string): string {
-    return text.normalize("NFC").replace(/\s+/g, " ").trim();
+    return text
+        .normalize("NFC")
+        .replace(/[^\S\u00a0]+/g, " ")
+        .trim();
 }
 
 /**

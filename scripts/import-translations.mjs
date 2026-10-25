@@ -113,12 +113,12 @@ async function downloadSources() {
   return manifest;
 }
 
+// Extracted fresh every run, so the text parsed is always the zip whose
+// checksum was just verified.
 function readText(source) {
   const dest = `${RAW}/${source.key}`;
-  if (!existsSync(dest)) {
-    mkdirSync(dest, { recursive: true });
-    execFileSync("unzip", ["-q", "-o", `${RAW}/${source.file}`, source.textFile, "-d", dest]);
-  }
+  mkdirSync(dest, { recursive: true });
+  execFileSync("unzip", ["-q", "-o", `${RAW}/${source.file}`, source.textFile, "-d", dest]);
   return readFileSync(`${dest}/${source.textFile}`, "utf8");
 }
 
@@ -247,18 +247,45 @@ on conflict (translation_id, book_id, chapter_number, verse_number) do update
   set verse_text = excluded.verse_text, source_id = excluded.source_id
   where public.verses.verse_text is distinct from excluded.verse_text
      or public.verses.source_id is distinct from excluded.source_id;
--- Inner joins drop rows silently, and verses removed upstream would linger;
--- refuse to commit unless each translation holds exactly the staged text.
+-- Inner joins drop rows silently, and verses removed upstream would linger
+-- (annotations may reference them, so they're never deleted here); refuse
+-- to commit unless each translation holds exactly the staged text.
 do $$
-declare mismatched text;
+declare
+  unloaded text;
+  leftover text;
 begin
-  select string_agg(t.slug, ', ') into mismatched
-  from public.translations t
-  where t.slug in (${slugs})
-    and (select count(*) from public.verses v where v.translation_id = t.id)
-     <> (select count(*) from stage_verses s where s.translation_slug = t.slug);
-  if mismatched is not null then
-    raise exception 'Verse counts differ from the staged text for %; rolling back.', mismatched;
+  select string_agg(format('%s %s %s:%s', s.translation_slug, s.book_slug, s.chapter, s.verse), ', ') into unloaded
+  from (
+    select s.* from stage_verses s
+    where not exists (
+      select 1 from public.verses v
+      join public.translations t on t.id = v.translation_id
+      join public.books b on b.id = v.book_id
+      where t.slug = s.translation_slug and b.slug = s.book_slug
+        and v.chapter_number = s.chapter and v.verse_number = s.verse
+    )
+    limit 10
+  ) s;
+  if unloaded is not null then
+    raise exception 'Staged verses that did not load: %; rolling back.', unloaded;
+  end if;
+  select string_agg(format('%s %s %s:%s', x.slug, x.book, x.chapter_number, x.verse_number), ', ') into leftover
+  from (
+    select t.slug, b.slug as book, v.chapter_number, v.verse_number
+    from public.verses v
+    join public.translations t on t.id = v.translation_id
+    join public.books b on b.id = v.book_id
+    where t.slug in (${slugs})
+      and not exists (
+        select 1 from stage_verses s
+        where s.translation_slug = t.slug and s.book_slug = b.slug
+          and s.chapter = v.chapter_number and s.verse = v.verse_number
+      )
+    limit 10
+  ) x;
+  if leftover is not null then
+    raise exception 'Verses no longer in the source: %; review and remove them (and any annotations) by hand. Rolling back.', leftover;
   end if;
 end $$;
 select t.slug, t.is_enabled, count(v.id) as verses
