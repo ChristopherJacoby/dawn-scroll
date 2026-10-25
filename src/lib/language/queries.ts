@@ -16,7 +16,7 @@ export interface VerseWordStudy {
     tokens: (WordMapping | null)[];
     /** The verse's Hebrew/Greek words, in order. */
     words: OriginalWord[];
-    /** Strong's entries for every number in `tokens`. */
+    /** Strong's entries for every number in `tokens` and `words`. */
     entries: Record<string, StrongsEntry>;
     /** Expanded morphology for every code in `words`. */
     morphology: Record<string, MorphologicalFeature[]>;
@@ -126,7 +126,14 @@ export async function getVerseWordStudy(
 
     const tokens = (map.data?.tokens ?? []) as (WordMapping | null)[];
     const words = (originals.data?.words ?? []) as OriginalWord[];
-    const numbers = [...new Set(tokens.flatMap((t) => (t ? [t.s] : [])))];
+    // Every original word's entry, not just the linked ones: translations
+    // without word links list the original words instead.
+    const numbers = [
+        ...new Set([
+            ...tokens.flatMap((t) => (t ? [t.s] : [])),
+            ...words.map((w) => w.s),
+        ]),
+    ];
     const codes = [...new Set(words.flatMap((w) => (w.m ? [w.m] : [])))];
 
     const [entries, morphology, notes] = await Promise.all([

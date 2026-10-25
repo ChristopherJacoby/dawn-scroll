@@ -62,6 +62,66 @@ export function StudyWord({ token, open, onOpenChange, card }: StudyWordProps) {
     );
 }
 
+interface OriginalWordChipProps {
+    word: OriginalWord;
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    /** The card, rendered only while open. */
+    card: () => React.ReactNode;
+}
+
+/**
+ * One of a verse's original words, with its in-context gloss; opens its
+ * card. For translations whose words aren't linked to the original.
+ */
+export function OriginalWordChip({
+    word,
+    open,
+    onOpenChange,
+    card,
+}: OriginalWordChipProps) {
+    const hebrew = word.s.startsWith("H");
+    return (
+        <Popover.Root open={open} onOpenChange={onOpenChange}>
+            <Popover.Trigger asChild>
+                <button
+                    type="button"
+                    className={cn(
+                        "flex flex-col items-center gap-0.5 rounded-md border border-reading-border px-2 py-1 transition-colors",
+                        "hover:bg-reading-bg-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-reading-focus",
+                        open && "bg-reading-bg-subtle",
+                    )}
+                >
+                    <span
+                        lang={hebrew ? "he" : "grc"}
+                        dir={hebrew ? "rtl" : "ltr"}
+                        className={cn(
+                            hebrew ? "font-hebrew" : "font-greek",
+                            "text-xl leading-tight text-reading-text",
+                        )}
+                    >
+                        {word.w}
+                    </span>
+                    <span className="font-sans text-xs text-reading-text-muted">
+                        {word.g}
+                    </span>
+                </button>
+            </Popover.Trigger>
+            <Popover.Portal>
+                <Popover.Content
+                    side="top"
+                    align="center"
+                    sideOffset={6}
+                    collisionPadding={12}
+                    className="z-30 max-h-[min(28rem,60vh)] overflow-y-auto rounded-lg border border-reading-border-strong bg-reading-surface-raised font-sans text-reading-text shadow-lg focus:outline-none"
+                >
+                    {card()}
+                </Popover.Content>
+            </Popover.Portal>
+        </Popover.Root>
+    );
+}
+
 interface WordStudyCardProps {
     mapping: WordMapping;
     word: OriginalWord | null;

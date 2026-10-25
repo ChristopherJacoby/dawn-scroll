@@ -15,8 +15,11 @@ interface VerseTextProps {
     bookmarked: boolean;
     highlight: HighlightColor | null;
     hasNote: boolean;
-    /** Word study, when active: the text with tappable words, and a hint. */
-    study?: { content: React.ReactNode; hint: string };
+    /**
+     * Word study, when active: the text (with tappable words where they're
+     * linked), a hint, and anything to show beneath the verse.
+     */
+    study?: { content: React.ReactNode; hint: string; below?: React.ReactNode };
     /** Marker for archaeological findings that start at this verse. */
     dig?: React.ReactNode;
     onToggle: (number: number, viaKeyboard: boolean) => void;
@@ -124,6 +127,7 @@ export function VerseText({
                     {study.hint}
                 </p>
             )}
+            {study?.below}
         </>
     );
 }

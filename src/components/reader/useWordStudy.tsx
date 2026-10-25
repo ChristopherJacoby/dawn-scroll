@@ -1,7 +1,11 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { StudyWord, WordStudyCard } from "@/components/reader/WordStudy";
+import {
+    OriginalWordChip,
+    StudyWord,
+    WordStudyCard,
+} from "@/components/reader/WordStudy";
 import { useToast } from "@/context/toast";
 import type { VerseWordStudy } from "@/lib/language/queries";
 import { tokenizeVerse } from "@/lib/language/text";
@@ -63,15 +67,67 @@ export function useWordStudy({
         }
     }
 
-    /** The verse text with tappable words and a hint, or undefined. */
+    /**
+     * The verse text with tappable words (where they're linked to the
+     * original) and a hint, or undefined.
+     */
     function render(
         target: number,
         text: string,
-    ): { content: React.ReactNode; hint: string } | undefined {
+    ):
+        | { content: React.ReactNode; hint: string; below?: React.ReactNode }
+        | undefined {
         const study = verse === target ? studies[target] : undefined;
         if (!study) return undefined;
-        const language = study.words[0]?.s.startsWith("H") ? "Hebrew" : "Greek";
+        const hebrew = study.words[0]?.s.startsWith("H") ?? false;
+        const language = hebrew ? "Hebrew" : "Greek";
         const hasLinks = study.tokens.some(Boolean);
+
+        // Only the KJV's words are linked to the original; elsewhere, list
+        // the verse's original words, in reading order, to tap instead.
+        if (!hasLinks && study.words.length > 0) {
+            return {
+                content: text,
+                hint: `This translation isn’t linked word by word, so here are the verse’s ${language} words. Tap one for its meaning.`,
+                below: (
+                    <div
+                        dir={hebrew ? "rtl" : "ltr"}
+                        className="flex flex-wrap gap-2"
+                    >
+                        {study.words.map((word, index) => {
+                            // Distinct from token indexes, which are >= 0.
+                            const key = -(index + 1);
+                            return (
+                                <OriginalWordChip
+                                    key={index}
+                                    word={word}
+                                    open={openToken === key}
+                                    onOpenChange={(open) =>
+                                        setOpenToken(open ? key : null)
+                                    }
+                                    card={() => (
+                                        <WordStudyCard
+                                            mapping={{ s: word.s, o: index }}
+                                            word={word}
+                                            entry={
+                                                study.entries[word.s] ?? null
+                                            }
+                                            features={
+                                                word.m
+                                                    ? (study.morphology[
+                                                          word.m
+                                                      ] ?? null)
+                                                    : null
+                                            }
+                                        />
+                                    )}
+                                />
+                            );
+                        })}
+                    </div>
+                ),
+            };
+        }
         const content = tokenizeVerse(text).map((token, index) => {
             const mapping = study.tokens[index];
             const separator = index > 0 ? " " : "";
