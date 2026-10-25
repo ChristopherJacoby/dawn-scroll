@@ -119,6 +119,9 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                     key={`${passage.book.slug}-${passage.chapter.chapterNumber}`}
                 />
                 <ChapterPrefetch
+                    // Switching translation evicts the prefetched chapters;
+                    // remounting fetches them again in the new one.
+                    key={passage.translation.slug}
                     previousHref={
                         passage.previous
                             ? `/read/${passage.previous.bookSlug}/${passage.previous.chapterNumber}`

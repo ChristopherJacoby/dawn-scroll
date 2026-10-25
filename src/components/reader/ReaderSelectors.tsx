@@ -52,8 +52,14 @@ export function ReaderSelectors({
         const slug = event.target.value;
         startTransition(async () => {
             setOptimisticTranslation(slug);
-            const result = await setTranslationAction(slug);
-            if (!result.ok) toast.error(result.error);
+            // A failed call (offline, or a deploy since this page loaded)
+            // throws; without the catch it would take down the page.
+            const result = await setTranslationAction(slug).catch(() => null);
+            if (!result) {
+                toast.error("Something went wrong. Please try again.");
+            } else if (!result.ok) {
+                toast.error(result.error);
+            }
         });
     }
 

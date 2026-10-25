@@ -25,14 +25,8 @@ export async function setTranslationAction(
         return fail(400, "That translation isn't available.");
     }
 
-    (await cookies()).set(TRANSLATION_COOKIE, slug, {
-        path: "/",
-        maxAge: ONE_YEAR,
-        sameSite: "lax",
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-    });
-
+    // Save first: setting the cookie re-renders the page in the new
+    // translation, which mustn't happen if the setting didn't stick.
     const user = await getUser();
     if (user) {
         try {
@@ -44,6 +38,14 @@ export async function setTranslationAction(
             );
         }
     }
+
+    (await cookies()).set(TRANSLATION_COOKIE, slug, {
+        path: "/",
+        maxAge: ONE_YEAR,
+        sameSite: "lax",
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+    });
 
     // Purges the client router cache too, so prefetched and back/forward
     // pages don't keep showing the previous translation.
