@@ -38,8 +38,15 @@ describe("findVerseReferences", () => {
         expect(hrefs("Gen 1")).toEqual([]);
     });
 
+    it("reads one-chapter books' numbers as verses, and skips roman numerals", () => {
+        expect(hrefs("Jude 3 and Philemon 1:10")).toEqual([
+            "/read/jude/1#verse-3",
+            "/read/philemon/1#verse-10",
+        ]);
+        expect(hrefs("I John 4:8")).toEqual([]);
+    });
+
     it("skips chapters that don't exist and words that only look like books", () => {
-        expect(hrefs("Jude 2 and Jude 1:3")).toEqual(["/read/jude/1#verse-3"]);
         expect(hrefs("John 22:1, Johnson 3:1, 2 Johns 1")).toEqual([]);
     });
 });
@@ -96,6 +103,22 @@ describe("parseInline", () => {
         ]);
     });
 
+    it("parses italics inside bold", () => {
+        expect(parseInline("**The *mikveh* rite**")).toEqual([
+            {
+                type: "strong",
+                children: [
+                    { type: "text", text: "The " },
+                    {
+                        type: "em",
+                        children: [{ type: "text", text: "mikveh" }],
+                    },
+                    { type: "text", text: " rite" },
+                ],
+            },
+        ]);
+    });
+
     it("doesn't treat snake_case or multiplication as italics", () => {
         expect(parseInline("a_b_c and 2 * 3 * 4")).toEqual([
             { type: "text", text: "a_b_c and 2 * 3 * 4" },
@@ -124,6 +147,22 @@ describe("parseMarkdown", () => {
             items: [[{ text: "one" }], [{ text: "two" }]],
         });
         expect(blocks[2]).toMatchObject({ ordered: true });
+    });
+
+    it("keeps numbered items separated by blank lines in one list", () => {
+        const blocks = parseMarkdown(
+            "1. Passover\n\n2. Pentecost\n\n3. Tabernacles",
+        );
+        expect(blocks).toHaveLength(1);
+        expect(blocks[0]).toMatchObject({
+            type: "list",
+            ordered: true,
+            start: 1,
+        });
+        expect(blocks[0].type === "list" && blocks[0].items).toHaveLength(3);
+        expect(parseMarkdown("3. Third\n4. Fourth")[0]).toMatchObject({
+            start: 3,
+        });
     });
 
     it("ends a list at a following paragraph", () => {

@@ -43,9 +43,8 @@ export function AIMessage({
                 streaming && (
                     <p
                         className="flex items-center gap-1 text-reading-text-muted"
-                        role="status"
+                        aria-hidden="true"
                     >
-                        <span className="sr-only">{speaker} is writing…</span>
                         {[0, 150, 300].map((delay) => (
                             <span
                                 key={delay}
@@ -58,7 +57,15 @@ export function AIMessage({
                 )
             )}
             {message.status === "stopped" && (
-                <p className="text-sm text-reading-text-muted">Stopped.</p>
+                <p className="flex flex-wrap items-center gap-3 text-sm text-reading-text-muted">
+                    Stopped.
+                    {onRetry && (
+                        <Button variant="ghost" size="sm" onClick={onRetry}>
+                            <RotateCcw size={14} aria-hidden="true" />
+                            Ask again
+                        </Button>
+                    )}
+                </p>
             )}
             {message.truncated && (
                 <p className="text-sm text-reading-text-muted">

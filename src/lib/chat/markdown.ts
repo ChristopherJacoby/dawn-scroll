@@ -18,11 +18,11 @@ export type Block =
     | { type: "paragraph"; children: Inline[] }
     | { type: "heading"; children: Inline[] }
     | { type: "quote"; children: Inline[] }
-    | { type: "list"; ordered: boolean; items: Inline[][] };
+    | { type: "list"; ordered: boolean; start: number; items: Inline[][] };
 
 // Groups: 1 strong, 2 em, 3 code, 4 link label, 5 link href.
 const INLINE =
-    /\*\*([^*]+?)\*\*|(?<![\w*])[*_]([^*_\s](?:[^*_]*[^*_\s])?)[*_](?![\w*])|`([^`]+)`|\[([^\]]+)\]\(([^)\s]+)\)/g;
+    /\*\*(.+?)\*\*|(?<![\w*])[*_]([^*_\s](?:[^*_]*[^*_\s])?)[*_](?![\w*])|`([^`]+)`|\[([^\]]+)\]\(([^)\s]+)\)/g;
 
 /**
  * Dawnscroll pages an answer may link to. Anything else (other sites,
@@ -30,7 +30,7 @@ const INLINE =
  * only, but a manipulated reply mustn't be able to plant a link.
  */
 const LINKABLE =
-    /^\/(read|archaeology|roots|questions)\/[\w-]+(\/\d+)?(#[\w-]+)?$/;
+    /^\/(read\/[\w-]+\/\d+(#verse-\d+)?|(archaeology|roots|questions)\/[\w-]+)$/;
 
 /** Plain text, with Bible references split out as verse links. */
 function withReferences(text: string): Inline[] {
@@ -97,7 +97,8 @@ const NUMBERED = /^\s*\d+[.)]\s+/;
 export function parseMarkdown(source: string): Block[] {
     const blocks: Block[] = [];
     let paragraph: string[] = [];
-    let list: { ordered: boolean; items: string[] } | null = null;
+    let list: { ordered: boolean; start: number; items: string[] } | null =
+        null;
 
     const flush = () => {
         if (paragraph.length) {
@@ -111,6 +112,7 @@ export function parseMarkdown(source: string): Block[] {
             blocks.push({
                 type: "list",
                 ordered: list.ordered,
+                start: list.start,
                 items: list.items.map((item) => parseInline(item)),
             });
             list = null;
@@ -127,7 +129,11 @@ export function parseMarkdown(source: string): Block[] {
         if (bullet || numbered) {
             if (paragraph.length || (list && list.ordered !== numbered))
                 flush();
-            list ??= { ordered: numbered, items: [] };
+            list ??= {
+                ordered: numbered,
+                start: numbered ? parseInt(line.trim(), 10) : 1,
+                items: [],
+            };
             list.items.push(line.replace(bullet ? BULLET : NUMBERED, ""));
             continue;
         }
@@ -151,11 +157,14 @@ export function parseMarkdown(source: string): Block[] {
         paragraph.push(line);
     }
     flush();
-    return mergeQuotes(blocks);
+    return mergeNeighbors(blocks);
 }
 
-/** Consecutive quote lines form one quote. */
-function mergeQuotes(blocks: Block[]): Block[] {
+/**
+ * Consecutive quote lines form one quote, and lists split only by blank
+ * lines ("1. a", blank, "2. b") form one list.
+ */
+function mergeNeighbors(blocks: Block[]): Block[] {
     const out: Block[] = [];
     for (const block of blocks) {
         const previous = out.at(-1);
@@ -164,6 +173,12 @@ function mergeQuotes(blocks: Block[]): Block[] {
                 { type: "text", text: "\n" },
                 ...block.children,
             );
+        } else if (
+            block.type === "list" &&
+            previous?.type === "list" &&
+            previous.ordered === block.ordered
+        ) {
+            previous.items.push(...block.items);
         } else {
             out.push(block);
         }

@@ -53,6 +53,15 @@ function Inlines({ nodes }: { nodes: Inline[] }) {
     });
 }
 
+/**
+ * Apostle replies end with a "Read: John 21:15-19, ..." line: the app's
+ * note to the reader rather than the apostle's speech.
+ */
+function isReadingNote(nodes: Inline[]): boolean {
+    const first = nodes[0];
+    return first?.type === "text" && first.text.startsWith("Read:");
+}
+
 /** An AI answer's markdown, with Bible references linked to the reader. */
 export function ChatMarkdown({
     source,
@@ -68,7 +77,14 @@ export function ChatMarkdown({
                 switch (block.type) {
                     case "paragraph":
                         return (
-                            <p key={i} className="whitespace-pre-line">
+                            <p
+                                key={i}
+                                className={cn(
+                                    "whitespace-pre-line",
+                                    isReadingNote(block.children) &&
+                                        "text-sm text-reading-text-muted",
+                                )}
+                            >
                                 <Inlines nodes={block.children} />
                             </p>
                         );
@@ -92,6 +108,11 @@ export function ChatMarkdown({
                         return (
                             <List
                                 key={i}
+                                start={
+                                    block.ordered && block.start !== 1
+                                        ? block.start
+                                        : undefined
+                                }
                                 className={cn(
                                     "flex flex-col gap-1.5 pl-5",
                                     block.ordered

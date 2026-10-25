@@ -101,7 +101,8 @@ const names = [...FULL_NAMES.keys(), ...ABBREVIATIONS.keys()]
     .map(escape)
     .join("|");
 const REFERENCE = new RegExp(
-    `(?<![\\p{L}\\d])(${names})\\.?\\s+(\\d{1,3})(?::(\\d{1,3})(?:\\s?[-–]\\s?\\d{1,3}(?::\\d{1,3})?)?)?(?![\\p{L}\\d]|:\\d)`,
+    // Not preceded by a letter or digit, nor by a roman numeral ("I John").
+    `(?<![\\p{L}\\d])(?<!\\b(?:I|II|III)\\s)(${names})\\.?\\s+(\\d{1,3})(?::(\\d{1,3})(?:\\s?[-–]\\s?\\d{1,3}(?::\\d{1,3})?)?)?(?![\\p{L}\\d]|:\\d)`,
     "gu",
 );
 
@@ -120,18 +121,30 @@ export function findVerseReferences(text: string): VerseReference[] {
         const isFullName = FULL_NAMES.has(book);
         const slug = FULL_NAMES.get(book) ?? ABBREVIATIONS.get(book);
         const chapter = Number(chapterText);
-        if (!slug || chapter < 1 || chapter > (CHAPTERS.get(slug) ?? 0))
+        const chapters = slug ? (CHAPTERS.get(slug) ?? 0) : 0;
+        if (!slug || chapter < 1 || (chapters > 1 && chapter > chapters))
             continue;
         if (!verseText && !isFullName) continue;
-        const verse = verseText ? Number(verseText) : null;
+        // In a one-chapter book, "Jude 3" means verse 3.
+        const oneChapter = CHAPTERS.get(slug) === 1 && !verseText;
+        const verse = oneChapter
+            ? chapter
+            : verseText
+              ? Number(verseText)
+              : null;
         if (verse === 0) continue;
         found.push({
             start: match.index,
             end: match.index + whole.length,
-            href: `/read/${slug}/${chapter}${verse ? `#verse-${verse}` : ""}`,
+            href: `/read/${slug}/${oneChapter ? 1 : chapter}${verse ? `#verse-${verse}` : ""}`,
         });
     }
     return found;
+}
+
+/** A book's chapter count; 0 for an unknown slug. */
+export function chapterCount(slug: string): number {
+    return CHAPTERS.get(slug) ?? 0;
 }
 
 /** A book's display name, for showing a passage reference. */

@@ -6,7 +6,7 @@ import type { PassageRef } from "@/lib/ai/chat";
 import { isAiConfigured } from "@/lib/ai/config";
 import { remainingToday } from "@/lib/ai/usage";
 import { getUser } from "@/lib/auth";
-import { bookName } from "@/lib/bible/references";
+import { bookName, chapterCount } from "@/lib/bible/references";
 
 export const metadata: Metadata = {
     title: "Scholar | Dawnscroll",
@@ -27,7 +27,8 @@ function passageFromParams({
         !book ||
         !bookName(book) ||
         !Number.isInteger(chapterNumber) ||
-        chapterNumber < 1
+        chapterNumber < 1 ||
+        chapterNumber > chapterCount(book)
     ) {
         return null;
     }
@@ -111,6 +112,7 @@ export default async function ScholarPage({
     const quota = await remainingToday(user.id, "scholar").catch(() => null);
     return (
         <ScholarChatLoader
+            userId={user.id}
             passage={passageFromParams(params)}
             initialQuota={quota}
         />

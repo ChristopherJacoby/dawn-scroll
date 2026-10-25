@@ -45,28 +45,32 @@ function initialState(
         // Storage unavailable or corrupt: start fresh.
     }
     if (
-        !stored?.messages ||
+        !Array.isArray(stored?.messages) ||
         (passage && !samePassage(stored.passage, passage))
     ) {
         return { messages: [], passage };
     }
     return {
-        passage: stored.passage,
+        passage: stored!.passage,
         // A reply cut off by leaving the page can't resume.
-        messages: stored.messages.map((m) =>
+        messages: stored!.messages.map((m) =>
             m.status === "streaming" ? { ...m, status: "stopped" } : m,
         ),
     };
 }
 
-const newId = () => crypto.randomUUID();
+let idCounter = 0;
+/** Unique within the tab; crypto.randomUUID needs HTTPS, which a phone on
+ * a LAN dev server lacks. */
+const newId = () => `${Date.now().toString(36)}-${(idCounter++).toString(36)}`;
 
 /** Quota days are UTC, like the server's. */
 const today = () => new Date().toISOString().slice(0, 10);
 
 /**
- * The server's count, unless this tab has seen a lower one today: the
- * page's props can be a cached render after back navigation.
+ * The server's count, unless this tab has seen a lower one today under
+ * the same limit: the page's props can be a cached render after back
+ * navigation.
  */
 function initialQuotaState(
     storageKey: string,
@@ -78,7 +82,9 @@ function initialQuotaState(
         ) as (Quota & { day: string }) | null;
         if (
             stored?.day === today() &&
-            (!server || stored.remaining < server.remaining)
+            (!server ||
+                (stored.limit === server.limit &&
+                    stored.remaining < server.remaining))
         ) {
             return { remaining: stored.remaining, limit: stored.limit };
         }
@@ -86,6 +92,15 @@ function initialQuotaState(
         // Fall back to the server's count.
     }
     return server;
+}
+
+/** Whether a reply can be asked again: it failed retryably or was stopped. */
+export function canRetry(message: ChatMessage | undefined): boolean {
+    return (
+        message?.role === "assistant" &&
+        (message.status === "stopped" ||
+            (message.status === "error" && message.retryable === true))
+    );
 }
 
 /** What the API needs: role and text, without replies that failed empty. */
@@ -104,11 +119,14 @@ function toTurns(messages: ChatMessage[]): ChatTurn[] {
 export function useChat({
     endpoint,
     storageKey,
+    extraBody,
     passage,
     initialQuota,
 }: {
     endpoint: string;
     storageKey: string;
+    /** Sent with every request, e.g. `{ figureId }`. */
+    extraBody?: Record<string, unknown>;
     passage: PassageRef | null;
     initialQuota: Quota | null;
 }) {
@@ -172,6 +190,7 @@ export function useChat({
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
+                        ...extraBody,
                         messages: toTurns(history),
                         ...(passage && { passage }),
                     }),
@@ -180,6 +199,7 @@ export function useChat({
                 if (!response.ok || !response.body) {
                     const body = (await response.json().catch(() => null)) as {
                         error?: string;
+                        retryable?: boolean;
                     } | null;
                     if (response.status === 429) {
                         setQuota((q) => (q ? { ...q, remaining: 0 } : q));
@@ -188,7 +208,8 @@ export function useChat({
                         status: "error",
                         error:
                             body?.error ?? "Something went wrong. Try again.",
-                        retryable: response.status >= 500,
+                        retryable:
+                            response.status >= 500 && body?.retryable !== false,
                     }));
                     return;
                 }
@@ -211,7 +232,7 @@ export function useChat({
                         update(() => ({
                             status: "error",
                             error: event.message,
-                            retryable: true,
+                            retryable: event.retryable,
                         }));
                     }
                 }
@@ -226,20 +247,22 @@ export function useChat({
                         : {},
                 );
             } catch {
-                update(() =>
-                    controller.signal.aborted
-                        ? { status: "stopped" }
-                        : {
-                              status: "error",
-                              error: "Couldn't reach Dawnscroll. Check your connection and try again.",
-                              retryable: true,
-                          },
+                update((m) =>
+                    m.status !== "streaming"
+                        ? {}
+                        : controller.signal.aborted
+                          ? { status: "stopped" }
+                          : {
+                                status: "error",
+                                error: "Couldn't reach Dawnscroll. Check your connection and try again.",
+                                retryable: true,
+                            },
                 );
             } finally {
                 if (abortRef.current === controller) abortRef.current = null;
             }
         },
-        [endpoint],
+        [endpoint, extraBody],
     );
 
     /** Asks a question; false when it can't be sent right now. */
@@ -256,10 +279,10 @@ export function useChat({
         [chat, run, streaming],
     );
 
-    /** Asks the last question again after a failed answer. */
+    /** Asks the last question again, after a failed or stopped answer. */
     const retry = useCallback(() => {
         const last = chat.messages.at(-1);
-        if (streaming || last?.status !== "error") return;
+        if (streaming || !canRetry(last)) return;
         void run(chat.messages.slice(0, -1), chat.passage);
     }, [chat, run, streaming]);
 
