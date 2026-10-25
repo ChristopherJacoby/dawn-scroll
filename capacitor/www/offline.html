@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Dawnscroll</title>
+        <style>
+            body {
+                margin: 0;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #f7f0df;
+                color: #2c2016;
+                font-family: Georgia, serif;
+                text-align: center;
+                padding: 24px;
+                box-sizing: border-box;
+            }
+            @media (prefers-color-scheme: dark) {
+                body {
+                    background: #2c2016;
+                    color: #f7f0df;
+                }
+            }
+            h1 {
+                font-weight: normal;
+                font-size: 2rem;
+                margin: 0 0 12px;
+            }
+            p {
+                font-family: system-ui, sans-serif;
+                margin: 0 0 24px;
+            }
+            button {
+                font: inherit;
+                font-family: system-ui, sans-serif;
+                padding: 10px 20px;
+                border-radius: 6px;
+                border: 1px solid #a07840;
+                background: transparent;
+                color: inherit;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <h1>Dawnscroll</h1>
+            <p>You're offline, or Dawnscroll can't be reached right now.</p>
+            <button type="button" onclick="location.href = 'https://www.dawnscroll.com'">
+                Try again
+            </button>
+        </main>
+    </body>
+</html>
