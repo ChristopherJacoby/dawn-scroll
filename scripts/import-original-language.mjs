@@ -81,12 +81,12 @@ async function downloadSources() {
   return manifest;
 }
 
+// Extracted fresh every run, so the files parsed are always the zip whose
+// checksum was just verified.
 function unzip(zipFile, into) {
   const dest = `${RAW}/${into}`;
-  if (!existsSync(dest)) {
-    mkdirSync(dest, { recursive: true });
-    execFileSync("unzip", ["-q", "-o", `${RAW}/${zipFile}`, "-d", dest]);
-  }
+  mkdirSync(dest, { recursive: true });
+  execFileSync("unzip", ["-q", "-o", `${RAW}/${zipFile}`, "-d", dest]);
   return dest;
 }
 
