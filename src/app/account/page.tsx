@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { DisplayNameForm } from "@/components/account/DisplayNameForm";
 import { LogOutButton } from "@/components/auth/LogOutButton";
 import { requireAuth } from "@/lib/auth";
@@ -80,6 +81,24 @@ export default async function AccountPage({
                             </dd>
                         </div>
                     </dl>
+                </section>
+
+                <section
+                    aria-labelledby="subscription-heading"
+                    className="flex items-center justify-between gap-4 rounded-lg border border-reading-border-strong bg-reading-surface-raised p-5"
+                >
+                    <h2
+                        id="subscription-heading"
+                        className="text-xs font-medium uppercase tracking-wide text-reading-text-muted"
+                    >
+                        Subscription
+                    </h2>
+                    <Link
+                        href="/account/subscription"
+                        className="text-sm font-medium text-reading-link"
+                    >
+                        Plan and billing
+                    </Link>
                 </section>
 
                 <div>
