@@ -55,3 +55,6 @@ next-env.d.ts
 /public/maplibre/
 /data/translations/raw/
 /data/translations/out/
+
+# Apostle mode red-team output (npm run red-team)
+red-team-report.md
