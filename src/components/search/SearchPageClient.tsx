@@ -11,11 +11,12 @@ import { SearchResults } from "./SearchResults";
 
 interface CompletedSearch {
     query: string;
+    translation: string;
     results: SearchResult[];
     error: string | null;
 }
 
-export function SearchPageClient() {
+export function SearchPageClient({ translation }: { translation: string }) {
     const initialQuery = useSearchParams().get("q")?.trim() ?? "";
     const [value, setValue] = useState(initialQuery);
     const [query, setQuery] = useState(initialQuery);
@@ -27,10 +28,10 @@ export function SearchPageClient() {
 
         (async () => {
             try {
-                const response = await fetch(
-                    `/api/bible/search?q=${encodeURIComponent(query)}`,
-                    { signal: controller.signal },
-                );
+                const params = new URLSearchParams({ q: query, translation });
+                const response = await fetch(`/api/bible/search?${params}`, {
+                    signal: controller.signal,
+                });
                 if (!response.ok) {
                     const body = (await response.json().catch(() => null)) as {
                         error?: string;
@@ -41,11 +42,17 @@ export function SearchPageClient() {
                     results: SearchResult[];
                 };
                 addRecentSearch(query);
-                setCompleted({ query, results: body.results, error: null });
+                setCompleted({
+                    query,
+                    translation,
+                    results: body.results,
+                    error: null,
+                });
             } catch (cause) {
                 if (controller.signal.aborted) return;
                 setCompleted({
                     query,
+                    translation,
                     results: [],
                     error:
                         cause instanceof Error
@@ -56,7 +63,7 @@ export function SearchPageClient() {
         })();
 
         return () => controller.abort();
-    }, [query]);
+    }, [query, translation]);
 
     const handleQueryChange = useCallback((nextQuery: string) => {
         setQuery(nextQuery);
@@ -78,7 +85,12 @@ export function SearchPageClient() {
         [handleQueryChange],
     );
 
-    const active = query && completed?.query === query ? completed : null;
+    const active =
+        query &&
+        completed?.query === query &&
+        completed.translation === translation
+            ? completed
+            : null;
     const loading = Boolean(query) && !active;
 
     // Returning from a search result: the browser's scroll restoration ran
