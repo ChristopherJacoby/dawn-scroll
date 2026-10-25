@@ -1,0 +1,765 @@
+{
+  "$comment": "Roots: where Christian traditions came from. Origin and early-church prose describe the documented history; only claim explanations assess. [n] markers cite the entry's sources (1-based). scripts/generate-roots-seed.mjs validates this file and writes the seed SQL.",
+  "traditions": [
+    {
+      "slug": "halloween",
+      "name": "Halloween",
+      "summary": "A night of costumes and candy that grew out of the Christian eve of All Saints, carrying Irish and Scottish folk customs whose older roots historians still debate.",
+      "origin": [
+        "Halloween is a contraction of “All Hallows’ Eve,” the night before All Saints’ Day (All Hallows) on November 1. Christians had long remembered martyrs on the anniversaries of their deaths, and in 609 or 610 Pope Boniface IV dedicated Rome’s Pantheon to Mary and all the martyrs [3][8]. A feast of all saints on November 1 appears in England and the Frankish lands in the eighth and ninth centuries, and in 835 the emperor Louis the Pious, at the request of Pope Gregory IV, ordered it kept throughout his empire [1]. In the early eleventh century (traditionally dated to 998), Abbot Odilo of Cluny ordered his monasteries to commemorate all the faithful departed, a day that spread as All Souls’ Day on November 2 [7].",
+        "Samhain (Old Irish samain), the start of winter in the medieval Irish calendar, also fell at the beginning of November. Irish tales written down by Christian monks from about the tenth century set royal assemblies and encounters with the otherworld at Samhain [1][2]. Much earlier, a bronze calendar from Coligny in Gaul (2nd century AD) names a month SAMON(I), often reconstructed as Samonios, though how it relates to the Irish feast is uncertain [5].",
+        "By the early modern period, Hallowe’en in Scotland and Ireland was a night for fortune-telling, bonfires and going door to door in disguise (“guising”) [1]. Robert Burns’s poem “Halloween,” published in 1786, describes the fortune-telling charms of a Scottish country Halloween: pulling kail stalks, burning nuts, sowing hemp seed [4]. In parts of England, children and the poor went “souling” at Hallowtide, the days around All Saints, asking for soul cakes in return for prayers for the dead [1]. Irish and Scottish immigrants carried these customs to North America in the nineteenth century, where Halloween became a community and children’s holiday; the phrase “trick or treat” is first recorded in Ontario in 1917 [9]."
+      ],
+      "earlyChurch": [
+        "Nothing like Halloween appears in the New Testament or in Christian writings before AD 100. The earliest Christians did remember their dead: the New Testament speaks of a “great cloud of witnesses” (Hebrews 12:1) and of the souls of martyrs (Revelation 6:9–11), and in the mid-second century the church at Smyrna planned to gather each year on the anniversary of Bishop Polycarp’s martyrdom [6]. A single feast for all the saints came centuries later [3]."
+      ],
+      "claims": [
+        {
+          "claim": "Halloween is the Celtic festival of Samhain under a new name.",
+          "rating": "debated",
+          "explanation": "Halloween’s name and date come from the Christian feast of All Saints, but some of its customs (bonfires, divination, spirits abroad) echo what medieval Irish texts associate with Samhain [1][2]. How much of that is pre-Christian, and how much attached itself to the night later, is disputed: nearly everything known about Samhain was written down by Christians centuries after Ireland’s conversion [1]."
+        },
+        {
+          "claim": "The church set All Saints’ Day on November 1 to replace Samhain.",
+          "rating": "unverified",
+          "explanation": "No surviving source gives that reason. The November 1 date first appears in England and the Frankish lands, and historians disagree over whether Celtic or Germanic custom shaped it [1]. The motive is undocumented."
+        },
+        {
+          "claim": "Samhain was named for a Celtic lord of the dead.",
+          "rating": "contradicted",
+          "explanation": "No Irish or Gaulish source names a god called Samhain; the word names a date. Its meaning is itself disputed: traditionally “summer’s end,” though some linguists connect it with a word for “assembly.” The death god first appears in eighteenth-century antiquarian speculation, not in any ancient or medieval text [1][10]."
+        },
+        {
+          "claim": "Trick-or-treating is an ancient pagan ritual.",
+          "rating": "unverified",
+          "explanation": "Going door to door in disguise, or for soul cakes, is documented in Britain and Ireland from the early modern period, often tied to prayers for the dead [1][4]. A line from these back to pre-Christian practice is not documented, and trick-or-treating in its modern form took shape in North America in the twentieth century [2]."
+        }
+      ],
+      "timeline": [
+        {
+          "year": 200,
+          "label": "2nd c. AD",
+          "event": "A Gaulish calendar, later found at Coligny in France, names a month SAMONIOS."
+        },
+        {
+          "year": 609,
+          "label": "609 or 610",
+          "event": "Pope Boniface IV dedicates the Pantheon in Rome to Mary and all the martyrs."
+        },
+        {
+          "year": 835,
+          "label": "835",
+          "event": "Louis the Pious orders All Saints’ Day kept on November 1 throughout his empire."
+        },
+        {
+          "year": 1030,
+          "label": "early 11th c.",
+          "event": "Odilo of Cluny orders a yearly commemoration of all the faithful departed, later All Souls’ Day."
+        },
+        {
+          "year": 1050,
+          "label": "10th–12th c.",
+          "event": "Irish monks write down tales that set assemblies and otherworldly events at Samhain."
+        },
+        {
+          "year": 1786,
+          "label": "1786",
+          "event": "Robert Burns publishes “Halloween,” describing Scottish fortune-telling charms."
+        },
+        {
+          "year": 1917,
+          "label": "1917",
+          "event": "The phrase “trick or treat” is first recorded, in Ontario, Canada."
+        }
+      ],
+      "refs": [
+        {
+          "book": "deuteronomy",
+          "from": "18:10",
+          "to": "18:12",
+          "note": "Forbids divination, sorcery and consulting the dead."
+        },
+        {
+          "book": "1-samuel",
+          "from": "28:7",
+          "to": "28:19",
+          "note": "Saul consults a medium at Endor to bring up the dead prophet Samuel."
+        },
+        {
+          "book": "hebrews",
+          "from": "12:1",
+          "to": "12:1",
+          "note": "Speaks of the faithful who have died as “so great a cloud of witnesses.”"
+        },
+        {
+          "book": "revelation",
+          "from": "6:9",
+          "to": "6:11",
+          "note": "The souls of martyrs beneath the altar cry out and are given white robes."
+        }
+      ],
+      "sources": [
+        {
+          "citation": "Hutton, Ronald. The Stations of the Sun: A History of the Ritual Year in Britain. Oxford: Oxford University Press, 1996.",
+          "url": "https://archive.org/details/stationsofsunhis0000hutt"
+        },
+        {
+          "citation": "Rogers, Nicholas. Halloween: From Pagan Ritual to Party Night. Oxford: Oxford University Press, 2002.",
+          "url": null
+        },
+        {
+          "citation": "The Book of Pontiffs (Liber Pontificalis), life of Boniface IV. Translated by Raymond Davis. Liverpool: Liverpool University Press, 1989.",
+          "url": null
+        },
+        {
+          "citation": "Burns, Robert. “Halloween” (written 1785, published 1786). In Poems and Songs of Robert Burns, Project Gutenberg eBook #1279.",
+          "url": "https://www.gutenberg.org/ebooks/1279"
+        },
+        {
+          "citation": "Olmsted, Garrett S. The Gaulish Calendar: A Reconstruction from the Bronze Fragments from Coligny. Bonn: R. Habelt, 1992.",
+          "url": null
+        },
+        {
+          "citation": "The Martyrdom of Polycarp 18. Ante-Nicene Fathers, vol. 1, via New Advent.",
+          "url": "https://www.newadvent.org/fathers/0102.htm"
+        },
+        {
+          "citation": "Mershman, Francis. “All Souls’ Day.” The Catholic Encyclopedia, vol. 1. New York: Robert Appleton Company, 1907, via New Advent.",
+          "url": "https://www.newadvent.org/cathen/01315b.htm"
+        },
+        {
+          "citation": "Mershman, Francis. “All Saints’ Day.” The Catholic Encyclopedia, vol. 1. New York: Robert Appleton Company, 1907, via New Advent.",
+          "url": "https://www.newadvent.org/cathen/01315a.htm"
+        },
+        {
+          "citation": "“trick or treat.” DCHP-3: A Dictionary of Canadianisms on Historical Principles, 3rd ed. University of British Columbia.",
+          "url": "https://dchp.arts.ubc.ca/entries/trick%20or%20treat"
+        },
+        {
+          "citation": "Morton, Lisa. Trick or Treat: A History of Halloween. London: Reaktion Books, 2012.",
+          "url": "https://reaktionbooks.co.uk/work/trick-or-treat"
+        }
+      ],
+      "reviewedOn": "2026-10-25"
+    },
+    {
+      "slug": "christmas",
+      "name": "Christmas",
+      "summary": "The feast of Jesus’ birth, kept on December 25 in Rome by 336. Why that date was chosen is one of the oldest debates in Christian history.",
+      "origin": [
+        "The Gospels of Matthew and Luke describe Jesus’ birth but give no date or season. Early Christian writers who tried to work one out disagreed: around 200, Clement of Alexandria reported calculations placing it in the spring, including on the 25th of the Egyptian month Pachon (May 20) [5].",
+        "The earliest evidence for a celebration on December 25 is a Roman list of feast days, the Depositio Martyrum, which begins: “December 25: Christ born in Bethlehem of Judea.” It survives in a collection known as the Chronography of 354 and is generally dated to 336 [3]. The same collection’s civil calendar marks December 25 as “N(atalis) Invicti,” the birthday of the Unconquered (Sun), with thirty chariot races [4].",
+        "From Rome the date spread east. In a sermon of 386, John Chrysostom told his congregation in Antioch that the feast had been kept there for less than ten years; many Eastern churches had celebrated Jesus’ birth and baptism together on January 6, as the Armenian church still does [2]. Orthodox churches that follow the Julian calendar keep December 25 on what is now January 7 in the civil calendar.",
+        "Later Christians disputed the feast as well. Puritan reformers objected that it had no warrant in Scripture; England’s Parliament abolished its observance in 1647 [9], and Massachusetts fined anyone caught keeping it from 1659 to 1681 [6]. In the United States, Christmas became a federal holiday in 1870 [10]."
+      ],
+      "earlyChurch": [
+        "There is no record of Christians celebrating Jesus’ birth before AD 100. The New Testament centers on his death and resurrection, and Paul’s letters mention the birth only in passing (Galatians 4:4) [2]. The earliest Christian observances known are the weekly gathering on the first day of the week and the yearly Pascha, or Easter [2]."
+      ],
+      "claims": [
+        {
+          "claim": "Jesus was born on December 25.",
+          "rating": "unverified",
+          "explanation": "No source before about 200 gives a date, and those from around 200 disagree: Clement of Alexandria reports several [5], and a passage in Hippolytus’s Commentary on Daniel that gives December 25 is of disputed authenticity [2]. December 25 is first attested as the feast day in Rome in 336 [3]."
+        },
+        {
+          "claim": "December 25 was chosen to replace the Roman festival of the Unconquered Sun.",
+          "rating": "debated",
+          "explanation": "Rome did celebrate the Unconquered Sun on December 25 by the mid-fourth century [4], and some later Christian writers drew the connection themselves [1]. Others argue the date came from a calculation: if Jesus was conceived on March 25, the date some early Christians assigned to his death, he was born nine months later [1][2]. The solar festival on that date is attested no earlier than the Christian one, which has led some scholars to question which came first [7]."
+        },
+        {
+          "claim": "Jeremiah 10 describes and condemns Christmas trees.",
+          "rating": "contradicted",
+          "explanation": "Jeremiah 10:3–5 describes a tree cut from the forest, carved by a craftsman and decked with silver and gold to make an idol that cannot speak or walk. The passage is about idol-making around the sixth century BC; decorated Christmas trees are first clearly recorded in German-speaking lands in the sixteenth century, after a few ambiguous fifteenth-century mentions [8]. Some readers apply verse 2, “Learn not the way of the heathen,” as a principle against adopting pagan customs; that is an application of the passage, not what it describes."
+        },
+        {
+          "claim": "Christians did not celebrate Jesus’ birth for the first three centuries.",
+          "rating": "supported",
+          "explanation": "No celebration of the Nativity is recorded before the fourth century, apart from Clement of Alexandria’s report that one Egyptian group kept a festival of Jesus’ baptism [5]. Silence in the sources is not proof, but it is consistent across them [2]."
+        }
+      ],
+      "timeline": [
+        {
+          "year": 200,
+          "label": "c. 200",
+          "event": "Clement of Alexandria records conflicting calculations of the date of Jesus’ birth."
+        },
+        {
+          "year": 274,
+          "label": "274",
+          "event": "Emperor Aurelian dedicates a temple to the Unconquered Sun in Rome."
+        },
+        {
+          "year": 336,
+          "label": "336",
+          "event": "A Roman list of feasts records December 25 as the birth of Christ."
+        },
+        {
+          "year": 354,
+          "label": "354",
+          "event": "The Chronography of 354 preserves that list beside a civil calendar marking December 25 as the Sun’s birthday."
+        },
+        {
+          "year": 386,
+          "label": "386",
+          "event": "John Chrysostom preaches that Antioch adopted the December 25 feast within the past decade."
+        },
+        {
+          "year": 1500,
+          "label": "16th c.",
+          "event": "Decorated trees for Christmas are first clearly recorded in German-speaking towns."
+        },
+        {
+          "year": 1647,
+          "label": "1647",
+          "event": "England’s Parliament abolishes the observance of Christmas."
+        },
+        {
+          "year": 1870,
+          "label": "1870",
+          "event": "Christmas becomes a federal holiday in the United States."
+        }
+      ],
+      "refs": [
+        {
+          "book": "luke",
+          "from": "2:1",
+          "to": "2:20",
+          "note": "The birth in Bethlehem during a census, with shepherds “abiding in the field” at night. No date is given."
+        },
+        {
+          "book": "matthew",
+          "from": "2:1",
+          "to": "2:12",
+          "note": "Wise men from the east follow a star to the child."
+        },
+        {
+          "book": "jeremiah",
+          "from": "10:1",
+          "to": "10:5",
+          "note": "A tree is cut from the forest, shaped by a craftsman and decked with silver and gold to make an idol."
+        },
+        {
+          "book": "galatians",
+          "from": "4:4",
+          "to": "4:4",
+          "note": "Paul’s direct reference to the birth: God sent forth his Son, “made of a woman.”"
+        }
+      ],
+      "sources": [
+        {
+          "citation": "McGowan, Andrew. “How December 25 Became Christmas.” Bible Review 18, no. 6 (2002); Biblical Archaeology Society.",
+          "url": "https://www.biblicalarchaeology.org/daily/people-cultures-in-the-bible/jesus-historical-jesus/how-december-25-became-christmas/"
+        },
+        {
+          "citation": "Talley, Thomas J. The Origins of the Liturgical Year. 2nd ed. Collegeville, MN: Liturgical Press, 1991.",
+          "url": "https://litpress.org/Products/6075/The-Origins-of-the-Liturgical-Year"
+        },
+        {
+          "citation": "The Chronography of 354, part 12: Depositio Martyrum. Transcribed by Roger Pearse, tertullian.org.",
+          "url": "https://www.tertullian.org/fathers/chronography_of_354_12_depositions_martyrs.htm"
+        },
+        {
+          "citation": "The Chronography of 354, part 6: the calendar of Philocalus. Transcribed by Roger Pearse, tertullian.org.",
+          "url": "https://www.tertullian.org/fathers/chronography_of_354_06_calendar.htm"
+        },
+        {
+          "citation": "Clement of Alexandria. Stromata 1.21. Ante-Nicene Fathers, vol. 2, via New Advent.",
+          "url": "https://www.newadvent.org/fathers/02101.htm"
+        },
+        {
+          "citation": "Nissenbaum, Stephen. The Battle for Christmas. New York: Alfred A. Knopf, 1996.",
+          "url": null
+        },
+        {
+          "citation": "Hijmans, Steven E. “Sol: The Sun in the Art and Religions of Rome.” PhD diss., University of Groningen, 2009.",
+          "url": "https://hdl.handle.net/11370/af334f2a-d157-4793-95c6-80d2f6323668"
+        },
+        {
+          "citation": "Brunner, Bernd. Inventing the Christmas Tree. Translated by Benjamin A. Smith. New Haven: Yale University Press, 2012.",
+          "url": null
+        },
+        {
+          "citation": "Hutton, Ronald. The Stations of the Sun: A History of the Ritual Year in Britain. Oxford: Oxford University Press, 1996.",
+          "url": "https://archive.org/details/stationsofsunhis0000hutt"
+        },
+        {
+          "citation": "An Act making the first Day of January, the twenty-fifth Day of December, the fourth Day of July, and Thanksgiving Day, Holidays within the District of Columbia. Act of June 28, 1870, 16 Stat. 168.",
+          "url": null
+        }
+      ],
+      "reviewedOn": "2026-10-25"
+    },
+    {
+      "slug": "easter",
+      "name": "Easter",
+      "summary": "The yearly feast of Christ’s death and resurrection, kept since at least the second century. Its English name, unlike the Pascha of most languages, comes from an Anglo-Saxon month.",
+      "origin": [
+        "Christians in most languages call the feast by a form of the Greek pascha, from the Hebrew pesach, Passover: Pâques in French, Pascua in Spanish, Pasqua in Italian. Jesus was crucified at Passover, and around AD 54 Paul wrote that “Christ our passover is sacrificed for us” (1 Corinthians 5:7).",
+        "By the second century, churches disagreed about when to keep the feast. The churches of the Roman province of Asia, citing a tradition from the apostle John, kept it on the fourteenth day of the Jewish month Nisan, whatever day of the week that fell; they were later called Quartodecimans, from the Latin for “fourteenth.” Rome and most other churches kept it on a Sunday [2]. Around 155, Bishops Polycarp of Smyrna and Anicetus of Rome discussed the difference without settling it, each holding to the custom of those before him; Irenaeus later wrote that the earlier Roman bishops “neither observed it” themselves, which some historians read as meaning Rome kept no yearly Pascha before about 165 [2]. Around 190, Bishop Victor of Rome tried to cut the Asian churches off over the date [2]. A homily On Pascha by Melito of Sardis, from about 165, shows how one Quartodeciman church preached the feast, centered on Christ’s passion [7].",
+        "In 325 the Council of Nicaea agreed that all churches should keep Easter on the same Sunday, independently of the Jewish calendar; the decision is known from Constantine’s letter to the churches [3]. It did not fix a method of calculation, disagreements persisted, and since the Gregorian calendar reform of 1582, Western and Eastern churches have usually celebrated on different dates.",
+        "The English name has a different history. The monk Bede, writing in 725, explained that the Anglo-Saxons called April Eosturmonath after a goddess, Eostre, once honored in that month, and that the name had passed to the Christian feast [1]. Bede is the only ancient witness to this goddess [4]. The German Ostern shares the root.",
+        "Eggs and hares came later. Eggs were forbidden during the Lenten fast in medieval Europe and became part of the celebration that ended it [5], and the egg-bringing Easter hare is first described in German lands in 1682 [8]."
+      ],
+      "earlyChurch": [
+        "The New Testament does not command a yearly feast, but it ties Jesus’ death to Passover (John 19:14; 1 Corinthians 5:7) and his resurrection to “the first day of the week” (Matthew 28:1). Talley and others take the Asian churches’ claim that their practice came from the apostle John as evidence that some yearly observance reached back near the apostolic generation, though no source from before AD 100 describes one directly [2][9]."
+      ],
+      "claims": [
+        {
+          "claim": "Easter is named after the Babylonian goddess Ishtar.",
+          "rating": "contradicted",
+          "explanation": "The English name comes from Old English Eastre, which Bede tied to a goddess Eostre and a spring month [1]; the word shares a root with words for “east” and “dawn” [4]. Ishtar is a similar-sounding name of unrelated, Akkadian origin, and most languages call the feast Pascha, after Passover. The Ishtar link traces to Alexander Hislop’s The Two Babylons (1853; expanded 1858), which equated Easter with Astarte [6]."
+        },
+        {
+          "claim": "Easter is named after an Anglo-Saxon goddess, Eostre.",
+          "rating": "debated",
+          "explanation": "Bede is the only source, and some scholars have suspected he inferred the goddess from the month’s name. Others accept his report, and inscriptions to Germanic mother goddesses called the Austriahenae, found in 1958, may share the root [4]."
+        },
+        {
+          "claim": "Christians kept a yearly Pascha, the feast of Christ’s death and resurrection, from the earliest times.",
+          "rating": "supported",
+          "explanation": "The churches of Asia traced their custom to the apostle John, and by the 150s Polycarp and Anicetus each defended their church’s practice as inherited from their predecessors [2]. Whether Rome kept any yearly Pascha before about 165 is disputed, and no first-century description survives [2][9]."
+        },
+        {
+          "claim": "Easter eggs and the Easter bunny come from pagan fertility rites.",
+          "rating": "unverified",
+          "explanation": "Eggs and hares are old symbols of new life, but no source ties them to a pre-Christian spring festival. The documented history is later: eggs held back through the Lenten fast [5], and a German folk custom of an egg-bringing hare first recorded in 1682 [8]."
+        }
+      ],
+      "timeline": [
+        {
+          "year": 54,
+          "label": "c. 54",
+          "event": "Paul calls Christ “our passover” (1 Corinthians 5:7)."
+        },
+        {
+          "year": 155,
+          "label": "c. 155",
+          "event": "Polycarp of Smyrna and Anicetus of Rome discuss their churches’ differing customs."
+        },
+        {
+          "year": 165,
+          "label": "c. 165",
+          "event": "Melito of Sardis preaches On Pascha."
+        },
+        {
+          "year": 190,
+          "label": "c. 190",
+          "event": "Victor of Rome tries to excommunicate the churches of Asia over the date."
+        },
+        {
+          "year": 325,
+          "label": "325",
+          "event": "The Council of Nicaea agrees on a common Sunday celebration."
+        },
+        {
+          "year": 725,
+          "label": "725",
+          "event": "Bede ties the English name to the month Eosturmonath and a goddess Eostre."
+        },
+        {
+          "year": 1682,
+          "label": "1682",
+          "event": "The egg-bringing Easter hare is first described in Germany."
+        },
+        {
+          "year": 1858,
+          "label": "1853–58",
+          "event": "Alexander Hislop’s The Two Babylons equates Easter with Astarte."
+        }
+      ],
+      "refs": [
+        {
+          "book": "exodus",
+          "from": "12:1",
+          "to": "12:14",
+          "note": "The first Passover: a lamb killed on the fourteenth day of the first month."
+        },
+        {
+          "book": "1-corinthians",
+          "from": "5:7",
+          "to": "5:8",
+          "note": "“Christ our passover is sacrificed for us: therefore let us keep the feast.”"
+        },
+        {
+          "book": "matthew",
+          "from": "28:1",
+          "to": "28:6",
+          "note": "Women come to the tomb at dawn on the first day of the week and find it empty."
+        },
+        {
+          "book": "acts",
+          "from": "12:4",
+          "to": "12:4",
+          "note": "The only place the KJV says “Easter”; the Greek word is pascha, rendered “passover” elsewhere."
+        }
+      ],
+      "sources": [
+        {
+          "citation": "Bede. The Reckoning of Time, ch. 15. Translated by Faith Wallis. Liverpool: Liverpool University Press, 1999.",
+          "url": null
+        },
+        {
+          "citation": "Eusebius. Church History 5.23–25. Nicene and Post-Nicene Fathers, 2nd series, vol. 1, via New Advent.",
+          "url": "https://www.newadvent.org/fathers/250105.htm"
+        },
+        {
+          "citation": "Eusebius. Life of Constantine 3.5, 3.18–19. Nicene and Post-Nicene Fathers, 2nd series, vol. 1, via New Advent.",
+          "url": "https://www.newadvent.org/fathers/25023.htm"
+        },
+        {
+          "citation": "Shaw, Philip A. Pagan Goddesses in the Early Germanic World: Eostre, Hreda and the Cult of Matrons. London: Bristol Classical Press, 2011.",
+          "url": null
+        },
+        {
+          "citation": "Hutton, Ronald. The Stations of the Sun: A History of the Ritual Year in Britain. Oxford: Oxford University Press, 1996.",
+          "url": "https://archive.org/details/stationsofsunhis0000hutt"
+        },
+        {
+          "citation": "Hislop, Alexander. The Two Babylons; or, The Papal Worship Proved to Be the Worship of Nimrod and His Wife. Edinburgh, 1853; expanded ed. 1858.",
+          "url": "https://archive.org/details/thetwobabylonsor00hisluoft"
+        },
+        {
+          "citation": "Melito of Sardis. On Pascha. Translated by Alistair Stewart-Sykes. Crestwood, NY: St Vladimir’s Seminary Press, 2001.",
+          "url": null
+        },
+        {
+          "citation": "Franck von Franckenau, Georg. De ovis paschalibus [On Easter Eggs]. Heidelberg, 1682.",
+          "url": null
+        },
+        {
+          "citation": "Talley, Thomas J. The Origins of the Liturgical Year. 2nd ed. Collegeville, MN: Liturgical Press, 1991.",
+          "url": "https://litpress.org/Products/6075/The-Origins-of-the-Liturgical-Year"
+        }
+      ],
+      "reviewedOn": "2026-10-25"
+    },
+    {
+      "slug": "sunday-worship",
+      "name": "Sunday Worship",
+      "summary": "Christians have gathered on the first day of the week since the New Testament era. In 321 Constantine made Sunday a civil day of rest; who changed what, and when, is still argued.",
+      "origin": [
+        "The Jewish Sabbath is the seventh day, Saturday, set apart in the Ten Commandments as a day of rest (Exodus 20:8–11). The New Testament records believers meeting on the first day of the week, the day of the resurrection, to break bread at Troas (Acts 20:7), and Paul told the Corinthians to set money aside on that day (1 Corinthians 16:2). Revelation 1:10 mentions “the Lord’s day.”",
+        "Writings from the next generations speak of the Sunday gathering more directly. The Didache, probably from the late first century, tells believers to gather “every Lord’s day” to break bread [2]. Around 110, Ignatius of Antioch described believers “no longer observing the Sabbath, but living in the observance of the Lord’s Day”; the Greek says literally “living according to the Lord’s,” and one manuscript reads “the Lord’s life” [3]. Around 112 the Roman governor Pliny reported that Christians met “on a fixed day” before dawn, without naming the day [4], and around 155 Justin Martyr wrote that “on the day called Sunday” Christians in town and country gathered for readings, prayer and the Eucharist, because it was the day God began creation and Christ rose [1]. The Epistle of Barnabas called it “the eighth day,” the day after the seventh [5].",
+        "In 321 the emperor Constantine ordered that courts and city workers rest on “the venerable day of the Sun,” while allowing farm work to go on [6]. Around 363 the Synod of Laodicea told Christians not to “judaize” (follow Jewish practice) by resting on the Sabbath, but to honor the Lord’s day [7]. Catholic teaching describes Sunday observance as replacing the Sabbath’s [10]. Some Christians, notably Seventh Day Baptists from the seventeenth century and Seventh-day Adventists from the nineteenth, hold that the seventh-day Sabbath remains binding [9]."
+      ],
+      "earlyChurch": [
+        "Within the New Testament period, believers met on the first day of the week (Acts 20:7), and Revelation, usually dated to the 90s, names “the Lord’s day” (Revelation 1:10). Acts also shows Paul in synagogues on the Sabbath “as his manner was,” with Gentiles present (Acts 17:2; 13:42–44). How long and how widely Sabbath and Sunday were kept side by side is debated [8][9]."
+      ],
+      "claims": [
+        {
+          "claim": "Constantine changed the Christian day of worship from Saturday to Sunday in 321.",
+          "rating": "contradicted",
+          "explanation": "Christian sources from well before 321 describe Sunday gatherings: the Didache, Ignatius around 110 and Justin around 155 [1][2][3]. Constantine’s law made Sunday a civil day of rest; it did not create Christian Sunday worship [6]."
+        },
+        {
+          "claim": "A pope or church council began Sunday worship.",
+          "rating": "contradicted",
+          "explanation": "Sunday gatherings are documented in the first and early second centuries [1][2][3], before any church council met and before any bishop of Rome is recorded ruling on the question. Fourth-century councils such as Laodicea later regulated Sabbath and Sunday practice [7]."
+        },
+        {
+          "claim": "The Catholic Church changed the Sabbath to Sunday.",
+          "rating": "debated",
+          "explanation": "Catholic teaching says Sunday’s observance replaces the Sabbath’s, and older Catholic catechisms say the Church “transferred the solemnity from Saturday to Sunday”; Sabbatarians cite these statements [10][11]. Historically, Sunday gatherings are documented in the first and early second centuries [1][2][3]. The disagreement turns largely on what “the Church” and “changed” mean."
+        },
+        {
+          "claim": "Early Christians chose Sunday because of the resurrection.",
+          "rating": "established",
+          "explanation": "Justin Martyr gives this reason explicitly, alongside the first day of creation [1], and the Epistle of Barnabas calls Sunday “the eighth day … in which also Jesus rose again from the dead” [5]."
+        },
+        {
+          "claim": "Sunday worship began in second-century Rome, to set Christians apart from Jews.",
+          "rating": "contradicted",
+          "explanation": "Samuele Bacchiocchi argued this in From Sabbath to Sunday (1977) [8]. The earliest witnesses to Sunday gatherings are not Roman: Troas (Acts 20:7), the Didache (probably Syria), Ignatius of Antioch and Pliny in Bithynia [2][3][4]. His thesis is answered in detail in Carson’s volume [9], though what “the Lord’s day” means in Revelation 1:10 remains debated."
+        }
+      ],
+      "timeline": [
+        {
+          "year": 54,
+          "label": "c. 54",
+          "event": "Paul tells the Corinthians to set money aside “upon the first day of the week.”"
+        },
+        {
+          "year": 95,
+          "label": "c. 95",
+          "event": "Revelation refers to “the Lord’s day.”"
+        },
+        {
+          "year": 100,
+          "label": "late 1st c.",
+          "event": "The Didache tells believers to gather every Lord’s day to break bread."
+        },
+        {
+          "year": 110,
+          "label": "c. 110",
+          "event": "Ignatius of Antioch contrasts keeping the Sabbath with living by the Lord’s Day."
+        },
+        {
+          "year": 112,
+          "label": "c. 112",
+          "event": "Pliny reports that Christians meet before dawn on a fixed day."
+        },
+        {
+          "year": 155,
+          "label": "c. 155",
+          "event": "Justin Martyr describes Christian worship “on the day called Sunday.”"
+        },
+        {
+          "year": 321,
+          "label": "321",
+          "event": "Constantine makes Sunday a civil day of rest."
+        },
+        {
+          "year": 363,
+          "label": "c. 363",
+          "event": "The Synod of Laodicea tells Christians to work on the Sabbath and honor the Lord’s day."
+        }
+      ],
+      "refs": [
+        {
+          "book": "exodus",
+          "from": "20:8",
+          "to": "20:11",
+          "note": "The fourth commandment: rest on the seventh day, because God rested after creating."
+        },
+        {
+          "book": "acts",
+          "from": "20:7",
+          "to": "20:7",
+          "note": "Believers at Troas gather “upon the first day of the week” to break bread."
+        },
+        {
+          "book": "1-corinthians",
+          "from": "16:2",
+          "to": "16:2",
+          "note": "Paul tells the Corinthians to lay money aside “upon the first day of the week.”"
+        },
+        {
+          "book": "revelation",
+          "from": "1:10",
+          "to": "1:10",
+          "note": "John is “in the Spirit on the Lord’s day.”"
+        },
+        {
+          "book": "colossians",
+          "from": "2:16",
+          "to": "2:17",
+          "note": "“Let no man therefore judge you in meat, or in drink, or in respect of an holyday, or of the new moon, or of the sabbath days.”"
+        },
+        {
+          "book": "mark",
+          "from": "2:27",
+          "to": "2:28",
+          "note": "“The sabbath was made for man, and not man for the sabbath: therefore the Son of man is Lord also of the sabbath.”"
+        }
+      ],
+      "sources": [
+        {
+          "citation": "Justin Martyr. First Apology 67. Ante-Nicene Fathers, vol. 1, via New Advent.",
+          "url": "https://www.newadvent.org/fathers/0126.htm"
+        },
+        {
+          "citation": "The Didache 14. Ante-Nicene Fathers, vol. 7, via New Advent.",
+          "url": "https://www.newadvent.org/fathers/0714.htm"
+        },
+        {
+          "citation": "Ignatius of Antioch. Letter to the Magnesians 9. Ante-Nicene Fathers, vol. 1, via New Advent.",
+          "url": "https://www.newadvent.org/fathers/0105.htm"
+        },
+        {
+          "citation": "Pliny the Younger. Letters 10.96 (Latin text). The Latin Library.",
+          "url": "https://www.thelatinlibrary.com/pliny.ep10.html"
+        },
+        {
+          "citation": "The Epistle of Barnabas 15. Ante-Nicene Fathers, vol. 1, via New Advent.",
+          "url": "https://www.newadvent.org/fathers/0124.htm"
+        },
+        {
+          "citation": "Codex Justinianus 3.12.2 (Constantine, AD 321). Latin text, The Latin Library.",
+          "url": "https://www.thelatinlibrary.com/justinian/codex3.shtml"
+        },
+        {
+          "citation": "Synod of Laodicea, canon 29. Nicene and Post-Nicene Fathers, 2nd series, vol. 14, via New Advent.",
+          "url": "https://www.newadvent.org/fathers/3806.htm"
+        },
+        {
+          "citation": "Bacchiocchi, Samuele. From Sabbath to Sunday: A Historical Investigation of the Rise of Sunday Observance in Early Christianity. Rome: Pontifical Gregorian University Press, 1977.",
+          "url": null
+        },
+        {
+          "citation": "Carson, D. A., ed. From Sabbath to Lord’s Day: A Biblical, Historical, and Theological Investigation. Grand Rapids: Zondervan, 1982.",
+          "url": null
+        },
+        {
+          "citation": "Catechism of the Catholic Church, §2175. 2nd ed. Vatican City: Libreria Editrice Vaticana, 1997.",
+          "url": null
+        },
+        {
+          "citation": "Geiermann, Peter. The Convert’s Catechism of Catholic Doctrine. St. Louis: B. Herder, 1910.",
+          "url": null
+        }
+      ],
+      "reviewedOn": "2026-10-25"
+    },
+    {
+      "slug": "early-church-leadership",
+      "name": "Early Church Leadership",
+      "summary": "How local elders and overseers became bishops and how Rome’s bishop rose to prominence, with the claim that Simon Magus founded a counterfeit church in Rome.",
+      "origin": [
+        "In the New Testament, local churches are led by groups of elders (presbyteroi) and overseers (episkopoi), with deacons assisting, and the two leading titles are used of the same people (Acts 20:17, 28; Titus 1:5–7). In Jerusalem, James the brother of Jesus led alongside the elders (Acts 15:13–21; 21:18), and later tradition remembered him as the city’s first bishop [4]. Timothy and Titus were sent to appoint elders in the churches (1 Timothy 3; Titus 1:5). Around 96 the letter known as 1 Clement, sent from the church in Rome to Corinth, speaks of “bishops and deacons” appointed by the apostles and their successors, and calls the same leaders presbyters [5]. The Didache likewise tells churches to “appoint for yourselves bishops and deacons” [7].",
+        "Around 110, the letters of Ignatius of Antioch show a single bishop presiding over each church in Asia Minor, with presbyters and deacons under him [6]. His letter to the Romans names no bishop there, though it greets the Roman church as the one that “presides over love” [10], and many historians conclude that Rome was led by a group of presbyters until the mid-second century [8][9].",
+        "Around 180, Irenaeus of Lyon listed the bishops of Rome from the apostles Peter and Paul through Linus to his own day, to show that the apostles’ teaching had been handed on in public, and wrote that every church should agree with Rome “on account of its preeminent authority” [2]. Second-century writers place the deaths of Peter and Paul in Rome: Dionysius of Corinth and the Roman presbyter Gaius, both quoted by Eusebius [4]. 1 Clement, written from Rome, recalls their martyrdoms [5], and Ignatius tells the Romans, “I do not, as Peter and Paul, issue commandments unto you” [10]. Around 190, Victor of Rome tried to cut off the churches of Asia over the date of Easter, and other bishops, Irenaeus among them, sharply rebuked him [12].",
+        "Simon Magus appears in Acts 8:9–24 as a Samaritan sorcerer who believed and was baptized, then offered money for the power to give the Holy Spirit; rebuked by Peter, he asked Peter to pray for him. The word simony comes from him. Second-century writers made him the father of heresy. Justin Martyr, himself from Samaria, wrote that Simon came to Rome under Claudius and was honored there as a god with a statue [3], and Irenaeus called him the one from whom “all sorts of heresies” derive [1]. Later legends, retold by Eusebius, describe Peter confronting Simon in Rome [4]."
+      ],
+      "earlyChurch": [
+        "Between AD 30 and 100, the sources show apostles and traveling prophets, and local elders or overseers with deacons (Philippians 1:1; 1 Timothy 3:1–13; 1 Peter 5:1–4) [5][7]. No source from the period uses “bishop” for an office over more than one church, and none connects Simon Magus with any church office."
+      ],
+      "claims": [
+        {
+          "claim": "Simon Magus went to Rome posing as an apostle and founded a counterfeit Christianity that became the Catholic Church.",
+          "rating": "contradicted",
+          "explanation": "Acts shows Simon baptized and then rebuked by Peter (Acts 8:13–24); Justin, Irenaeus and Eusebius treat him as an opponent of the church and the source of heresies, not a leader within it [1][3][4]. No ancient source places him in the leadership of the Roman church or any other, or identifies him with Peter or Rome’s early bishops."
+        },
+        {
+          "claim": "Rome honored Simon Magus as a god with a statue.",
+          "rating": "unverified",
+          "explanation": "Justin Martyr reports a statue on the Tiber island inscribed “Simoni Deo Sancto” [3]. In 1574 an inscription beginning “SEMONI SANCO DEO FIDIO,” to the Sabine god Semo Sancus, was found on that island [11], and many historians think Justin misread a dedication of this kind. No other evidence for a statue of Simon survives."
+        },
+        {
+          "claim": "Peter was the first bishop of Rome.",
+          "rating": "debated",
+          "explanation": "Irenaeus names Peter and Paul as the founders of the Roman church and Linus as its first bishop [2]; later lists count Peter first. Peter’s presence and death in Rome are widely accepted [4][5], but many historians doubt that Rome had a single bishop in the first century at all [8][9]."
+        },
+        {
+          "claim": "Each church was led by a single bishop from the start.",
+          "rating": "contradicted",
+          "explanation": "Within single churches, the New Testament and 1 Clement name plural elders or overseers (Philippians 1:1; Acts 20:17, 28) [5], and single bishops appear in Ignatius’s letters around 110 [6]; James’s leadership in Jerusalem is the main early exception [4]. Historians across traditions, Catholic ones included, describe a gradual development [8][9]. Catholic, Orthodox and Anglican teaching holds that the episcopate is nonetheless apostolic, while Reformed and free-church traditions see the single bishop as post-biblical; that disagreement is about the development’s legitimacy, not whether it happened."
+        }
+      ],
+      "timeline": [
+        {
+          "year": 35,
+          "label": "c. 35",
+          "event": "Simon the sorcerer is baptized in Samaria and rebuked by Peter (Acts 8)."
+        },
+        {
+          "year": 64,
+          "label": "c. 64–67",
+          "event": "Peter and Paul are put to death in Rome, according to early tradition."
+        },
+        {
+          "year": 96,
+          "label": "c. 96",
+          "event": "1 Clement, from the church in Rome, describes bishops and deacons appointed by the apostles."
+        },
+        {
+          "year": 110,
+          "label": "c. 110",
+          "event": "Ignatius’s letters show a single bishop leading each church in Asia Minor."
+        },
+        {
+          "year": 155,
+          "label": "c. 155",
+          "event": "Justin Martyr writes that Rome honored Simon Magus with a statue."
+        },
+        {
+          "year": 180,
+          "label": "c. 180",
+          "event": "Irenaeus lists Rome’s bishops from Linus and calls Simon the source of heresies."
+        },
+        {
+          "year": 325,
+          "label": "c. 325",
+          "event": "Eusebius retells the legend of Peter confronting Simon in Rome."
+        },
+        {
+          "year": 1574,
+          "label": "1574",
+          "event": "An inscription to the Sabine god Semo Sancus is found on Rome’s Tiber island."
+        }
+      ],
+      "refs": [
+        {
+          "book": "acts",
+          "from": "8:9",
+          "to": "8:24",
+          "note": "Simon the sorcerer is baptized, then offers money for the power to give the Holy Spirit and is rebuked by Peter."
+        },
+        {
+          "book": "matthew",
+          "from": "16:17",
+          "to": "16:19",
+          "note": "Jesus tells Peter, “upon this rock I will build my church,” and promises him the keys of the kingdom."
+        },
+        {
+          "book": "acts",
+          "from": "20:17",
+          "to": "20:28",
+          "note": "Paul calls the elders of Ephesus and tells them the Holy Spirit made them overseers."
+        },
+        {
+          "book": "titus",
+          "from": "1:5",
+          "to": "1:7",
+          "note": "Titus is to ordain elders in every city; Paul goes on, “For a bishop must be blameless.”"
+        },
+        {
+          "book": "1-peter",
+          "from": "5:1",
+          "to": "5:4",
+          "note": "Peter addresses the elders as “also an elder.”"
+        }
+      ],
+      "sources": [
+        {
+          "citation": "Irenaeus. Against Heresies 1.23. Ante-Nicene Fathers, vol. 1, via New Advent.",
+          "url": "https://www.newadvent.org/fathers/0103123.htm"
+        },
+        {
+          "citation": "Irenaeus. Against Heresies 3.3. Ante-Nicene Fathers, vol. 1, via New Advent.",
+          "url": "https://www.newadvent.org/fathers/0103303.htm"
+        },
+        {
+          "citation": "Justin Martyr. First Apology 26. Ante-Nicene Fathers, vol. 1, via New Advent.",
+          "url": "https://www.newadvent.org/fathers/0126.htm"
+        },
+        {
+          "citation": "Eusebius. Church History 2.1, 2.13–15, 2.23, 2.25. Nicene and Post-Nicene Fathers, 2nd series, vol. 1, via New Advent.",
+          "url": "https://www.newadvent.org/fathers/250102.htm"
+        },
+        {
+          "citation": "Clement of Rome. 1 Clement 5, 42–44. Ante-Nicene Fathers, vol. 9, via New Advent.",
+          "url": "https://www.newadvent.org/fathers/1010.htm"
+        },
+        {
+          "citation": "Ignatius of Antioch. Letter to the Magnesians 6–7. Ante-Nicene Fathers, vol. 1, via New Advent.",
+          "url": "https://www.newadvent.org/fathers/0105.htm"
+        },
+        {
+          "citation": "The Didache 15. Ante-Nicene Fathers, vol. 7, via New Advent.",
+          "url": "https://www.newadvent.org/fathers/0714.htm"
+        },
+        {
+          "citation": "Lampe, Peter. From Paul to Valentinus: Christians at Rome in the First Two Centuries. Translated by Michael Steinhauser. Minneapolis: Fortress Press, 2003.",
+          "url": "https://fortresspress.com/store/product/9780800627027/From-Paul-to-Valentinus"
+        },
+        {
+          "citation": "Sullivan, Francis A. From Apostles to Bishops: The Development of the Episcopacy in the Early Church. New York: Newman Press, 2001.",
+          "url": null
+        },
+        {
+          "citation": "Ignatius of Antioch. Letter to the Romans, preface and 4. Ante-Nicene Fathers, vol. 1, via New Advent.",
+          "url": "https://www.newadvent.org/fathers/0107.htm"
+        },
+        {
+          "citation": "Dedication to Semo Sancus, Corpus Inscriptionum Latinarum VI 567, found on the Tiber island in 1574.",
+          "url": null
+        },
+        {
+          "citation": "Eusebius. Church History 5.24. Nicene and Post-Nicene Fathers, 2nd series, vol. 1, via New Advent.",
+          "url": "https://www.newadvent.org/fathers/250105.htm"
+        }
+      ],
+      "reviewedOn": "2026-10-25"
+    }
+  ]
+}
