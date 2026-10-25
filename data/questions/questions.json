@@ -13,14 +13,14 @@
         "Proponents insist the argument is positive, not merely a gap in current theories. Meyer writes that design theorists argue for design not only because chance, natural law or the two together have failed to explain certain features, but because “we know from experience that systems possessing these features invariably arise from intelligent causes” [2]. On this view, inferring design from biological information is no different in kind from an archaeologist inferring a carver from an inscription, or the search for extraterrestrial intelligence treating a coded radio signal as the work of a mind [2]."
       ],
       "critiques": [
-        "The central scientific objection is that ID offers no mechanism or testable predictions of its own: its arguments point to what evolutionary theory has not explained and conclude design. In Kitzmiller v. Dover Area School District (2005), after a six-week trial with expert witnesses on both sides, federal judge John E. Jones III found that ID “is at bottom premised upon a false dichotomy, namely, that to the extent evolutionary theory is discredited, ID is confirmed” [3].",
+        "The central scientific objection is that ID offers no mechanism or testable predictions of its own: its arguments point to what evolutionary theory has not explained and conclude design. In Kitzmiller v. Dover Area School District (2005), after a six-week trial with expert witnesses on both sides, federal judge John E. Jones III found that ID “is at bottom premised upon a false dichotomy, namely, that to the extent evolutionary theory is discredited, ID is confirmed” [3]. Proponents reply that ID’s arguments do make testable claims, and note that the court itself accepted that irreducible complexity, though not ID as a whole, can be tested [3].",
         "Critics also contest each specific argument, as the related questions describe, and scientific bodies have rejected ID as science. In 2002 the American Association for the Advancement of Science resolved that “the lack of scientific warrant for so-called ‘intelligent design theory’ makes it improper to include as a part of science education” [5].",
         "Philosophers who study design arguments note a long-standing difficulty with arguments of this kind: much of their historical persuasiveness came from the absence of any known natural explanation, and when such explanations appear, the argument loses its force [6]. Critics see the same pattern in ID. Proponents reply that they argue from what is known about the causes of information and machinery, not from what is unknown [2].",
-        "A further objection concerns ID’s origins. Comparing drafts of the ID textbook Of Pandas and People from before and after the Supreme Court’s 1987 ruling against teaching creationism as science, the Kitzmiller court found that the early drafts’ definition of creation science was identical to the later definition of ID, and that about 150 uses of “creationism” and its cognates had been systematically replaced [3]. Proponents answer that a theory’s history does not decide whether it is true, and that ID’s claims differ from creationism’s [2]."
+        "A further objection concerns ID’s origins. Comparing drafts of the ID textbook Of Pandas and People from before and after the Supreme Court’s 1987 ruling against teaching creationism as science, the Kitzmiller court found that the early drafts’ definition of creation science was identical to the later definition of ID, and that the words creationism and creationist, used about 150 times, had been systematically replaced [3]. Proponents answer that a theory’s history does not decide whether it is true, and that ID’s claims differ from creationism’s [2]."
       ],
       "standing": [
         "ID has not been accepted as science by the major scientific organizations, and the Kitzmiller ruling barred teaching it in that district’s public-school science classes [3][5]. Its proponents point to work they have published in peer-reviewed journals and monographs [1], and argue that its rejection reflects a definition of science that excludes design in advance. A few philosophers who are not theists, such as Bradley Monton, have argued that ID deserves a hearing as science even if its conclusions turn out to be false [7].",
-        "Whether nature shows evidence of design is one of the oldest questions in philosophy, and the arguments remain under active discussion [6]. Whether ID’s particular arguments count as science, philosophy or theology is itself contested, including among Christians, many of whom accept evolution and see God’s purposes in natural processes rather than in gaps in them [6]."
+        "Whether nature shows evidence of design is one of the oldest questions in philosophy, and the arguments remain under active discussion [6]. Whether ID’s particular arguments count as science, philosophy or theology is itself contested, including among Christians, many of whom accept evolution and see God’s purposes at work through natural processes [6]."
       ],
       "claims": [
         {
@@ -108,10 +108,9 @@
         "His case is meant to be positive, not only a gap. Drawing on William Dembski’s concept of specified complexity [3], he argues that in our uniform experience, information of this kind arises from minds: a computer program from a programmer, a newspaper from a writer [1]. He compares the inference to the search for extraterrestrial intelligence, which would treat an information-bearing radio signal from space as evidence of an intelligent source [1]."
       ],
       "critiques": [
-        "Critics’ first objection is that the argument rests on what origin-of-life research has not yet explained. That research is unfinished, as its practitioners say [5], but critics read its progress, including recent advances in systems chemistry [5], as reason to keep looking for a natural explanation rather than to conclude design.",
-        "Second, critics dispute the concept of information. Wesley Elsberry and the computer scientist Jeffrey Shallit argued that Dembski’s “complex specified information” is not a well-defined quantity that can be calculated for biological systems, and that his arguments contain significant errors [3][4]. Shallit also points to experiments and simulations in which evolutionary processes increase information, contrary to Dembski’s claims [3].",
-        "Third, critics question the analogy behind the inference. The information in human artifacts comes from minds we already know exist and can observe at work; the origin of life was a one-time event in the remote past. Extending the analogy to an unobserved designer, they argue, goes beyond what experience can support, an objection to design arguments that goes back to David Hume [6].",
-        "Philosophers note that design arguments have historically drawn much of their force from the absence of a known natural explanation, and lost it when one was found [6]. Critics expect the same here as origin-of-life chemistry advances. Meyer answers that his argument rests on what is known about the causes of information, not only on what is unknown [1]."
+        "Critics’ first objection is that the argument rests on what origin-of-life research has not yet explained. No researcher proposes that a cell assembled by chance; Pross and Pascal, for example, describe chemical selection among replicating molecules, in which more stable replicating systems tend to win out, as the route by which chemistry could become biology [5]. Critics read progress of this kind as reason to keep looking for a natural explanation rather than to conclude design.",
+        "Second, critics dispute the concept of information. Wesley Elsberry and the computer scientist Jeffrey Shallit argued that Dembski’s “complex specified information” is not a well-defined quantity that can be calculated for biological systems, and that his arguments contain significant errors [3][4]. Shallit also points to experiments and simulations in which evolutionary processes increase information, contrary to Dembski’s claims [3]. Dembski and the engineer Robert Marks reply that successful evolutionary simulations work only because their programmers build in information about the target, which they call active information [8].",
+        "Third, critics question the analogy behind the inference. The information in human artifacts comes from minds we already know exist and can observe at work; the origin of life was a one-time event in the remote past. Extending the analogy to an unobserved designer, they argue, goes beyond what experience can support, an objection to design arguments that goes back to David Hume [6]. Meyer replies that his inference rests on what is known about the causes of information, not on an analogy: intelligence is the only cause known to produce it [1]."
       ],
       "standing": [
         "How life began remains unsolved; Addy Pross and Robert Pascal call it “one of the more challenging scientific questions of all time” [5]. Meyer’s argument addresses a real open question, and his critics agree on that much. They disagree over whether an unsolved problem is evidence for design or a research program still under way.",
@@ -129,9 +128,14 @@
           "explanation": "No complete pathway from simple chemistry to a living cell has been demonstrated, and researchers describe the origin of life as unsolved [5]. That is a statement about current knowledge; it does not show that no such pathway exists."
         },
         {
+          "claim": "Undirected chemistry could not have produced the information in the first cell.",
+          "rating": "unverified",
+          "explanation": "This is Meyer’s central scientific claim [2]. No natural pathway has been demonstrated [5], but no one has shown that none exists; it remains a claim about an open problem."
+        },
+        {
           "claim": "Natural processes cannot produce new genetic information.",
           "rating": "contradicted",
-          "explanation": "Experiments and simulations show evolutionary processes generating new information and novelty [3]. This popular form of the argument goes beyond Meyer’s own, which concerns the first cell, before selection could act [2]."
+          "explanation": "New functions arising from mutation and selection have been observed directly: in Richard Lenski’s long-running experiment, one population of E. coli evolved the ability to use citrate after about 31,500 generations [7]. This popular form of the argument goes beyond Meyer’s own, which concerns the first cell, before selection could act [2]."
         },
         {
           "claim": "The information in DNA is best explained by an intelligent cause.",
@@ -182,6 +186,14 @@
         {
           "citation": "Ratzsch, Del, and Jeffrey Koperski. “Teleological Arguments for God’s Existence.” Stanford Encyclopedia of Philosophy.",
           "url": "https://plato.stanford.edu/entries/teleological-arguments/"
+        },
+        {
+          "citation": "Blount, Zachary D., Christina Z. Borland, and Richard E. Lenski. “Historical Contingency and the Evolution of a Key Innovation in an Experimental Population of Escherichia coli.” Proceedings of the National Academy of Sciences 105 (2008): 7899–7906.",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2430337/"
+        },
+        {
+          "citation": "Dembski, William A., and Robert J. Marks II. “Conservation of Information in Search: Measuring the Cost of Success.” IEEE Transactions on Systems, Man, and Cybernetics A 39 (2009): 1051–1061.",
+          "url": null
         }
       ],
       "reviewedOn": "2026-10-25"
@@ -194,12 +206,13 @@
       "argument": [
         "In Darwin’s Black Box (1996), the biochemist Michael Behe defined an irreducibly complex system as “a single system which is composed of several well-matched, interacting parts that contribute to the basic function, wherein the removal of any one of the parts causes the system to effectively cease functioning” [1][2]. His best-known example is the bacterial flagellum, a rotary motor bacteria use to swim; others include the blood-clotting cascade and parts of the immune system [2].",
         "Behe’s argument takes up a test Darwin himself proposed: if any complex organ could be shown that “could not possibly have been formed by numerous, successive, slight modifications, my theory would absolutely break down” [4]. Natural selection can only preserve what already works, Behe argues, so a precursor missing a part would give selection nothing to favor; an irreducibly complex system therefore cannot be produced directly by slight, successive modifications [2]. He concludes that such systems are better explained by design [6].",
-        "Behe pointed to the flagellum because it is a true rotary motor, with a rotor, a stator, a drive shaft and a propeller made of protein, and because knocking out its proteins one at a time leaves bacteria unable to swim [1][6]. In 1996 Behe also claimed that science would never find an evolutionary explanation for the immune system [2]."
+        "Behe pointed to the flagellum because it is a true rotary motor, with a rotor, a stator, a drive shaft and a propeller made of protein, and because removing many of its core proteins leaves bacteria unable to swim, though flagella vary between species [2][3]. Behe did not claim that indirect routes are impossible, only that they become too improbable to credit as systems grow more complex [6]. The Kitzmiller court described his 1996 claim that science would never find an evolutionary explanation for the immune system [2]."
       ],
       "critiques": [
         "Biologists’ main answer is that evolution need not build a system by adding parts toward its present function. Parts can be borrowed from systems that did something else, a process called co-option or exaptation, and parts that once helped can later be lost. Behe’s definition, critics say, rules out only the direct route [3][5].",
-        "For the flagellum, Mark Pallen and Nicholas Matzke reported that many of its proteins share ancestry with proteins in other systems: its export machinery with the type III secretion system some bacteria use to inject proteins into host cells, its motor proteins with other membrane transport systems, and its ATPase with the F- and V-type ATPases found across life [3]. At the Kitzmiller trial, the biologist Kenneth Miller presented peer-reviewed studies identifying possible precursors of the flagellum and evolutionary explanations for the clotting cascade and the immune system, and the court accepted them [2][5].",
-        "The immune system became a turning point at the Kitzmiller trial. On cross-examination Behe was presented with fifty-eight peer-reviewed publications, nine books and several immunology textbook chapters on the evolution of the immune system, and said they were not “good enough” as evidence. The court concluded that the ID argument depends on setting a scientifically unreasonable burden of proof for evolution [2]. Behe’s position is that such studies describe what might have happened without showing, step by step, that it did, and that this is the evidence he asked for [6].",
+        "For the flagellum, Mark Pallen and Nicholas Matzke reported that many of its proteins share ancestry with proteins in other systems: its export machinery with the type III secretion system some bacteria use to inject proteins into host cells, its motor proteins with other membrane transport systems, and its ATPase with the F- and V-type ATPases found across life [3]. The secretion system shows that a subset of flagellar proteins can do a useful job on its own, though later work suggests it evolved from the flagellum rather than the reverse [3][8]. At the Kitzmiller trial, the biologist Kenneth Miller presented peer-reviewed studies on possible precursors of the flagellum and evolutionary explanations for the clotting cascade and the immune system, and the court accepted them [2][5].",
+        "Researchers have also watched a machine of this kind gain a necessary part. In 2012 Joseph Thornton’s group reconstructed ancestral versions of a ring in the cell’s proton pump and showed that a two-protein ring became a three-protein ring, each part essential, through gene duplication followed by complementary losses of function: ordinary, high-probability mutations [7].",
+        "The immune system became a turning point at the Kitzmiller trial. On cross-examination Behe was presented with fifty-eight peer-reviewed publications, nine books and several immunology textbook chapters on the evolution of the immune system, and said they were not “good enough” as evidence. The court concluded that the ID argument depends on setting a scientifically unreasonable burden of proof for evolution [2]. Behe has long maintained that studies of this kind describe what might have happened without showing, step by step, that it did [6].",
         "Proponents reply that shared ancestry is not a pathway: showing that parts resemble parts elsewhere does not show how the whole was assembled, or that each intermediate stage worked and could be selected [6]."
       ],
       "standing": [
@@ -208,14 +221,19 @@
       ],
       "claims": [
         {
-          "claim": "Removing a part from some molecular machines stops them working.",
+          "claim": "Removing core parts from some molecular machines stops them working.",
           "rating": "established",
-          "explanation": "This is the observation behind Behe’s definition, and it is not in dispute for systems like the flagellum [1][2]. The question is what it implies about how the system arose."
+          "explanation": "This is the observation behind Behe’s definition, and for many core flagellar proteins it is not disputed [2][3]. Flagella do vary between species, and some of their proteins are not needed everywhere [3]."
         },
         {
-          "claim": "Irreducibly complex systems could not have evolved step by step.",
+          "claim": "Irreducibly complex systems cannot arise through evolutionary processes.",
           "rating": "contradicted",
-          "explanation": "The claim assumes a precursor missing a part would be useless. Flagellar proteins have relatives that do other jobs in other systems, showing that parts can be useful apart from the whole [3], and the Kitzmiller court accepted peer-reviewed evidence of precursors [2]. Complete pathways have not been worked out [3]."
+          "explanation": "An irreducibly complex ring has been shown to evolve through gene duplication and loss of function [7], and flagellar proteins have relatives doing other jobs elsewhere [3]. Behe’s own claim is narrower: that indirect routes are too improbable for systems like the flagellum [6]."
+        },
+        {
+          "claim": "Unguided processes are too improbable to have built the flagellum.",
+          "rating": "unverified",
+          "explanation": "This is Behe’s actual claim [6]. No complete pathway for the flagellum has been worked out [3], and no probability estimate for one has been established either way."
         },
         {
           "claim": "Irreducibly complex systems are best explained by design.",
@@ -239,7 +257,7 @@
         {
           "quote": "Like Darwin, we have found that careful attention to homology, analogy and diversity yields substantial insights into the origin of even the most complex systems.",
           "speaker": "Mark Pallen and Nicholas Matzke",
-          "role": "Microbiologist and evolutionary biologist",
+          "role": "Microbiologist and evolutionary biologist (2006)",
           "source": 3
         }
       ],
@@ -272,6 +290,14 @@
         {
           "citation": "Behe, Michael J. “Irreducible Complexity: Obstacle to Darwinian Evolution.” In Debating Design: From Darwin to DNA, edited by William A. Dembski and Michael Ruse. Cambridge: Cambridge University Press, 2004.",
           "url": "https://www.cambridge.org/core/books/debating-design/irreducible-complexity/8BFCF4D5FFE200E4164427395D0E3BB4"
+        },
+        {
+          "citation": "Finnigan, Gregory C., Victor Hanson-Smith, Tom H. Stevens, and Joseph W. Thornton. “Evolution of Increased Complexity in a Molecular Machine.” Nature 481 (2012): 360–364.",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3979732/"
+        },
+        {
+          "citation": "Abby, Sophie S., and Eduardo P. C. Rocha. “The Non-Flagellar Type III Secretion System Evolved from the Bacterial Flagellum and Diversified into Host-Cell Adapted Systems.” PLoS Genetics 8 (2012): e1002983.",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3459982/"
         }
       ],
       "reviewedOn": "2026-10-25"
@@ -280,36 +306,37 @@
       "slug": "cambrian-explosion",
       "title": "Does the Cambrian explosion challenge evolution?",
       "category": "life",
-      "summary": "Most major animal groups appear in the fossil record within a geologically short span beginning about 539 million years ago. Stephen Meyer argues undirected evolution cannot explain it; paleontologists answer that it was fast but not too fast.",
+      "summary": "Most major animal groups with a fossil record appear within a geologically short span after the Cambrian began, about 540 million years ago. Stephen Meyer argues undirected evolution cannot explain it; paleontologists answer that it was fast but not too fast.",
       "argument": [
-        "Beginning about 539 million years ago, the fossil record shows the rapid appearance of most major animal phyla, the basic body plans of animal life, including arthropods, mollusks and the ancestors of vertebrates [5]. Darwin recognized this as a difficulty. Of the absence of earlier fossils he wrote, “The case at present must remain inexplicable; and may be truly urged as a valid argument against the views here entertained” [1].",
-        "In Darwin’s Doubt (2013), and earlier in a 2004 review article, Stephen Meyer argues that the explosion is not only a problem of missing fossils but of missing information: building many new body plans required new genes, new proteins and new developmental programs in a short span, and he argues that mutation and selection could not generate so much novel information so quickly [2][6]. He concludes that the explosion is best explained by intelligent design [2].",
+        "The Cambrian period began about 540 million years ago, and over the following tens of millions of years the fossil record shows the rapid appearance of most major animal phyla with a fossil record, the basic body plans of animal life, including arthropods, mollusks and the first vertebrates [5]. Darwin recognized this as a difficulty. Of the absence of earlier fossils he wrote, “The case at present must remain inexplicable; and may be truly urged as a valid argument against the views here entertained” [1].",
+        "In Darwin’s Doubt (2013), and earlier in a 2004 review article, Stephen Meyer argues that the explosion is not only a problem of missing fossils but of missing information: building many new body plans required new genes, new proteins and new developmental programs in a short span, and, citing published estimates of how rare functional protein sequences are, he argues that mutation and selection could not generate so much novel information so quickly [2][6][8]. He concludes that the explosion is best explained by intelligent design [2].",
         "Meyer adds two further arguments. Animal body plans are set up early in development by networks of regulatory genes, and mutations to those early networks are almost always fatal, so he argues that the networks resist the gradual change evolution would need [2]. And the fossil pattern runs “top down”: the big differences between body plans appear first, with the variety within each plan filling in afterward, which he argues is the opposite of what a gradual branching process would predict [2]."
       ],
       "critiques": [
         "Paleontologists answer that the explosion was neither instantaneous nor without antecedents. The Ediacaran organisms lived in the tens of millions of years before it, and trace fossils record burrowing animals before the main radiation [5]. A 2018 review of the arthropod record by Allison Daley and colleagues concluded that the group’s diversification “unfolded gradually over the ∼40 million years of the lower to middle Cambrian” [4].",
-        "Molecular clocks, estimates of when lineages split based on genetic differences, suggested from the 1990s that animal lineages began diverging before the Cambrian. That prompted searches of older rocks, which have since turned up at least 30 new Ediacaran fossil sites [4]. Paleontologists disagree over how far back the animal lineages go, but most read the evidence as a long fuse lit before an explosion that the fossil record exaggerates, because hard parts that fossilize well arose in the Cambrian [4][5].",
+        "Molecular clocks, estimates of when lineages split based on genetic differences, suggested from the 1990s that animal lineages began diverging well before the Cambrian. That prompted searches of older rocks, which have found at least 30 new Ediacaran-age lagerstätten, sites that preserve soft-bodied animals [4]. Finding no arthropods among them, Daley and colleagues concluded that “hypotheses that regard Precambrian preservation as insufficient to preserve euarthropods can no longer be sustained” [4]. How deep animal lineages go overall is still debated, with molecular clocks generally placing origins earlier than the fossils do [5].",
         "Reviewing Darwin’s Doubt in Science, the paleontologist Charles Marshall argued that Meyer overstated how much new genetic material the explosion required: animal body plans are built largely by rewiring developmental gene networks, many of whose genes already existed before the Cambrian, rather than by inventing many new genes [3].",
-        "Critics also point to explanations for why the radiation happened when it did, including rising oxygen levels, new ecological relationships such as predation, and the evolution of developmental gene networks [5]."
+        "Critics also point to explanations for why the radiation happened when it did, including rising oxygen levels, new ecological relationships such as predation, and the evolution of developmental gene networks [5].",
+        "On the question of pace, Michael Lee, Julien Soubrier and Gregory Edgecombe estimated in 2013 that arthropod anatomy evolved about four times faster, and their genes about five and a half times faster, during the Cambrian explosion than in later periods, rates they found still consistent with evolution by natural selection [7]."
       ],
       "standing": [
         "The speed of the Cambrian radiation is real and still studied; paleontologists debate its triggers and how much of its suddenness reflects which animals could fossilize [4][5]. Meyer’s conclusion, that it requires design, has not been accepted in paleontology. Proponents answer that the proposed triggers describe conditions for the radiation without explaining where the information it required came from [2]."
       ],
       "claims": [
         {
-          "claim": "Most animal phyla first appear in the fossil record during the Cambrian, in a geologically short time.",
+          "claim": "Most animal phyla with a fossil record first appear during the Cambrian, in a geologically short time.",
           "rating": "established",
-          "explanation": "This is the observation all sides start from [4][5]. How short is debated: estimates for the main radiation run from about 20 to 40 million years, depending on what is counted [4]."
+          "explanation": "This is the observation all sides start from [4][5]. Daley and colleagues put the arthropod radiation at about 40 million years [4]; estimates for the radiation as a whole vary with what is counted."
         },
         {
-          "claim": "The Cambrian animals appeared with no precursors.",
-          "rating": "contradicted",
-          "explanation": "Ediacaran organisms and animal burrows precede the main radiation [5]. Many individual phyla, though, have no deep Precambrian record; for arthropods, Daley and colleagues found none [4]."
+          "claim": "Most Cambrian phyla lack identifiable Precambrian ancestors.",
+          "rating": "supported",
+          "explanation": "Ediacaran organisms and animal burrows precede the radiation [5], but most phyla have no clear Precambrian forerunners in the fossil record; for arthropods, a search of Ediacaran lagerstätten found none [4]. Molecular clocks suggest deeper origins that have left no recognized fossils [5]."
         },
         {
           "claim": "Undirected evolution could not produce the Cambrian body plans in the time available.",
-          "rating": "unverified",
-          "explanation": "Meyer argues this from estimates of the new information required [2][6], but no published analysis has shown that the time was insufficient, and paleontologists consider the radiation’s tens of millions of years consistent with known evolutionary processes [3][4]."
+          "rating": "debated",
+          "explanation": "Meyer argues this from published estimates of protein rarity and of the time new mutations take to arise [2][8]. Lee and colleagues estimated Cambrian rates of change and found them consistent with natural selection [7], and Marshall argues the information problem is overstated because body plans were built largely by rewiring genes that already existed [3]."
         },
         {
           "claim": "The Cambrian explosion is best explained by intelligent design.",
@@ -360,6 +387,14 @@
         {
           "citation": "Meyer, Stephen C. “The Origin of Biological Information and the Higher Taxonomic Categories.” Proceedings of the Biological Society of Washington 117 (2004): 213–239.",
           "url": null
+        },
+        {
+          "citation": "Lee, Michael S. Y., Julien Soubrier, and Gregory D. Edgecombe. “Rates of Phenotypic and Genomic Evolution during the Cambrian Explosion.” Current Biology 23 (2013): 1889–1895.",
+          "url": null
+        },
+        {
+          "citation": "Axe, Douglas D. “Estimating the Prevalence of Protein Sequences Adopting Functional Enzyme Folds.” Journal of Molecular Biology 341 (2004): 1295–1315.",
+          "url": null
         }
       ],
       "reviewedOn": "2026-10-25"
@@ -368,16 +403,16 @@
       "slug": "fine-tuning",
       "title": "Is the universe fine-tuned for life?",
       "category": "universe",
-      "summary": "Physicists find that small changes to several constants and initial conditions would make life impossible. Whether that points to a designer, a multiverse or nothing at all is debated.",
+      "summary": "Physicists find that small changes to several constants and initial conditions would make life impossible. Whether that points to a designer, a multiverse or a brute fact is debated.",
       "argument": [
         "Many of the constants and conditions that describe our universe appear to fall in narrow ranges that permit life. The physicist Luke Barnes summarizes the claim: “in the space of possible physical laws, parameters and initial conditions, the set that permits the evolution of intelligent life is very small” [1]. Examples include the relative strengths of the fundamental forces, the masses of elementary particles, and the cosmological constant, the energy of empty space, whose observed value is far smaller than simple theoretical estimates [1][3].",
-        "Hoyle’s own example concerned carbon, the basis of all known life. Stars make carbon and oxygen through a sequence of nuclear reactions that depends on a specific energy level in the carbon nucleus, at 7.65 MeV, and on one in oxygen. Hoyle noted that if you wanted to produce carbon and oxygen in roughly equal quantities in stars, these are just the two levels you would have to fix, and that they sit just about where they are found [2].",
-        "The astronomer Fred Hoyle, who was not religious, concluded from his work on how stars make carbon that “a superintellect has monkeyed with physics, as well as with chemistry and biology” [2]. The philosopher Robin Collins develops the theistic argument: a life-permitting universe is far less surprising if a designer intended one than if the constants were set by chance, so fine-tuning counts as evidence for design [5]."
+        "The astronomer Fred Hoyle, who was not religious, concluded from his work on how stars make carbon that “a superintellect has monkeyed with physics, as well as with chemistry and biology” [2]. The philosopher Robin Collins develops the theistic argument: a life-permitting universe is far less surprising if a designer intended one than if the constants were set by chance, so fine-tuning counts as evidence for design [5].",
+        "Hoyle’s own example concerned carbon, the basis of all known life. Stars make carbon and oxygen through a sequence of nuclear reactions that depends on a specific energy level in the carbon nucleus, at 7.65 MeV, and on one in oxygen. Hoyle noted that if you wanted to produce carbon and oxygen in roughly equal quantities in stars, these are just the two levels you would have to fix, and that they sit just about where they are found [2]."
       ],
       "critiques": [
         "One response is the anthropic principle: we could only ever observe a universe compatible with our existence. As the physicist Brandon Carter put it, our location in the universe is necessarily privileged to the extent of being compatible with our existence as observers [3]. On its own this explains why we see a life-permitting universe, not why there is one.",
         "Another is the multiverse. If there are many universes with different constants, as some versions of inflationary cosmology and string theory suggest, life-permitting ones are bound to occur somewhere [3]. Critics of this response note that other universes cannot be observed, and some philosophers argue that inferring a multiverse from our one life-permitting universe commits an “inverse gambler’s fallacy” [3].",
-        "Others question the premise. Victor Stenger argued that the life-permitting range is much wider than claimed when several constants are varied together [6]; Barnes replied in detail that most cases of fine-tuning survive that objection [1]. Some philosophers doubt that probabilities can be meaningfully assigned to constants that could take any value [3], and Sean Carroll argues that we know too little about which universes could support some form of life, and about what a designer would do, for fine-tuning to favor theism [4].",
+        "Others question the premise. Victor Stenger argued that the life-permitting range is much wider than claimed when several constants are varied together [6]; Barnes replied in detail that most cases of fine-tuning survive that objection [1]. Some philosophers doubt that probabilities can be meaningfully assigned to constants that could take any value [3], and Sean Carroll argues that we know too little about which universes could support some form of life, and about what a designer would do, for fine-tuning to favor theism [4]. Collins replies that probabilities can be assessed over the range of values physicists can actually consider, which he calls the epistemically illuminated range, and that a multiverse generator would itself need finely tuned laws [5].",
         "Some critics also question what the argument shows even if fine-tuning is real. The philosophers Elliott Sober and Jan Narveson argue that we are in no position to predict what a cosmic designer would prefer, so we cannot say that design makes a life-permitting universe more likely than chance [3]. Theistic philosophers have replied that a good God has reason to create embodied creatures like us, and the exchange continues [3]."
       ],
       "standing": [
@@ -386,8 +421,8 @@
       "claims": [
         {
           "claim": "Several physical constants fall in narrow ranges that permit life.",
-          "rating": "supported",
-          "explanation": "Detailed reviews find many such cases [1], and most physicists accept the core observation. Which constants count, how narrow the ranges are, and whether they can vary independently remain debated [1][3][6]."
+          "rating": "established",
+          "explanation": "Detailed reviews find many such cases [1], and the core observation is widely accepted among physicists. Which constants count, how narrow the ranges are, and whether they can vary independently remain debated [1][3][6]."
         },
         {
           "claim": "A multiverse explains fine-tuning.",
@@ -404,7 +439,7 @@
         {
           "quote": "A common sense interpretation of the facts suggests that a superintellect has monkeyed with physics, as well as with chemistry and biology, and that there are no blind forces worth speaking about in nature.",
           "speaker": "Fred Hoyle",
-          "role": "Astronomer, University of Cambridge",
+          "role": "Astronomer",
           "source": 2
         },
         {
@@ -426,7 +461,7 @@
       ],
       "sources": [
         {
-          "citation": "Barnes, Luke A. “The Fine-Tuning of the Universe for Intelligent Life.” Publications of the Astronomical Society of Australia 29 (2012): 529–564.",
+          "citation": "Barnes, Luke A. “The Fine-Tuning of the Universe for Intelligent Life.” arXiv:1112.4647 (2011); a condensed version appeared in Publications of the Astronomical Society of Australia 29 (2012): 529–564.",
           "url": "https://arxiv.org/pdf/1112.4647"
         },
         {
@@ -459,13 +494,13 @@
       "summary": "The kalam cosmological argument reasons that whatever begins to exist has a cause, and the universe began to exist. Modern cosmology bears on the second premise; both premises are disputed.",
       "argument": [
         "The kalam cosmological argument, named for the medieval Islamic theologians who developed it and revived by the philosopher William Lane Craig, runs in three steps: whatever begins to exist has a cause of its beginning; the universe began to exist; therefore the universe has a cause of its beginning [1].",
-        "Craig defends the first premise as a principle confirmed by all experience: things do not come into being without a cause [1]. For the second he offers philosophical arguments against an infinite past and scientific evidence: the expansion of the universe traced back to the Big Bang, and a 2003 theorem by Arvind Borde, Alan Guth and Alexander Vilenkin showing that a universe that has on average been expanding cannot be extended infinitely into the past [1][4]. He then argues that a cause of all space and time must itself be beyond them: timeless, immaterial, enormously powerful and personal [1][2].",
+        "Craig defends the first premise on three grounds: something cannot come into being from nothing; if it could, there would be no reason why anything and everything does not; and apparent exceptions, such as particles produced in quantum decay, do not come from nothing [1]. For the second premise he offers philosophical arguments against an infinite past, and scientific evidence: the expansion of the universe traced back to the Big Bang, the second law of thermodynamics, and a 2003 theorem by Arvind Borde, Alan Guth and Alexander Vilenkin showing that any region of the universe that has on average been expanding must have a boundary in the past, so its history cannot be extended infinitely back [1][4]. He then argues that a cause of all space and time must itself be beyond them: timeless, immaterial, enormously powerful and personal [1][2].",
         "Craig’s philosophical case for the second premise turns on the difference between a potential infinite, a series that can always be extended but is never complete, and an actual infinite, a completed infinite collection. Following the medieval argument, he holds that an actual infinite cannot exist in reality and cannot be built up one moment at a time, so the series of past events must be finite and the universe must have begun [1]."
       ],
       "critiques": [
-        "Critics challenge the first premise. Our experience of causes comes from things beginning within the universe, and whether it applies to the universe as a whole is the point in question. Some appeal to quantum physics, in which individual events such as radioactive decays have no deterministic cause [2]. Craig replies that quantum events still have causal conditions, and that a quantum vacuum is not nothing [2].",
-        "Others accept that the past might be finite but question the reasoning against an infinite one. Modern mathematics treats actual infinities as consistent, and critics argue that the paradoxes Craig uses, such as a hotel with infinitely many rooms that is full yet can take new guests, are strange but not contradictory [2].",
-        "Others challenge what a beginning would mean. If time itself began at the Big Bang, there was no earlier moment at which a cause could act; Adolf Grünbaum argued on this ground that asking for a cause of the Big Bang is a pseudo-question [2][6]. The Big Bang model also describes the universe’s early expansion rather than necessarily an absolute beginning, since general relativity is expected to break down at the earliest times, and physicists have proposed models without a first moment [2][5].",
+        "Critics challenge the first premise. Our experience of causes comes from things beginning within the universe, and whether it applies to the universe as a whole is the point in question. Some appeal to quantum physics, in which individual events such as quantum decays have no deterministic cause [1][2]. Craig replies that quantum events still have causal conditions, and that a quantum vacuum is not nothing [1][2].",
+        "Others accept that the past might be finite but question the reasoning against an infinite one. Modern mathematics treats actual infinities as consistent, and critics argue that the paradoxes Craig uses, such as Hilbert’s Hotel, a hotel with infinitely many rooms that is full yet can take new guests, are strange but not contradictory [1][2]. Craig replies that set theory shows actual infinities can be discussed consistently, not that they can exist in reality [1].",
+        "Others challenge what a beginning would mean. If time itself began at the Big Bang, there was no earlier moment at which a cause could act; Adolf Grünbaum argued on this ground that asking for a cause of the Big Bang is a pseudo-question [2][6]. Craig replies that God, timeless without the universe, enters time with the act of creation, so the cause and its effect can begin together [1]. The Big Bang model also describes the universe’s early expansion rather than necessarily an absolute beginning, since general relativity is expected to break down at the earliest times, and physicists have proposed models without a first moment [2][5].",
         "Sean Carroll argues that cosmologists take both “beginning” and “eternal” models seriously, and that which is true should be settled by which models best fit the evidence, not by metaphysical principles about causes [5]."
       ],
       "standing": [

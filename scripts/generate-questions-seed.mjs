@@ -133,10 +133,14 @@ const normalize = (text) =>
     .replace(/^\W+|\W+$/g, "")
     .toLowerCase();
 
-async function sourceText(url) {
-  const response = await fetch(url, { headers: { "User-Agent": "dawnscroll-source-check" } });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const body = Buffer.from(await response.arrayBuffer());
+// Fetched with curl rather than fetch(): some hosts (PubMed Central among
+// them) answer Node's fetch with a bot-check page but serve curl normally.
+function sourceText(url) {
+  const body = execFileSync(
+    "curl",
+    ["-sSfL", "--max-time", "40", "-A", "Mozilla/5.0 (dawnscroll-source-check)", url],
+    { maxBuffer: 64 * 1024 * 1024 },
+  );
   if (body.subarray(0, 4).toString() === "%PDF") {
     const dir = mkdtempSync(join(tmpdir(), "dawnscroll-quote-"));
     try {
@@ -146,27 +150,28 @@ async function sourceText(url) {
       rmSync(dir, { recursive: true, force: true });
     }
   }
+  const html = body.toString("utf8");
+  if (/<title>[^<]*(Checking your browser|Just a moment)/i.test(html)) {
+    throw new Error("answered with a bot check, so its quotes can't be verified; try again later");
+  }
   const named = { nbsp: " ", quot: '"', amp: "&", apos: "'", lsquo: "‘", rsquo: "’", ldquo: "“", rdquo: "”", ndash: "–", mdash: "—", hellip: "…" };
-  const decode = (s) =>
-    s
-      .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
-      .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
-      .replace(/&([a-z]+);/gi, (entity, name) => named[name.toLowerCase()] ?? entity);
-  return decode(body.toString("utf8").replace(/<[^>]+>/g, " "));
+  return html
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
+    .replace(/&([a-z]+);/gi, (entity, name) => named[name.toLowerCase()] ?? entity);
 }
 
 if (process.argv.includes("--check-urls")) {
   const texts = new Map();
   const urls = new Set(questions.flatMap((q) => (q.sources ?? []).flatMap((s) => (s.url ? [s.url] : []))));
-  await Promise.all(
-    [...urls].map(async (url) => {
-      try {
-        texts.set(url, normalize(await sourceText(url)));
-      } catch (error) {
-        errors.push(`${url}: ${error.message}`);
-      }
-    }),
-  );
+  for (const url of urls) {
+    try {
+      texts.set(url, normalize(sourceText(url)));
+    } catch (error) {
+      errors.push(`${url}: ${error.message.split("\n")[0]}`);
+    }
+  }
   for (const q of questions) {
     for (const quote of q.quotes ?? []) {
       const url = q.sources?.[quote.source - 1]?.url;
