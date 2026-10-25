@@ -14,6 +14,7 @@ import {
     Search,
     ScrollText,
     Sprout,
+    Users,
     Settings,
     User,
     Menu,
@@ -26,6 +27,7 @@ const navItems = [
     { href: "/search", icon: Search, label: "Search" },
     // Shown only once AI chat is configured (see Navigation's props).
     { href: "/scholar", icon: ScrollText, label: "Scholar", ai: true },
+    { href: "/apostles", icon: Users, label: "Apostles", ai: true },
     { href: "/bookmarks", icon: Bookmark, label: "Bookmarks" },
     { href: "/highlights", icon: Highlighter, label: "Highlights" },
     { href: "/notes", icon: NotebookPen, label: "Notes" },
