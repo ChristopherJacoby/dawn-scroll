@@ -1,5 +1,6 @@
 import "server-only";
 import Stripe from "stripe";
+import { PRICE_LOOKUP_KEYS } from "@/lib/premium/plan-lookup";
 import type { PlanKey } from "@/lib/premium/plans";
 
 let stripe: Stripe | null = null;
@@ -15,16 +16,6 @@ export function getStripe(): Stripe | null {
     return stripe;
 }
 
-/**
- * Prices are found by lookup key rather than configured by ID, so the
- * same code works in test and live mode once
- * scripts/create-stripe-products.mjs has created them.
- */
-export const PRICE_LOOKUP_KEYS: Record<PlanKey, string> = {
-    monthly: "dawnscroll_premium_monthly",
-    annual: "dawnscroll_premium_annual",
-};
-
 /** The active price for a plan, or null if it hasn't been created. */
 export async function getPriceId(
     client: Stripe,
@@ -36,12 +27,4 @@ export async function getPriceId(
         limit: 1,
     });
     return prices.data[0]?.id ?? null;
-}
-
-/** Which plan a price belongs to, from its lookup key. */
-export function planForLookupKey(lookupKey: string | null): PlanKey | null {
-    const entry = Object.entries(PRICE_LOOKUP_KEYS).find(
-        ([, key]) => key === lookupKey,
-    );
-    return entry ? (entry[0] as PlanKey) : null;
 }
