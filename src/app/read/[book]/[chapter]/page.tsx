@@ -19,6 +19,7 @@ import {
     getChapter,
     getEnabledTranslations,
 } from "@/lib/bible/queries";
+import { getChapterJourneys } from "@/lib/bible/journeys";
 import { getChapterLayout } from "@/lib/bible/layout";
 import { chapterReference } from "@/lib/bible/references";
 import { getPreferredTranslation } from "@/lib/bible/translation-preference";
@@ -184,6 +185,10 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                     notes={notes}
                     findings={findings}
                     aiEnabled={aiEnabled}
+                    journeys={getChapterJourneys(
+                        passage.book.slug,
+                        passage.chapter.chapterNumber,
+                    )}
                     layout={getChapterLayout(
                         passage.book.slug,
                         passage.chapter.chapterNumber,
