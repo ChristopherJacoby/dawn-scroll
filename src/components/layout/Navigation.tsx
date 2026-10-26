@@ -20,25 +20,58 @@ import {
     Menu,
     X,
 } from "lucide-react";
+import { buttonVariants } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 
-const navItems = [
-    { href: "/reader", icon: BookOpen, label: "Reader" },
-    { href: "/search", icon: Search, label: "Search" },
-    // Shown only once AI chat is configured (see Navigation's props).
-    { href: "/scholar", icon: ScrollText, label: "Scholar", ai: true },
-    { href: "/apostles", icon: Users, label: "Apostles", ai: true },
-    { href: "/bookmarks", icon: Bookmark, label: "Bookmarks" },
-    { href: "/highlights", icon: Highlighter, label: "Highlights" },
-    { href: "/notes", icon: NotebookPen, label: "Notes" },
-    { href: "/plans", icon: CalendarCheck, label: "Plans" },
-    { href: "/archaeology", icon: Landmark, label: "Archaeology" },
-    { href: "/roots", icon: Sprout, label: "Roots" },
+interface NavLink {
+    href: string;
+    icon: React.ElementType;
+    label: string;
+    /** Shown only once AI chat is configured (see Navigation's props). */
+    ai?: boolean;
+    /** Other paths that count as this page, e.g. /read/... for Reader. */
+    matches?: string[];
+}
+
+const navGroups: { label: string; items: NavLink[] }[] = [
     {
-        href: "/questions",
-        icon: MessageCircleQuestion,
-        label: "Hard Questions",
+        label: "Read",
+        items: [
+            {
+                href: "/reader",
+                icon: BookOpen,
+                label: "Reader",
+                matches: ["/read/"],
+            },
+            { href: "/search", icon: Search, label: "Search" },
+            { href: "/plans", icon: CalendarCheck, label: "Plans" },
+        ],
     },
+    {
+        label: "Your library",
+        items: [
+            { href: "/bookmarks", icon: Bookmark, label: "Bookmarks" },
+            { href: "/highlights", icon: Highlighter, label: "Highlights" },
+            { href: "/notes", icon: NotebookPen, label: "Notes" },
+        ],
+    },
+    {
+        label: "Explore",
+        items: [
+            { href: "/archaeology", icon: Landmark, label: "Archaeology" },
+            { href: "/roots", icon: Sprout, label: "Roots" },
+            {
+                href: "/questions",
+                icon: MessageCircleQuestion,
+                label: "Hard Questions",
+            },
+            { href: "/scholar", icon: ScrollText, label: "Scholar", ai: true },
+            { href: "/apostles", icon: Users, label: "Apostles", ai: true },
+        ],
+    },
+];
+
+const accountItems: NavLink[] = [
     { href: "/account", icon: User, label: "Account" },
     { href: "/settings", icon: Settings, label: "Settings" },
 ];
@@ -61,57 +94,130 @@ function NavItem({
             href={href}
             onClick={onClick}
             className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-reading-focus",
+                // The current page is filled; hover is the lighter touch.
                 active
-                    ? "bg-reading-surface-raised text-reading-text ring-1 ring-inset ring-reading-focus"
-                    : "text-reading-text-muted hover:bg-reading-bg-subtle hover:text-reading-text",
+                    ? "bg-reading-bg-subtle font-semibold text-reading-text"
+                    : "text-reading-text-muted hover:bg-reading-surface-raised hover:text-reading-text",
             )}
             aria-current={active ? "page" : undefined}
         >
-            <Icon size={18} strokeWidth={active ? 2.5 : 1.75} />
+            <Icon size={18} strokeWidth={active ? 2.25 : 1.75} />
             {label}
         </Link>
     );
 }
 
-/** Secondary link pinned to the bottom of the nav. */
-function CreditsLink({ onClick }: { onClick?: () => void }) {
+/**
+ * The grouped links, then the account links (or Log in when signed out)
+ * and credits at the bottom. Shared by the sidebar and the mobile drawer.
+ */
+function NavLinks({
+    aiEnabled,
+    signedIn,
+    onNavigate,
+}: {
+    aiEnabled: boolean;
+    signedIn: boolean;
+    onNavigate?: () => void;
+}) {
+    const pathname = usePathname();
+    const isActive = ({ href, matches = [] }: NavLink) =>
+        [href, ...matches].some((path) => pathname.startsWith(path));
+
     return (
-        <Link
-            href="/credits"
-            onClick={onClick}
-            className="mt-auto px-3 py-2 text-xs text-reading-text-muted hover:text-reading-text"
-        >
-            Credits &amp; sources
-        </Link>
+        <>
+            <div className="flex flex-col gap-5">
+                {navGroups.map((group) => (
+                    <div
+                        key={group.label}
+                        role="group"
+                        aria-labelledby={`nav-${group.label}`}
+                        className="flex flex-col gap-0.5"
+                    >
+                        <p
+                            id={`nav-${group.label}`}
+                            className="px-3 pb-1 text-[0.7rem] font-medium uppercase tracking-wide text-reading-text-muted"
+                        >
+                            {group.label}
+                        </p>
+                        {group.items
+                            .filter((item) => aiEnabled || !item.ai)
+                            .map((item) => (
+                                <NavItem
+                                    key={item.href}
+                                    {...item}
+                                    active={isActive(item)}
+                                    onClick={onNavigate}
+                                />
+                            ))}
+                    </div>
+                ))}
+            </div>
+            <div className="mt-auto flex flex-col gap-0.5 border-t border-reading-divider pt-4">
+                {signedIn ? (
+                    accountItems.map((item) => (
+                        <NavItem
+                            key={item.href}
+                            {...item}
+                            active={isActive(item)}
+                            onClick={onNavigate}
+                        />
+                    ))
+                ) : (
+                    <div className="flex flex-col gap-2 px-1 pb-1">
+                        <Link
+                            href="/login"
+                            onClick={onNavigate}
+                            className={buttonVariants({ size: "sm" })}
+                        >
+                            Log in
+                        </Link>
+                        <Link
+                            href="/signup"
+                            onClick={onNavigate}
+                            className={buttonVariants({
+                                variant: "secondary",
+                                size: "sm",
+                            })}
+                        >
+                            Create an account
+                        </Link>
+                    </div>
+                )}
+                <Link
+                    href="/credits"
+                    onClick={onNavigate}
+                    className="px-3 py-2 text-xs text-reading-text-muted hover:text-reading-text"
+                >
+                    Credits &amp; sources
+                </Link>
+            </div>
+        </>
     );
 }
 
-export function Navigation({ aiEnabled }: { aiEnabled: boolean }) {
-    const pathname = usePathname();
+export function Navigation({
+    aiEnabled,
+    signedIn,
+}: {
+    aiEnabled: boolean;
+    signedIn: boolean;
+}) {
     const [mobileOpen, setMobileOpen] = useState(false);
-    const items = navItems.filter((item) => aiEnabled || !item.ai);
-
-    const isActive = (href: string) => pathname.startsWith(href);
 
     return (
         <>
             {/* ── Desktop sidebar (md+) ─────────────────────────────── */}
-            <nav className="hidden md:flex print:hidden h-screen w-56 shrink-0 sticky top-0 flex-col gap-1 border-r border-reading-divider bg-reading-surface px-3 py-6">
+            <nav className="hidden md:flex print:hidden h-screen w-56 shrink-0 sticky top-0 flex-col gap-1 overflow-y-auto border-r border-reading-divider bg-reading-surface px-3 py-6">
                 <Link
                     href="/"
                     className="mb-4 self-start rounded-md px-3 font-serif text-lg text-reading-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-reading-focus"
                 >
                     Dawnscroll
                 </Link>
-                {items.map((item) => (
-                    <NavItem
-                        key={item.href}
-                        {...item}
-                        active={isActive(item.href)}
-                    />
-                ))}
-                <CreditsLink />
+                <NavLinks aiEnabled={aiEnabled} signedIn={signedIn} />
             </nav>
 
             {/* ── Mobile top bar ────────────────────────────────────── */}
@@ -146,11 +252,13 @@ export function Navigation({ aiEnabled }: { aiEnabled: boolean }) {
             {/* ── Mobile slide-in nav ───────────────────────────────── */}
             <nav
                 className={cn(
-                    "md:hidden fixed left-0 top-0 bottom-0 z-50 w-56 flex flex-col gap-1",
+                    "md:hidden fixed left-0 top-0 bottom-0 z-50 w-56 flex flex-col gap-1 overflow-y-auto",
                     "border-r border-reading-divider bg-reading-surface px-3 py-6",
                     "transition-transform duration-300",
                     mobileOpen ? "translate-x-0" : "-translate-x-full",
                 )}
+                // Off-screen links stay out of the tab order.
+                inert={!mobileOpen}
             >
                 <div className="mb-4 flex items-center justify-between px-3">
                     <Link
@@ -168,15 +276,11 @@ export function Navigation({ aiEnabled }: { aiEnabled: boolean }) {
                         <X size={18} />
                     </button>
                 </div>
-                {items.map((item) => (
-                    <NavItem
-                        key={item.href}
-                        {...item}
-                        active={isActive(item.href)}
-                        onClick={() => setMobileOpen(false)}
-                    />
-                ))}
-                <CreditsLink onClick={() => setMobileOpen(false)} />
+                <NavLinks
+                    aiEnabled={aiEnabled}
+                    signedIn={signedIn}
+                    onNavigate={() => setMobileOpen(false)}
+                />
             </nav>
         </>
     );
