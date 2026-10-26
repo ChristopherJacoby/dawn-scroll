@@ -51,10 +51,20 @@ async function loadPlaces() {
   return places;
 }
 
-/** The place's leading identification: coordinates and confidence. */
-function locate(place) {
-  const identification = place.identifications?.[0];
-  const lonlat = identification?.resolutions?.[0]?.lonlat;
+const stripTags = (html) => (html ?? "").replace(/<[^>]+>/g, "");
+
+/**
+ * A place's coordinates and confidence. OpenBible orders identifications
+ * by its own time-weighted score, so the first is its leading one; a stop
+ * can name another (`identification: "Jabal al Lawz"`), matched against
+ * the identification's description.
+ */
+function locate(place, name) {
+  const candidates = place.identifications ?? [];
+  const matches = name ? candidates.filter((i) => stripTags(i.resolutions?.[0]?.description) === name) : candidates.slice(0, 1);
+  if (matches.length !== 1) return null;
+  const [identification] = matches;
+  const lonlat = identification.resolutions?.[0]?.lonlat;
   if (!lonlat) return null;
   const [lng, lat] = lonlat.split(",").map(Number);
   const votes = identification.score?.vote_total ?? 0;
@@ -82,10 +92,97 @@ function haversine(a, b) {
   return 2 * 6371 * Math.asin(Math.sqrt(h));
 }
 
-const places = await loadPlaces();
-const { journeys } = JSON.parse(readFileSync(`${DIR}/journeys.json`, "utf8"));
 const errors = [];
 const fail = (slug, message) => errors.push(`${slug}: ${message}`);
+
+/** A route's points in order: stops, plus via points that only shape the line. */
+function routePoints(slug, label, stops) {
+  const where = label ? `${slug} (${label})` : slug;
+  const points = [];
+  // Which place each set of coordinates came from on this route.
+  const placeAt = new Map();
+  let stopIndex = 0;
+  for (const [i, s] of stops.entries()) {
+    if (s.via) {
+      if (i === 0 || i === stops.length - 1) fail(where, `via "${s.via}" can't start or end the route`);
+      if (!Number.isFinite(s.lat) || !Number.isFinite(s.lng)) {
+        fail(where, `via "${s.via}" needs lat and lng`);
+        continue;
+      }
+      points.push({ via: s.via, lat: s.lat, lng: s.lng });
+      continue;
+    }
+    // A place OpenBible doesn't have (Nuweiba) is given directly, with
+    // where its coordinates came from, and is never marked certain.
+    let located;
+    if (s.at) {
+      if (!Number.isFinite(s.at.lat) || !Number.isFinite(s.at.lng) || !s.source?.trim()) {
+        fail(where, `stop "${s.name}" needs at.lat, at.lng and a source`);
+        continue;
+      }
+      located = { lat: s.at.lat, lng: s.at.lng, confident: false, region: false };
+    } else {
+      const place = places.get(s.key);
+      located = place && locate(place, s.identification);
+      if (!located) {
+        fail(where, `no location for OpenBible place "${s.key}"${s.identification ? ` as "${s.identification}"` : ""}`);
+        continue;
+      }
+    }
+    const ref = parseRef(s.ref);
+    if (!ref) fail(where, `stop "${s.name}" has a bad reference "${s.ref}"`);
+    else if (!verseText.get(s.ref).toLowerCase().includes(String(s.kjv).toLowerCase())) {
+      fail(where, `${s.ref} doesn't name "${s.kjv}"`);
+    }
+    // The map gives a place one marker; two places sharing a point (as
+    // OpenBible's Gilead and Penuel do) would hide one of them.
+    const place = s.at ? `at ${s.source}` : s.key;
+    const at = `${located.lng},${located.lat}`;
+    if (placeAt.has(at) && placeAt.get(at) !== place) {
+      fail(where, `"${place}" and "${placeAt.get(at)}" are at the same point; pick a place with its own location`);
+    }
+    placeAt.set(at, place);
+    const first = stopIndex++ === 0;
+    if (!first && !MODES.has(s.by)) fail(where, `stop "${s.name}" needs by: foot, flocks or ship`);
+    points.push({
+      name: s.name,
+      ref: ref && { ...ref, label: `${bookName.get(ref.book)} ${ref.chapter}:${ref.verse}` },
+      lat: located.lat,
+      lng: located.lng,
+      // `certain` overrides OpenBible's votes where its doubt is about
+      // something else (e.g. Rhodes the island vs Rhodes the city).
+      confident: s.certain === true || located.confident,
+      region: located.region,
+      by: first ? undefined : s.by,
+      // Credited in the modal, e.g. "Nuweiba from Wikidata (Q1011488)".
+      source: s.at ? s.source : undefined,
+    });
+  }
+  if (points.filter((p) => !p.via).length < 2) fail(where, "needs at least two stops");
+  return points;
+}
+
+/** Legs between consecutive stops, through any via points between them. */
+function routeLegs(points) {
+  const legs = [];
+  let distance = 0;
+  let start = null;
+  for (const p of points) {
+    if (start) distance += haversine(start, p);
+    if (start && !p.via) {
+      legs.push({ km: Math.round(distance), by: p.by });
+      distance = 0;
+    }
+    start = p;
+  }
+  return legs;
+}
+
+const places = await loadPlaces();
+const findings = new Map(
+  JSON.parse(readFileSync(`${ROOT}data/archaeology/findings.json`, "utf8")).findings.map((f) => [f.slug, f.title]),
+);
+const { journeys } = JSON.parse(readFileSync(`${DIR}/journeys.json`, "utf8"));
 const seen = new Set();
 const out = [];
 
@@ -100,67 +197,22 @@ for (const j of journeys) {
   const to = parseRef(`${j.passage?.book} ${j.passage?.to}`);
   if (!from || !to) fail(slug, "passage doesn't exist in the KJV");
 
-  // Route points in order: stops, plus via points that only shape the line.
-  const points = [];
-  // Which OpenBible place each set of coordinates came from in this journey.
-  const keyAt = new Map();
-  let stopIndex = 0;
-  for (const [i, s] of (j.stops ?? []).entries()) {
-    if (s.via) {
-      if (i === 0 || i === j.stops.length - 1) fail(slug, `via "${s.via}" can't start or end the route`);
-      if (!Number.isFinite(s.lat) || !Number.isFinite(s.lng)) {
-        fail(slug, `via "${s.via}" needs lat and lng`);
-        continue;
-      }
-      points.push({ via: s.via, lat: s.lat, lng: s.lng });
-      continue;
-    }
-    const place = places.get(s.key);
-    const located = place && locate(place);
-    if (!located) {
-      fail(slug, `no location for OpenBible place "${s.key}"`);
-      continue;
-    }
-    const ref = parseRef(s.ref);
-    if (!ref) fail(slug, `stop "${s.name}" has a bad reference "${s.ref}"`);
-    else if (!verseText.get(s.ref).toLowerCase().includes(String(s.kjv).toLowerCase())) {
-      fail(slug, `${s.ref} doesn't name "${s.kjv}"`);
-    }
-    // The map gives a place one marker; two places sharing a point (as
-    // OpenBible's Gilead and Penuel do) would hide one of them.
-    const at = `${located.lng},${located.lat}`;
-    if (keyAt.has(at) && keyAt.get(at) !== s.key) {
-      fail(slug, `"${s.key}" and "${keyAt.get(at)}" are at the same point; pick a place with its own location`);
-    }
-    keyAt.set(at, s.key);
-    const first = stopIndex++ === 0;
-    if (!first && !MODES.has(s.by)) fail(slug, `stop "${s.name}" needs by: foot, flocks or ship`);
-    points.push({
-      name: s.name,
-      ref: ref && { ...ref, label: `${bookName.get(ref.book)} ${ref.chapter}:${ref.verse}` },
-      lat: located.lat,
-      lng: located.lng,
-      // `certain` overrides OpenBible's votes where its doubt is about
-      // something else (e.g. Rhodes the island vs Rhodes the city).
-      confident: s.certain === true || located.confident,
-      region: located.region,
-      by: first ? undefined : s.by,
-    });
-  }
-  if (points.filter((p) => !p.via).length < 2) fail(slug, "needs at least two stops");
-
-  // Legs between consecutive stops, through any via points between them.
-  const legs = [];
-  let distance = 0;
-  let start = null;
-  for (const p of points) {
-    if (start) distance += haversine(start, p);
-    if (start && !p.via) {
-      legs.push({ km: Math.round(distance), by: p.by });
-      distance = 0;
-    }
-    start = p;
-  }
+  // Most journeys have one route; a disputed one (the Exodus) lists each
+  // proposed route with a label and a note on who proposes it.
+  const routes = j.routes ?? [{ label: "", note: "", stops: j.stops }];
+  if (j.routes && j.stops) fail(slug, "has both stops and routes");
+  const routesOut = routes.map((r) => {
+    if (j.routes && (!r.label?.trim() || !r.note?.trim())) fail(slug, "each route needs a label and a note");
+    if (r.finding && !findings.has(r.finding)) fail(slug, `no archaeology finding "${r.finding}"`);
+    const points = routePoints(slug, r.label, r.stops ?? []);
+    return {
+      label: r.label,
+      note: r.note,
+      finding: r.finding ? { slug: r.finding, title: findings.get(r.finding) } : undefined,
+      points: points.map(({ lat, lng, ...rest }) => ({ ...rest, lat: Number(lat.toFixed(4)), lng: Number(lng.toFixed(4)) })),
+      legs: routeLegs(points),
+    };
+  });
 
   const scriptureTime = (j.scriptureTime ?? []).map((t) => {
     const ref = parseRef(t.ref);
@@ -179,8 +231,7 @@ for (const j of journeys) {
       to: { chapter: to.chapter, verse: to.verse },
       label: `${bookName.get(from.book)} ${from.chapter}:${from.verse}–${to.chapter === from.chapter ? "" : `${to.chapter}:`}${to.verse}`,
     },
-    points: points.map(({ lat, lng, ...rest }) => ({ ...rest, lat: Number(lat.toFixed(4)), lng: Number(lng.toFixed(4)) })),
-    legs,
+    routes: routesOut,
     scriptureTime,
   });
 }

@@ -3,7 +3,7 @@
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { ExpressionSpecification, Map as MapLibreMap } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
-import type { Journey, JourneyStop } from "@/lib/bible/journeys";
+import type { JourneyRoute, JourneyStop } from "@/lib/bible/journeys";
 import { cn } from "@/lib/cn";
 
 // The same basemap and parchment tones as the archaeology map.
@@ -24,14 +24,14 @@ const FIT = { padding: 56, maxZoom: 10 };
 const MODERN =
     /^(highway|road|railway|tunnel|aeroway|airport|boundary|label_|building|landuse|park)/;
 
-const isStop = (p: Journey["points"][number]): p is JourneyStop =>
+const isStop = (p: JourneyRoute["points"][number]): p is JourneyStop =>
     !("via" in p);
 
 /** Each leg as a line through its via points, tagged with how it was traveled. */
-function routeFeatures(journey: Journey) {
+function routeFeatures(route: JourneyRoute) {
     const features: GeoJSON.Feature<GeoJSON.LineString, { by: string }>[] = [];
     let line: [number, number][] = [];
-    for (const point of journey.points) {
+    for (const point of route.points) {
         line.push([point.lng, point.lat]);
         if (isStop(point) && line.length > 1) {
             features.push({
@@ -54,12 +54,12 @@ const QUALIFIER = /\s*\(.*\)$/;
  * drops list qualifiers, and prefers a stop named plainly: "Macedonia (by
  * way of Philippi)" and a later stop at Philippi are named "Philippi".
  */
-function places(journey: Journey) {
+function places(route: JourneyRoute) {
     const byPlace = new Map<
         string,
         { stop: JourneyStop; numbers: number[]; name: string }
     >();
-    journey.points.filter(isStop).forEach((stop, i) => {
+    route.points.filter(isStop).forEach((stop, i) => {
         const key = `${stop.lng},${stop.lat}`;
         const place = byPlace.get(key);
         if (!place) {
@@ -105,7 +105,13 @@ function namePlacement(
  * numbered stops (hollow where the location is uncertain). Loaded only
  * when a journey is opened.
  */
-export function JourneyMap({ journey }: { journey: Journey }) {
+export function JourneyMap({
+    title,
+    route,
+}: {
+    title: string;
+    route: JourneyRoute;
+}) {
     const container = useRef<HTMLDivElement>(null);
     const [failed, setFailed] = useState(false);
 
@@ -118,10 +124,10 @@ export function JourneyMap({ journey }: { journey: Journey }) {
             if (cancelled || !container.current) return;
             maplibre.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
             const bounds = new maplibre.LngLatBounds();
-            for (const p of journey.points) bounds.extend([p.lng, p.lat]);
+            for (const p of route.points) bounds.extend([p.lng, p.lat]);
             const middle = bounds.getCenter().lng;
-            const count = journey.points.filter(isStop).length;
-            const stops = places(journey);
+            const count = route.points.filter(isStop).length;
+            const stops = places(route);
             map = new maplibre.Map({
                 container: container.current,
                 style: STYLE_URL,
@@ -182,7 +188,7 @@ export function JourneyMap({ journey }: { journey: Journey }) {
                     type: "geojson",
                     data: {
                         type: "FeatureCollection",
-                        features: routeFeatures(journey),
+                        features: routeFeatures(route),
                     },
                 });
                 map.addLayer({
@@ -298,7 +304,7 @@ export function JourneyMap({ journey }: { journey: Journey }) {
             cancelled = true;
             map?.remove();
         };
-    }, [journey]);
+    }, [route]);
 
     if (failed) {
         return (
@@ -311,7 +317,7 @@ export function JourneyMap({ journey }: { journey: Journey }) {
         <div
             ref={container}
             role="region"
-            aria-label={`Map of ${journey.title}`}
+            aria-label={`Map of ${title}`}
             className="h-64 w-full overflow-hidden rounded-md border border-reading-divider bg-[#efe7d4] sm:h-80"
         />
     );
