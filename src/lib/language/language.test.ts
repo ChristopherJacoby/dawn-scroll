@@ -56,7 +56,11 @@ describe("morphology", () => {
         const features = parseMorphologyExpansion(
             "Function=Verb ; Stem=Qal (hence Action=Simple; Voice=Active); Person=Third",
         );
-        expect(features.map((f) => f.name)).toContain("Function");
+        expect(features).toEqual([
+            { name: "Function", value: "Verb" },
+            { name: "Stem", value: "Qal" },
+            { name: "Person", value: "Third" },
+        ]);
         expect(summarizeMorphology(features.slice(0, 1))).toBe("Verb");
         expect(
             summarizeMorphology(
