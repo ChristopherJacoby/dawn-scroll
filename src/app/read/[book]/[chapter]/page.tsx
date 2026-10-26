@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ChevronLeft, ChevronRight, ScrollText } from "lucide-react";
 import { ChapterPrefetch } from "@/components/reader/ChapterPrefetch";
 import { ChapterVerses } from "@/components/reader/ChapterVerses";
+import { ReaderHeader } from "@/components/reader/ReaderHeader";
 import { ReaderSelectors } from "@/components/reader/ReaderSelectors";
 import { ReadingModeToggle } from "@/components/reader/ReadingModeToggle";
 import { VerseAnchorScroll } from "@/components/reader/VerseAnchorScroll";
@@ -89,17 +90,12 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
     return (
         <div className="flex min-h-full w-full flex-col bg-reading-bg">
             <header className="border-b border-reading-divider bg-reading-surface">
-                <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-5 py-6 md:px-10 md:py-8">
-                    <div className="flex items-start justify-between gap-4">
-                        <div className="flex flex-col gap-2">
-                            <p className="text-xs font-medium uppercase tracking-wide text-reading-text-muted">
-                                {passage.translation.name}
-                            </p>
-                            <h1 className="font-serif text-4xl leading-tight text-reading-text md:text-5xl">
-                                {reference}
-                            </h1>
-                        </div>
-                        <div className="flex items-center gap-2">
+                <ReaderHeader
+                    key={reference}
+                    reference={reference}
+                    translationName={passage.translation.name}
+                    actions={
+                        <>
                             {aiEnabled && (
                                 <Link
                                     href={`/scholar?book=${passage.book.slug}&chapter=${passage.chapter.chapterNumber}`}
@@ -118,20 +114,22 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                                 </Link>
                             )}
                             <ReadingModeToggle />
-                        </div>
-                    </div>
-                    <ReaderSelectors
-                        books={books}
-                        currentBookSlug={passage.book.slug}
-                        currentChapter={passage.chapter.chapterNumber}
-                        translations={translations.map((t) => ({
-                            slug: t.slug,
-                            abbreviation: t.abbreviation,
-                            name: t.name,
-                        }))}
-                        currentTranslation={passage.translation.slug}
-                    />
-                </div>
+                        </>
+                    }
+                    pickers={
+                        <ReaderSelectors
+                            books={books}
+                            currentBookSlug={passage.book.slug}
+                            currentChapter={passage.chapter.chapterNumber}
+                            translations={translations.map((t) => ({
+                                slug: t.slug,
+                                abbreviation: t.abbreviation,
+                                name: t.name,
+                            }))}
+                            currentTranslation={passage.translation.slug}
+                        />
+                    }
+                />
             </header>
 
             <article
