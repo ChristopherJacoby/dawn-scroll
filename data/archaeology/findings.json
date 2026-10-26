@@ -2,6 +2,95 @@
   "$comment": "Launch archaeology findings, in canonical order of each finding's first reference. Generate SQL with: node scripts/generate-archaeology-seed.mjs > data/archaeology/findings.seed.sql",
   "findings": [
     {
+      "slug": "noahs-ark-durupinar",
+      "title": "Noah’s Ark and the Durupınar Formation",
+      "summary": "A boat-shaped mound near Mount Ararat, about 164 meters long, that Ron Wyatt promoted as Noah’s ark and that radar surveys are still probing. Geologists, including one of its first promoters, explain it as a natural formation.",
+      "siteName": "Durupınar, near Doğubayazıt, Turkey",
+      "lat": 39.4407,
+      "lng": 44.2348,
+      "credibility": "unverified",
+      "credibilityNote": "This rating covers the claim that the Durupınar formation is the remains of Noah’s ark. It rests on the formation’s boat-like outline and on radar and resistivity scans that its proponents read as walls, a corridor and rooms. No excavation has recovered timber or other remains of a vessel, no peer-reviewed study supports the identification, and the geologists who examined it, among them David Fasold, once its leading promoter, explain it as a natural fold in the rock.",
+      "description": [
+        "Genesis says the ark came to rest “upon the mountains of Ararat” (Genesis 8:4). Ararat is the Hebrew name for Urartu, an ancient kingdom centered on Lake Van in what is now eastern Turkey, Armenia and northwestern Iran, so the text points to a mountainous region rather than one peak; the 5,137-meter volcano now called Mount Ararat took the name later. Ancient writers looked elsewhere in the region too: Josephus, quoting the Babylonian priest Berossus, wrote that part of the ship was still shown on a mountain of the Cordyaeans, in Kurdish country.",
+        "The Durupınar formation lies beside the village of Üzengili, about 16 kilometers southeast of Doğubayazıt and some 29 kilometers south of Mount Ararat’s summit. It is a boat-shaped mound about 164 meters (538 feet) long; proponents note that this is close to the ark’s 300 cubits (Genesis 6:15). Captain İlhan Durupınar of the Turkish army noticed it in an aerial photograph taken in 1959. An expedition in 1960 dug and blasted into it, found only earth and rock, and announced that it was a natural formation.",
+        "Ron Wyatt began promoting the site as the ark in 1977. In 1985 he, the writer David Fasold and the geophysicist John Baumgardner surveyed it with metal detectors and ground-penetrating radar, and Fasold described a regular internal structure in his book The Ark of Noah (1988). A visitor center now stands beside the site.",
+        "Since 2019 Andrew Jones of Noah’s Ark Scans has worked with Turkish researchers on new ground-penetrating radar and electrical resistivity surveys, which the team reads as right angles, a central corridor and rooms below the surface. Researchers from Turkish and American universities also collected nearly 30 soil and rock samples for analysis at Istanbul Technical University, and in 2023 reported clay-like and marine material and initial dates of 3,500 to 5,000 years ago.",
+        "Geologists explain the formation differently. In 1996 Fasold, who by then had concluded it was not a boat, and the geologist Lorence Collins published a study identifying it as a natural fold in sedimentary rock. They found that a supposed iron bracket was weathered volcanic minerals, that the “metal-braced walls” were bands of iron minerals in steeply tilted layers, and that the nearby “anchor stones” were cut from local volcanic rock. Other searches have focused on the ice cap of Mount Ararat itself, where no claim has been confirmed."
+      ],
+      "refs": [
+        {
+          "book": "genesis",
+          "from": "6:14",
+          "to": "6:16"
+        },
+        {
+          "book": "genesis",
+          "from": "8:1",
+          "to": "8:5"
+        }
+      ],
+      "timeline": [
+        {
+          "year": 1959,
+          "label": "1959",
+          "event": "Captain İlhan Durupınar spots the formation in an aerial photograph."
+        },
+        {
+          "year": 1960,
+          "label": "1960",
+          "event": "An expedition digs into the formation and declares it natural."
+        },
+        {
+          "year": 1977,
+          "label": "1977",
+          "event": "Ron Wyatt begins promoting the site as Noah’s ark."
+        },
+        {
+          "year": 1985,
+          "label": "1985",
+          "event": "Wyatt, David Fasold and John Baumgardner survey it with radar and metal detectors."
+        },
+        {
+          "year": 1996,
+          "label": "1996",
+          "event": "Lorence Collins and Fasold publish a study calling it a natural geologic structure."
+        },
+        {
+          "year": 2019,
+          "label": "2019",
+          "event": "Noah’s Ark Scans begins new radar and resistivity surveys with Turkish researchers."
+        },
+        {
+          "year": 2023,
+          "label": "2023",
+          "event": "Researchers report dates and marine material from soil samples taken at the site."
+        }
+      ],
+      "sources": [
+        {
+          "citation": "Collins, Lorence G., and David F. Fasold. “Bogus ‘Noah’s Ark’ from Turkey Exposed as a Common Geologic Structure.” Journal of Geoscience Education 44, no. 4 (1996): 439–444.",
+          "url": "https://www.csun.edu/~vcgeo005/Nr1Bogus2.pdf"
+        },
+        {
+          "citation": "Fasold, David. The Ark of Noah. New York: Wynwood Press, 1988.",
+          "url": null
+        },
+        {
+          "citation": "Josephus. Antiquities of the Jews 1.3.6. Translated by William Whiston. Project Gutenberg eBook #2848.",
+          "url": "https://www.gutenberg.org/files/2848/2848-h/2848-h.htm"
+        },
+        {
+          "citation": "Noah’s Ark Scans. Research updates on the Durupınar site. noahsarkscans.com.",
+          "url": "https://noahsarkscans.com"
+        },
+        {
+          "citation": "“Discovery reignites search for Noah’s Ark in Turkey’s mountains.” The Jerusalem Post, October 23, 2024.",
+          "url": "https://www.jpost.com/archaeology/article-825786"
+        }
+      ],
+      "reviewedOn": "2026-10-25"
+    },
+    {
       "slug": "tall-el-hammam",
       "title": "Tall el-Hammam and the Search for Sodom",
       "summary": "A large Bronze Age city northeast of the Dead Sea, violently destroyed around 1650 BC by its excavators’ dating. Its excavator identifies it as Sodom; most scholars who look for Sodom favor other sites or doubt it can be located.",
