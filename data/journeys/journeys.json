@@ -48,7 +48,7 @@
       "passage": { "book": "genesis", "from": "31:17", "to": "33:20" },
       "stops": [
         { "key": "Haran", "name": "Haran (Padan-aram)", "kjv": "Padanaram", "ref": "genesis 31:18" },
-        { "key": "Gilead 1", "name": "Mount Gilead", "kjv": "Gilead", "ref": "genesis 31:21", "by": "flocks" },
+        { "key": "Mizpah 4", "name": "Galeed (Mizpah, in mount Gilead)", "kjv": "Galeed", "ref": "genesis 31:47", "by": "flocks" },
         { "key": "Mahanaim", "name": "Mahanaim", "kjv": "Mahanaim", "ref": "genesis 32:2", "by": "flocks" },
         { "key": "Penuel", "name": "Peniel", "kjv": "Peniel", "ref": "genesis 32:30", "by": "flocks" },
         { "key": "Succoth 1", "name": "Succoth", "kjv": "Succoth", "ref": "genesis 33:17", "by": "flocks" },

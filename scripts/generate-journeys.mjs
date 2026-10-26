@@ -102,9 +102,16 @@ for (const j of journeys) {
 
   // Route points in order: stops, plus via points that only shape the line.
   const points = [];
+  // Which OpenBible place each set of coordinates came from in this journey.
+  const keyAt = new Map();
+  let stopIndex = 0;
   for (const [i, s] of (j.stops ?? []).entries()) {
     if (s.via) {
-      if (!Number.isFinite(s.lat) || !Number.isFinite(s.lng)) fail(slug, `via "${s.via}" needs lat and lng`);
+      if (i === 0 || i === j.stops.length - 1) fail(slug, `via "${s.via}" can't start or end the route`);
+      if (!Number.isFinite(s.lat) || !Number.isFinite(s.lng)) {
+        fail(slug, `via "${s.via}" needs lat and lng`);
+        continue;
+      }
       points.push({ via: s.via, lat: s.lat, lng: s.lng });
       continue;
     }
@@ -119,7 +126,15 @@ for (const j of journeys) {
     else if (!verseText.get(s.ref).toLowerCase().includes(String(s.kjv).toLowerCase())) {
       fail(slug, `${s.ref} doesn't name "${s.kjv}"`);
     }
-    if (i > 0 && !MODES.has(s.by)) fail(slug, `stop "${s.name}" needs by: foot, flocks or ship`);
+    // The map gives a place one marker; two places sharing a point (as
+    // OpenBible's Gilead and Penuel do) would hide one of them.
+    const at = `${located.lng},${located.lat}`;
+    if (keyAt.has(at) && keyAt.get(at) !== s.key) {
+      fail(slug, `"${s.key}" and "${keyAt.get(at)}" are at the same point; pick a place with its own location`);
+    }
+    keyAt.set(at, s.key);
+    const first = stopIndex++ === 0;
+    if (!first && !MODES.has(s.by)) fail(slug, `stop "${s.name}" needs by: foot, flocks or ship`);
     points.push({
       name: s.name,
       ref: ref && { ...ref, label: `${bookName.get(ref.book)} ${ref.chapter}:${ref.verse}` },
@@ -129,7 +144,7 @@ for (const j of journeys) {
       // something else (e.g. Rhodes the island vs Rhodes the city).
       confident: s.certain === true || located.confident,
       region: located.region,
-      by: i > 0 ? s.by : undefined,
+      by: first ? undefined : s.by,
     });
   }
   if (points.filter((p) => !p.via).length < 2) fail(slug, "needs at least two stops");

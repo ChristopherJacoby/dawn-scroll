@@ -155,7 +155,15 @@ export function JourneyMap({ journey }: { journey: Journey }) {
                 return element;
             });
 
-            map.on("load", () => {
+            // A failed style (offline, or the tile server down) never loads;
+            // show the fallback rather than markers on a blank map.
+            map.once("error", () => {
+                if (cancelled || !map || map.isStyleLoaded()) return;
+                map.remove();
+                map = undefined;
+                setFailed(true);
+            });
+            map.on("style.load", () => {
                 if (!map) return;
                 if (map.getLayer("background")) {
                     map.setPaintProperty(

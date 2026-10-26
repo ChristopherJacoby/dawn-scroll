@@ -164,7 +164,10 @@ export function JourneyMarker({ journey }: { journey: Journey }) {
                                 The route between stops is approximate:{" "}
                                 {vias
                                     .map((v) =>
-                                        "via" in v ? v.via.toLowerCase() : "",
+                                        "via" in v
+                                            ? v.via[0].toLowerCase() +
+                                              v.via.slice(1)
+                                            : "",
                                     )
                                     .join("; ")}
                                 .

@@ -16,7 +16,7 @@ export interface JourneyStop {
     lng: number;
     /** False when the place's location is uncertain. */
     confident: boolean;
-    /** A region (e.g. Egypt) rather than a town; placed at its center. */
+    /** A region (e.g. Egypt) rather than a town, placed at OpenBible's point for it. */
     region: boolean;
     /** How the traveler reached this stop; absent on the first. */
     by?: TravelMode;
