@@ -46,7 +46,7 @@ export function ScholarChat({
                       ]
                     : GENERAL_SUGGESTIONS
             }
-            disclaimer="The Scholar can make mistakes; check its answers against Scripture."
+            disclaimer="The Scholar can make mistakes; check its answers against Scripture. Prayer and the leading of the Holy Spirit come first; this is here to help you study."
         />
     );
 }
