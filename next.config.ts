@@ -6,6 +6,16 @@ const nextConfig: NextConfig = {
     turbopack: {
         root: __dirname,
     },
+    redirects() {
+        return [
+            // The tradition was renamed Resurrection Day (DS-139).
+            {
+                source: "/roots/easter",
+                destination: "/roots/resurrection-day",
+                permanent: true,
+            },
+        ];
+    },
     images: {
         // Archaeology photos in the public "findings" storage bucket.
         remotePatterns: supabaseUrl

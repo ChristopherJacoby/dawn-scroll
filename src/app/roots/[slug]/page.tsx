@@ -49,13 +49,42 @@ export default async function TraditionPage({ params }: TraditionPageProps) {
                         <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
                         All traditions
                     </Link>
-                    <h1 className="font-serif text-4xl leading-tight text-reading-text">
-                        {tradition.name}
-                    </h1>
+                    <div className="flex flex-col gap-1">
+                        <h1 className="font-serif text-4xl leading-tight text-reading-text">
+                            {tradition.name}
+                        </h1>
+                        {tradition.alsoCalled && (
+                            <p className="text-reading-text-muted">
+                                {tradition.alsoCalled}
+                            </p>
+                        )}
+                    </div>
                     <p className="font-serif text-xl leading-relaxed text-reading-text">
                         {tradition.summary}
                     </p>
                 </header>
+
+                {/* Our position, set apart from the sourced history below. */}
+                {tradition.stance && (
+                    <section
+                        aria-labelledby="stance-heading"
+                        className="flex flex-col gap-4 rounded-lg border border-reading-border-strong bg-reading-surface-raised p-5 md:p-6"
+                    >
+                        <h2
+                            id="stance-heading"
+                            className="font-serif text-2xl leading-snug text-reading-text"
+                        >
+                            {tradition.stance.heading}
+                        </h2>
+                        <div className={prose}>
+                            {tradition.stance.paragraphs.map((paragraph, i) => (
+                                <p key={i}>
+                                    <CitedProse text={paragraph} />
+                                </p>
+                            ))}
+                        </div>
+                    </section>
+                )}
 
                 <section
                     aria-labelledby="origin-heading"
