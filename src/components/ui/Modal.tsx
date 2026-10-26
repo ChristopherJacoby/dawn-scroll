@@ -1,6 +1,7 @@
 "use client";
 
 import * as Dialog from "@radix-ui/react-dialog";
+import { useRef } from "react";
 import { cn } from "@/lib/cn";
 
 interface ModalProps {
@@ -20,6 +21,10 @@ export function Modal({
     children,
     className,
 }: ModalProps) {
+    // Radix returns focus only to a Dialog.Trigger; our modals open from
+    // plain buttons, so focus goes back to whatever opened it.
+    const opener = useRef<HTMLElement | null>(null);
+
     return (
         <Dialog.Root open={open} onOpenChange={onOpenChange}>
             <Dialog.Portal>
@@ -32,6 +37,16 @@ export function Modal({
                     )}
                 />
                 <Dialog.Content
+                    onOpenAutoFocus={() => {
+                        opener.current =
+                            document.activeElement as HTMLElement | null;
+                    }}
+                    onCloseAutoFocus={(event) => {
+                        event.preventDefault();
+                        // Without scrolling, so a link that closed the modal
+                        // keeps its place.
+                        opener.current?.focus({ preventScroll: true });
+                    }}
                     className={cn(
                         "fixed left-1/2 top-1/2 z-50",
                         "-translate-x-1/2 -translate-y-1/2",

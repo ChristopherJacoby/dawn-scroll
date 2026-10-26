@@ -1,0 +1,243 @@
+{
+  "$comment": "Journeys for the reader's journey maps (DS-146), built into src/lib/bible/journeys.json by scripts/generate-journeys.mjs. Each stop names an OpenBible.info place (key) and the verse that names it, with the place as the KJV spells it there (kjv), which the generator checks. by is how the traveler reached that stop: foot, flocks (moving with herds and households) or ship. via points shape the drawn route between stops and aren't stops themselves.",
+  "journeys": [
+    {
+      "slug": "terah-ur-to-haran",
+      "title": "From Ur to Haran",
+      "travelers": "Terah, Abram, Sarai and Lot",
+      "summary": "Terah takes his family from Ur of the Chaldees to go to Canaan, but they settle at Haran.",
+      "passage": { "book": "genesis", "from": "11:31", "to": "11:32" },
+      "stops": [
+        { "key": "Ur 2", "name": "Ur", "kjv": "Ur of the Chaldees", "ref": "genesis 11:31" },
+        { "via": "Probably along the Euphrates, by way of Mari", "lat": 34.5497, "lng": 40.8886 },
+        { "key": "Haran", "name": "Haran", "kjv": "Haran", "ref": "genesis 11:31", "by": "flocks" }
+      ]
+    },
+    {
+      "slug": "abram-to-canaan",
+      "title": "Abram goes to Canaan",
+      "travelers": "Abram, Sarai, Lot and their household",
+      "summary": "Called by God, Abram leaves Haran for Canaan, building altars at Shechem and between Bethel and Ai before moving on toward the south.",
+      "passage": { "book": "genesis", "from": "12:1", "to": "12:9" },
+      "stops": [
+        { "key": "Haran", "name": "Haran", "kjv": "Haran", "ref": "genesis 12:4" },
+        { "via": "Probably by way of Damascus", "lat": 33.5131, "lng": 36.2919 },
+        { "key": "Shechem", "name": "Shechem", "kjv": "Sichem", "ref": "genesis 12:6", "by": "flocks" },
+        { "key": "Bethel 1", "name": "Bethel", "kjv": "Bethel", "ref": "genesis 12:8", "by": "flocks" },
+        { "key": "Negeb", "name": "The Negev", "kjv": "south", "ref": "genesis 12:9", "by": "flocks" }
+      ]
+    },
+    {
+      "slug": "jacob-to-haran",
+      "title": "Jacob flees to Haran",
+      "travelers": "Jacob",
+      "summary": "Fleeing Esau, Jacob sets out from Beersheba, dreams of a ladder to heaven at Bethel, and comes to his mother’s family at Haran.",
+      "passage": { "book": "genesis", "from": "28:10", "to": "29:14" },
+      "stops": [
+        { "key": "Beersheba 1", "name": "Beersheba", "kjv": "Beersheba", "ref": "genesis 28:10" },
+        { "key": "Bethel 1", "name": "Bethel", "kjv": "Bethel", "ref": "genesis 28:19", "by": "foot" },
+        { "via": "Probably by way of Damascus", "lat": 33.5131, "lng": 36.2919 },
+        { "key": "Haran", "name": "Haran", "kjv": "Haran", "ref": "genesis 29:4", "by": "foot" }
+      ]
+    },
+    {
+      "slug": "jacob-returns-to-canaan",
+      "title": "Jacob returns to Canaan",
+      "travelers": "Jacob, his wives, children and flocks",
+      "summary": "Jacob leaves Laban with his family and herds, wrestles with God at Peniel, makes peace with Esau and settles near Shechem.",
+      "passage": { "book": "genesis", "from": "31:17", "to": "33:20" },
+      "stops": [
+        { "key": "Haran", "name": "Haran (Padan-aram)", "kjv": "Padanaram", "ref": "genesis 31:18" },
+        { "key": "Mizpah 4", "name": "Galeed (Mizpah, in mount Gilead)", "kjv": "Galeed", "ref": "genesis 31:47", "by": "flocks" },
+        { "key": "Mahanaim", "name": "Mahanaim", "kjv": "Mahanaim", "ref": "genesis 32:2", "by": "flocks" },
+        { "key": "Penuel", "name": "Peniel", "kjv": "Peniel", "ref": "genesis 32:30", "by": "flocks" },
+        { "key": "Succoth 1", "name": "Succoth", "kjv": "Succoth", "ref": "genesis 33:17", "by": "flocks" },
+        { "key": "Shechem", "name": "Shechem", "kjv": "Shechem", "ref": "genesis 33:18", "by": "flocks" }
+      ]
+    },
+    {
+      "slug": "ruth-and-naomi",
+      "title": "Ruth and Naomi go to Bethlehem",
+      "travelers": "Naomi and Ruth",
+      "summary": "Widowed in Moab, Naomi returns to Bethlehem, and Ruth goes with her: “whither thou goest, I will go.”",
+      "passage": { "book": "ruth", "from": "1:6", "to": "1:22" },
+      "stops": [
+        { "key": "Moab 1", "name": "Moab", "kjv": "Moab", "ref": "ruth 1:6" },
+        { "via": "Probably across the Jordan near Jericho", "lat": 31.8371, "lng": 35.5503 },
+        { "key": "Bethlehem 1", "name": "Bethlehem", "kjv": "Bethlehem", "ref": "ruth 1:19", "by": "foot" }
+      ]
+    },
+    {
+      "slug": "ezra-to-jerusalem",
+      "title": "Ezra returns to Jerusalem",
+      "travelers": "Ezra and the returning exiles",
+      "summary": "Ezra leads a company of exiles from Babylon to Jerusalem, carrying gifts for the temple, without a royal escort.",
+      "passage": { "book": "ezra", "from": "7:6", "to": "8:32" },
+      "scriptureTime": [{ "ref": "ezra 7:9", "text": "Four months, from the first day of the first month to the first day of the fifth." }],
+      "stops": [
+        { "key": "Babylon 1", "name": "Babylon", "kjv": "Babylon", "ref": "ezra 7:6" },
+        { "via": "Probably up the Euphrates", "lat": 34.5497, "lng": 40.8886 },
+        { "via": "Then by way of Tadmor", "lat": 34.5514, "lng": 38.2683 },
+        { "via": "And Damascus", "lat": 33.5131, "lng": 36.2919 },
+        { "key": "Jerusalem", "name": "Jerusalem", "kjv": "Jerusalem", "ref": "ezra 8:32", "by": "foot" }
+      ]
+    },
+    {
+      "slug": "nazareth-to-bethlehem",
+      "title": "Mary and Joseph go to Bethlehem",
+      "travelers": "Joseph and Mary",
+      "summary": "For the census, Joseph goes up from Nazareth in Galilee to Bethlehem, the city of David, with Mary, who is expecting her child.",
+      "passage": { "book": "luke", "from": "2:1", "to": "2:7" },
+      "stops": [
+        { "key": "Nazareth", "name": "Nazareth", "kjv": "Nazareth", "ref": "luke 2:4" },
+        { "key": "Bethlehem 1", "name": "Bethlehem", "kjv": "Bethlehem", "ref": "luke 2:4", "by": "foot" }
+      ]
+    },
+    {
+      "slug": "flight-into-egypt",
+      "title": "The flight into Egypt",
+      "travelers": "Joseph, Mary and the young child",
+      "summary": "Warned in a dream, Joseph takes Mary and the child to Egypt to escape Herod, then returns after Herod’s death and settles in Nazareth.",
+      "passage": { "book": "matthew", "from": "2:13", "to": "2:23" },
+      "stops": [
+        { "key": "Bethlehem 1", "name": "Bethlehem", "kjv": "Bethlehem", "ref": "matthew 2:1" },
+        { "key": "Egypt", "name": "Egypt (where is unknown)", "kjv": "Egypt", "ref": "matthew 2:14", "by": "foot" },
+        { "key": "Nazareth", "name": "Nazareth", "kjv": "Nazareth", "ref": "matthew 2:23", "by": "foot" }
+      ]
+    },
+    {
+      "slug": "up-to-jerusalem",
+      "title": "Jesus goes up to Jerusalem",
+      "travelers": "Jesus and his disciples",
+      "summary": "Jesus leaves Capernaum for the last time, crosses into Judea beyond the Jordan, passes through Jericho and enters Jerusalem.",
+      "passage": { "book": "mark", "from": "9:33", "to": "11:11" },
+      "stops": [
+        { "key": "Capernaum", "name": "Capernaum", "kjv": "Capernaum", "ref": "mark 9:33" },
+        { "via": "Into Judea beyond the Jordan", "lat": 31.95, "lng": 35.58 },
+        { "key": "Jericho 2", "name": "Jericho", "kjv": "Jericho", "ref": "mark 10:46", "by": "foot" },
+        { "key": "Bethany 1", "name": "Bethany", "kjv": "Bethany", "ref": "mark 11:1", "by": "foot" },
+        { "key": "Jerusalem", "name": "Jerusalem", "kjv": "Jerusalem", "ref": "mark 11:11", "by": "foot" }
+      ]
+    },
+    {
+      "slug": "road-to-emmaus",
+      "title": "The road to Emmaus",
+      "travelers": "Cleopas and another disciple",
+      "summary": "Two disciples walk to Emmaus and are joined by the risen Jesus, whom they know when he breaks bread; they hurry back to Jerusalem that same hour.",
+      "passage": { "book": "luke", "from": "24:13", "to": "24:35" },
+      "scriptureTime": [
+        { "ref": "luke 24:13", "text": "Threescore furlongs from Jerusalem: about 11 kilometers (7 miles)." },
+        { "ref": "luke 24:33", "text": "They went back “the same hour.”" }
+      ],
+      "stops": [
+        { "key": "Jerusalem", "name": "Jerusalem", "kjv": "Jerusalem", "ref": "luke 24:13" },
+        { "key": "Emmaus", "name": "Emmaus", "kjv": "Emmaus", "ref": "luke 24:13", "by": "foot" },
+        { "key": "Jerusalem", "name": "Jerusalem", "kjv": "Jerusalem", "ref": "luke 24:33", "by": "foot" }
+      ]
+    },
+    {
+      "slug": "paul-first-journey",
+      "title": "Paul’s first missionary journey",
+      "travelers": "Paul and Barnabas, with John Mark at first",
+      "summary": "Sent out from Antioch, Paul and Barnabas preach across Cyprus and in the cities of southern Galatia, then retrace their steps to strengthen the new churches.",
+      "passage": { "book": "acts", "from": "13:1", "to": "14:28" },
+      "stops": [
+        { "key": "Antioch 1", "name": "Antioch", "kjv": "Antioch", "ref": "acts 13:1" },
+        { "key": "Seleucia", "name": "Seleucia", "kjv": "Seleucia", "ref": "acts 13:4", "by": "foot" },
+        { "key": "Salamis", "name": "Salamis", "kjv": "Salamis", "ref": "acts 13:5", "by": "ship" },
+        { "key": "Paphos", "name": "Paphos", "kjv": "Paphos", "ref": "acts 13:6", "by": "foot" },
+        { "key": "Perga", "name": "Perga", "kjv": "Perga", "ref": "acts 13:13", "by": "ship" },
+        { "key": "Antioch 2", "name": "Antioch in Pisidia", "kjv": "Antioch", "ref": "acts 13:14", "by": "foot" },
+        { "key": "Iconium", "name": "Iconium", "kjv": "Iconium", "ref": "acts 13:51", "by": "foot" },
+        { "key": "Lystra", "name": "Lystra", "kjv": "Lystra", "ref": "acts 14:8", "by": "foot" },
+        { "key": "Derbe", "name": "Derbe", "kjv": "Derbe", "ref": "acts 14:20", "by": "foot" },
+        { "key": "Lystra", "name": "Lystra", "kjv": "Lystra", "ref": "acts 14:21", "by": "foot" },
+        { "key": "Iconium", "name": "Iconium", "kjv": "Iconium", "ref": "acts 14:21", "by": "foot" },
+        { "key": "Antioch 2", "name": "Antioch in Pisidia", "kjv": "Antioch", "ref": "acts 14:21", "by": "foot" },
+        { "key": "Perga", "name": "Perga", "kjv": "Perga", "ref": "acts 14:25", "by": "foot" },
+        { "key": "Attalia", "name": "Attalia", "kjv": "Attalia", "ref": "acts 14:25", "by": "foot" },
+        { "key": "Antioch 1", "name": "Antioch", "kjv": "Antioch", "ref": "acts 14:26", "by": "ship" }
+      ]
+    },
+    {
+      "slug": "paul-second-journey",
+      "title": "Paul’s second missionary journey",
+      "travelers": "Paul and Silas, joined by Timothy and Luke",
+      "summary": "Paul revisits the churches of Galatia, is called over to Macedonia in a vision, and plants churches at Philippi, Thessalonica, Berea and Corinth.",
+      "passage": { "book": "acts", "from": "15:36", "to": "18:22" },
+      "stops": [
+        { "key": "Antioch 1", "name": "Antioch", "kjv": "Antioch", "ref": "acts 15:35" },
+        { "key": "Derbe", "name": "Derbe", "kjv": "Derbe", "ref": "acts 16:1", "by": "foot" },
+        { "key": "Lystra", "name": "Lystra", "kjv": "Lystra", "ref": "acts 16:1", "by": "foot" },
+        { "key": "Troas", "name": "Troas", "kjv": "Troas", "ref": "acts 16:8", "by": "foot" },
+        { "key": "Samothrace", "name": "Samothrace", "kjv": "Samothracia", "ref": "acts 16:11", "by": "ship" },
+        { "key": "Neapolis", "name": "Neapolis", "kjv": "Neapolis", "ref": "acts 16:11", "by": "ship" },
+        { "key": "Philippi", "name": "Philippi", "kjv": "Philippi", "ref": "acts 16:12", "by": "foot" },
+        { "key": "Amphipolis", "name": "Amphipolis", "kjv": "Amphipolis", "ref": "acts 17:1", "by": "foot" },
+        { "key": "Apollonia", "name": "Apollonia", "kjv": "Apollonia", "ref": "acts 17:1", "by": "foot" },
+        { "key": "Thessalonica", "name": "Thessalonica", "kjv": "Thessalonica", "ref": "acts 17:1", "by": "foot" },
+        { "key": "Berea", "name": "Berea", "kjv": "Berea", "ref": "acts 17:10", "by": "foot" },
+        { "key": "Athens", "name": "Athens", "kjv": "Athens", "ref": "acts 17:15", "by": "ship" },
+        { "key": "Corinth", "name": "Corinth", "kjv": "Corinth", "ref": "acts 18:1", "by": "foot" },
+        { "key": "Cenchreae", "name": "Cenchreae", "kjv": "Cenchrea", "ref": "acts 18:18", "by": "foot" },
+        { "key": "Ephesus", "name": "Ephesus", "kjv": "Ephesus", "ref": "acts 18:19", "by": "ship" },
+        { "key": "Caesarea", "name": "Caesarea", "kjv": "Caesarea", "ref": "acts 18:22", "by": "ship" },
+        { "key": "Antioch 1", "name": "Antioch", "kjv": "Antioch", "ref": "acts 18:22", "by": "foot" }
+      ]
+    },
+    {
+      "slug": "paul-third-journey",
+      "title": "Paul’s third missionary journey",
+      "travelers": "Paul and his companions",
+      "summary": "Paul spends some three years at Ephesus, travels through Macedonia and Greece, then sails for Jerusalem, saying farewell to the Ephesian elders at Miletus.",
+      "passage": { "book": "acts", "from": "18:23", "to": "21:17" },
+      "stops": [
+        { "key": "Antioch 1", "name": "Antioch", "kjv": "Antioch", "ref": "acts 18:22" },
+        { "key": "Ephesus", "name": "Ephesus", "kjv": "Ephesus", "ref": "acts 19:1", "by": "foot" },
+        { "key": "Philippi", "name": "Macedonia (by way of Philippi)", "kjv": "Macedonia", "ref": "acts 20:1", "by": "foot" },
+        { "key": "Corinth", "name": "Greece (probably Corinth)", "kjv": "Greece", "ref": "acts 20:2", "by": "foot" },
+        { "key": "Philippi", "name": "Philippi", "kjv": "Philippi", "ref": "acts 20:6", "by": "foot" },
+        { "key": "Troas", "name": "Troas", "kjv": "Troas", "ref": "acts 20:6", "by": "ship" },
+        { "key": "Assos", "name": "Assos", "kjv": "Assos", "ref": "acts 20:13", "by": "foot" },
+        { "key": "Mitylene", "name": "Mitylene", "kjv": "Mitylene", "ref": "acts 20:14", "by": "ship" },
+        { "key": "Chios", "name": "Chios", "kjv": "Chios", "ref": "acts 20:15", "by": "ship" },
+        { "key": "Samos", "name": "Samos", "kjv": "Samos", "ref": "acts 20:15", "by": "ship" },
+        { "key": "Miletus", "name": "Miletus", "kjv": "Miletus", "ref": "acts 20:15", "by": "ship" },
+        { "key": "Cos", "name": "Cos", "kjv": "Coos", "ref": "acts 21:1", "by": "ship" },
+        { "key": "Rhodes 1", "name": "Rhodes", "kjv": "Rhodes", "ref": "acts 21:1", "by": "ship", "certain": true },
+        { "key": "Patara", "name": "Patara", "kjv": "Patara", "ref": "acts 21:1", "by": "ship" },
+        { "key": "Tyre", "name": "Tyre", "kjv": "Tyre", "ref": "acts 21:3", "by": "ship" },
+        { "key": "Ptolemais", "name": "Ptolemais", "kjv": "Ptolemais", "ref": "acts 21:7", "by": "ship" },
+        { "key": "Caesarea", "name": "Caesarea", "kjv": "Caesarea", "ref": "acts 21:8", "by": "foot" },
+        { "key": "Jerusalem", "name": "Jerusalem", "kjv": "Jerusalem", "ref": "acts 21:15", "by": "foot" }
+      ]
+    },
+    {
+      "slug": "paul-voyage-to-rome",
+      "title": "Paul’s voyage to Rome",
+      "travelers": "Paul, as a prisoner, with Luke and Aristarchus",
+      "summary": "Sent to Caesar under guard, Paul sails from Caesarea, survives a two-week storm and shipwreck on Malta, and reaches Rome the next spring.",
+      "passage": { "book": "acts", "from": "27:1", "to": "28:16" },
+      "scriptureTime": [
+        { "ref": "acts 27:27", "text": "Fourteen days driven by the storm before reaching land." },
+        { "ref": "acts 28:11", "text": "Three months on Malta before sailing on." },
+        { "ref": "acts 28:12", "text": "Three days at Syracuse." },
+        { "ref": "acts 28:14", "text": "Seven days with the believers at Puteoli." }
+      ],
+      "stops": [
+        { "key": "Caesarea", "name": "Caesarea", "kjv": "Caesarea", "ref": "acts 25:4" },
+        { "key": "Sidon", "name": "Sidon", "kjv": "Sidon", "ref": "acts 27:3", "by": "ship" },
+        { "key": "Myra", "name": "Myra", "kjv": "Myra", "ref": "acts 27:5", "by": "ship" },
+        { "key": "Cnidus", "name": "Cnidus", "kjv": "Cnidus", "ref": "acts 27:7", "by": "ship" },
+        { "key": "Fair Havens", "name": "Fair Havens", "kjv": "fair havens", "ref": "acts 27:8", "by": "ship" },
+        { "key": "Malta", "name": "Malta", "kjv": "Melita", "ref": "acts 28:1", "by": "ship" },
+        { "key": "Syracuse", "name": "Syracuse", "kjv": "Syracuse", "ref": "acts 28:12", "by": "ship" },
+        { "key": "Rhegium", "name": "Rhegium", "kjv": "Rhegium", "ref": "acts 28:13", "by": "ship" },
+        { "key": "Puteoli", "name": "Puteoli", "kjv": "Puteoli", "ref": "acts 28:13", "by": "ship" },
+        { "key": "Forum of Appius", "name": "Forum of Appius", "kjv": "Appii forum", "ref": "acts 28:15", "by": "foot" },
+        { "key": "Three Taverns", "name": "Three Taverns", "kjv": "three taverns", "ref": "acts 28:15", "by": "foot" },
+        { "key": "Rome", "name": "Rome", "kjv": "Rome", "ref": "acts 28:16", "by": "foot" }
+      ]
+    }
+  ]
+}

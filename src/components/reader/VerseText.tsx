@@ -20,8 +20,8 @@ interface VerseTextProps {
      * linked), a hint, and anything to show beneath the verse.
      */
     study?: { content: React.ReactNode; hint: string; below?: React.ReactNode };
-    /** Marker for archaeological findings that start at this verse. */
-    dig?: React.ReactNode;
+    /** Markers beside the number: archaeological findings, journeys. */
+    markers?: React.ReactNode;
     /**
      * "block": its own paragraph (verse-by-verse layout). "inline": a run
      * inside a prose paragraph. "line": a line of poetry, wrapped lines
@@ -44,7 +44,7 @@ export function VerseText({
     highlight,
     hasNote,
     study,
-    dig,
+    markers,
     variant = "block",
     onToggle,
 }: VerseTextProps) {
@@ -124,7 +124,7 @@ export function VerseText({
                             {HIGHLIGHT_LABELS[highlight].toLowerCase()})
                         </span>
                     )}
-                    {dig}
+                    {markers}
                 </sup>
                 <span
                     className={cn(

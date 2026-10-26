@@ -1,0 +1,13 @@
+{
+    "note": "Source for scripts/generate-journeys.mjs. sha256 is recorded on first download and verified after.",
+    "source": {
+        "key": "openbible-geocoding-ancient",
+        "title": "OpenBible.info Bible Geocoding Data: ancient places",
+        "url": "https://raw.githubusercontent.com/openbibleinfo/Bible-Geocoding-Data/main/data/ancient.jsonl",
+        "catalogUrl": "https://www.openbible.info/geo/",
+        "file": "ancient.jsonl",
+        "license": "CC BY 4.0",
+        "attribution": "Place locations from OpenBible.info’s Bible Geocoding Data (CC BY 4.0).",
+        "sha256": "b8187aa4737e8517ccc090f765d2be11da4c548cd2a59d3cdcb62e952cb8c0f2"
+    }
+}

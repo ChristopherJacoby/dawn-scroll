@@ -5,6 +5,7 @@ import { AskVerseAction } from "@/components/reader/AskVerseAction";
 import { BookmarkVerseAction } from "@/components/reader/BookmarkVerseAction";
 import { CopyVerseAction } from "@/components/reader/CopyVerseAction";
 import { DigDeeper } from "@/components/reader/DigDeeper";
+import { JourneyMarker } from "@/components/reader/JourneyMarker";
 import { HighlightVerseAction } from "@/components/reader/HighlightVerseAction";
 import { NoteEditor } from "@/components/reader/NoteEditor";
 import { NoteVerseAction } from "@/components/reader/NoteVerseAction";
@@ -25,6 +26,7 @@ import {
 import { saveNoteAction } from "@/app/notes/actions";
 import { findingMarkers } from "@/lib/archaeology/refs";
 import type { FindingSummary } from "@/lib/archaeology/types";
+import type { Journey } from "@/lib/bible/journeys";
 import { chapterReference } from "@/lib/bible/references";
 import { groupVerses, type LayoutMarks } from "@/lib/bible/verse-blocks";
 import type { HighlightColor } from "@/lib/highlight-colors";
@@ -52,6 +54,8 @@ interface ChapterVersesProps {
     aiEnabled: boolean;
     /** Where paragraphs, poetry and stanzas fall, for paragraph layout. */
     layout: LayoutMarks | null;
+    /** Journeys with a map marker in this chapter, and the verse it's on. */
+    journeys: { verse: number; journey: Journey }[];
 }
 
 /**
@@ -71,6 +75,7 @@ export function ChapterVerses({
     findings,
     aiEnabled,
     layout,
+    journeys,
 }: ChapterVersesProps) {
     const verseLayout = useVerseLayout();
     const [selected, setSelected] = useState<number | null>(null);
@@ -229,10 +234,20 @@ export function ChapterVerses({
                 highlight={highlights.get(verse.number)?.color ?? null}
                 hasNote={notes.get(verse.number) !== undefined}
                 study={wordStudy.render(verse.number, verse.text)}
-                dig={
-                    markers.has(verse.number) && (
-                        <DigDeeper findings={markers.get(verse.number)!} />
-                    )
+                markers={
+                    <>
+                        {markers.has(verse.number) && (
+                            <DigDeeper findings={markers.get(verse.number)!} />
+                        )}
+                        {journeys
+                            .filter((j) => j.verse === verse.number)
+                            .map(({ journey }) => (
+                                <JourneyMarker
+                                    key={journey.slug}
+                                    journey={journey}
+                                />
+                            ))}
+                    </>
                 }
                 onToggle={toggle}
             />
