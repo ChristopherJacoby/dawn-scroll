@@ -31,7 +31,11 @@ export default async function SearchPage() {
 
             <section className="mx-auto w-full max-w-4xl px-5 py-8 md:px-10 md:py-12">
                 <Suspense>
-                    <SearchPageClient translation={slug} />
+                    <SearchPageClient
+                        translation={slug}
+                        translationName={translation?.name ?? "Bible"}
+                        language={translation?.languageCode ?? "en"}
+                    />
                 </Suspense>
             </section>
         </div>

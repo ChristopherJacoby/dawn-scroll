@@ -6,6 +6,9 @@ import type { SearchResult } from "@/lib/bible/types";
 import { saveSearchScrollPosition } from "@/lib/search-scroll";
 
 interface SearchResultsProps {
+    /** The translation's language code: picks the examples, and marks
+     * verse text that isn't English for screen readers. */
+    language: string;
     query: string;
     results: SearchResult[];
     loading: boolean;
@@ -13,13 +16,20 @@ interface SearchResultsProps {
 }
 
 export function SearchResults({
+    language,
     query,
     results,
     loading,
     error,
 }: SearchResultsProps) {
     if (!query) {
-        return (
+        return language === "es" ? (
+            <p className="text-sm text-reading-text-muted">
+                Search by words or phrases — for example{" "}
+                <em lang="es">prójimo</em> or{" "}
+                <em lang="es">&quot;silbo apacible&quot;</em>.
+            </p>
+        ) : (
             <p className="text-sm text-reading-text-muted">
                 Search by words or phrases — for example{" "}
                 <em>love your neighbor</em> or{" "}
@@ -64,7 +74,12 @@ export function SearchResults({
                                     :{result.verseNumber} ·{" "}
                                     {result.translationAbbreviation}
                                 </span>
-                                <span className="font-serif text-lg leading-7 text-reading-text">
+                                <span
+                                    lang={
+                                        language === "en" ? undefined : language
+                                    }
+                                    className="font-serif text-lg leading-7 text-reading-text"
+                                >
                                     {result.text}
                                 </span>
                             </Link>

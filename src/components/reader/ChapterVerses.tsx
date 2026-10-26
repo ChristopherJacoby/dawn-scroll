@@ -36,7 +36,8 @@ interface ChapterVersesProps {
     bookSlug: string;
     bookName: string;
     chapterNumber: number;
-    translation: { slug: string; abbreviation: string };
+    /** languageCode marks verse text that isn't English for screen readers. */
+    translation: { slug: string; abbreviation: string; languageCode: string };
     verses: { number: number; text: string }[];
     signedIn: boolean;
     /** Verse number → bookmark id for this chapter (empty when signed out). */
@@ -240,7 +241,14 @@ export function ChapterVerses({
 
     return (
         <>
-            <div className="selection-reading reading-scale flex flex-col gap-4 font-serif text-reading-text">
+            <div
+                lang={
+                    translation.languageCode === "en"
+                        ? undefined
+                        : translation.languageCode
+                }
+                className="selection-reading reading-scale flex flex-col gap-4 font-serif text-reading-text"
+            >
                 {blocks
                     ? blocks.map((block) => {
                           const key = block.verses[0].number;
