@@ -66,3 +66,27 @@ export function safeReturnPath(value: unknown, fallback = "/reader"): string {
     if (url.origin !== PLACEHOLDER_ORIGIN) return fallback;
     return url.pathname + url.search + url.hash;
 }
+
+/** Why a page sent someone to log in, keyed by the start of its path. */
+const LOGIN_REASONS: [string, string][] = [
+    ["/bookmarks", "Log in to see your bookmarks."],
+    ["/highlights", "Log in to see your highlights."],
+    ["/notes", "Log in to see your notes."],
+    ["/plans", "Log in to start a reading plan and track your progress."],
+    ["/account", "Log in to manage your account."],
+    ["/settings", "Log in to save your reading settings."],
+    ["/scholar", "Log in to ask Scholar a question."],
+    ["/apostles", "Log in to talk with the apostles."],
+];
+
+/** The reason to show on the login page for a return path, if any. */
+export function loginReason(next: string): string | null {
+    return (
+        LOGIN_REASONS.find(
+            ([path]) =>
+                next === path ||
+                next.startsWith(`${path}/`) ||
+                next.startsWith(`${path}?`),
+        )?.[1] ?? null
+    );
+}

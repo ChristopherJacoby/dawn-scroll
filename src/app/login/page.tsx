@@ -8,7 +8,7 @@ import {
 import { LogInForm } from "@/components/auth/LogInForm";
 import { getUser } from "@/lib/auth";
 import { isGoogleSignInEnabled } from "@/lib/auth-providers";
-import { safeReturnPath } from "@/lib/auth-validation";
+import { loginReason, safeReturnPath } from "@/lib/auth-validation";
 
 export const metadata: Metadata = {
     title: "Log in | Dawnscroll",
@@ -29,8 +29,11 @@ export default async function LogInPage({
     const next = safeReturnPath(params.next);
     if (await getUser()) redirect(next);
 
+    const reason = params.next ? loginReason(next) : null;
+
     return (
         <AuthShell title="Log in">
+            {reason && <p className="-mt-4 text-reading-text">{reason}</p>}
             {(await isGoogleSignInEnabled()) && (
                 <>
                     <GoogleSignInButton next={next} />

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+    loginReason,
     safeReturnPath,
     validateEmail,
     validateLogIn,
@@ -92,5 +93,21 @@ describe("safeReturnPath", () => {
         expect(safeReturnPath("/%2F/evil.example")).toBe("/%2F/evil.example");
         expect(safeReturnPath(null)).toBe("/reader");
         expect(safeReturnPath(undefined, "/x")).toBe("/x");
+    });
+});
+
+describe("loginReason", () => {
+    it("explains the page that sent someone to log in", () => {
+        expect(loginReason("/bookmarks")).toBe("Log in to see your bookmarks.");
+        expect(loginReason("/apostles/peter")).toBe(
+            "Log in to talk with the apostles.",
+        );
+        expect(loginReason("/scholar?book=john&chapter=3")).toBe(
+            "Log in to ask Scholar a question.",
+        );
+    });
+    it("says nothing for other pages", () => {
+        expect(loginReason("/reader")).toBeNull();
+        expect(loginReason("/notesfoo")).toBeNull();
     });
 });
