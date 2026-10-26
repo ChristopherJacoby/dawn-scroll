@@ -65,3 +65,42 @@ export function computeStreak(
     }
     return streak;
 }
+
+/** One chapter of a plan day. */
+export interface PlanChapter {
+    bookSlug: string;
+    bookName: string;
+    chapter: number;
+}
+
+/** Every chapter in a day's readings, in reading order. */
+export function readingChapters(readings: PlanReading[]): PlanChapter[] {
+    return readings.flatMap((r) =>
+        Array.from({ length: r.endChapter - r.startChapter + 1 }, (_, i) => ({
+            bookSlug: r.bookSlug,
+            bookName: r.bookName,
+            chapter: r.startChapter + i,
+        })),
+    );
+}
+
+/**
+ * Where a chapter falls in a day's readings (1-based), and the chapter
+ * after it in the day; null when the day doesn't include it.
+ */
+export function chapterInDay(
+    readings: PlanReading[],
+    bookSlug: string,
+    chapter: number,
+): { index: number; total: number; next: PlanChapter | null } | null {
+    const chapters = readingChapters(readings);
+    const i = chapters.findIndex(
+        (c) => c.bookSlug === bookSlug && c.chapter === chapter,
+    );
+    if (i < 0) return null;
+    return {
+        index: i + 1,
+        total: chapters.length,
+        next: chapters[i + 1] ?? null,
+    };
+}

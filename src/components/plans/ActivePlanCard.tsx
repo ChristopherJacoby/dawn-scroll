@@ -2,27 +2,14 @@
 
 import { Flame, PartyPopper } from "lucide-react";
 import Link from "next/link";
-import { useState, useSyncExternalStore, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { leaveAction, setDayCompleteAction } from "@/app/plans/actions";
 import { Button } from "@/components/ui/Button";
 import { useToast } from "@/context/toast";
 import { computeStreak, readingLabel } from "@/lib/plan-progress";
 import type { EnrolledPlan } from "@/lib/reading-plans";
 import type { Result } from "@/lib/result";
-
-const subscribe = () => () => {};
-
-/**
- * The reader's time zone; the server doesn't know it, so it renders the
- * streak in UTC and the client corrects it right after hydration.
- */
-function useTimeZone() {
-    return useSyncExternalStore(
-        subscribe,
-        () => Intl.DateTimeFormat().resolvedOptions().timeZone,
-        () => "UTC",
-    );
-}
+import { useTimeZone } from "./useTimeZone";
 
 export function ActivePlanCard({ entry }: { entry: EnrolledPlan }) {
     const { plan, completed, currentDay, readings } = entry;

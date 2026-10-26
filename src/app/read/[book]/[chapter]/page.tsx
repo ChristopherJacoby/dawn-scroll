@@ -7,6 +7,8 @@ import { ChapterVerses } from "@/components/reader/ChapterVerses";
 import { ReaderHeader } from "@/components/reader/ReaderHeader";
 import { ReaderSelectors } from "@/components/reader/ReaderSelectors";
 import { ReadingModeToggle } from "@/components/reader/ReadingModeToggle";
+import { PlanDayFooter } from "@/components/plans/PlanDayFooter";
+import { PlanReadingBar } from "@/components/plans/PlanReadingBar";
 import { VerseAnchorScroll } from "@/components/reader/VerseAnchorScroll";
 import { buttonVariants } from "@/components/ui/Button";
 import { isAiConfigured } from "@/lib/ai/config";
@@ -23,6 +25,7 @@ import { getPreferredTranslation } from "@/lib/bible/translation-preference";
 import { getChapterBookmarkIds } from "@/lib/bookmarks";
 import { getChapterHighlights } from "@/lib/highlights";
 import { getChapterNotes } from "@/lib/notes";
+import { getPlanContext } from "@/lib/reading-plans";
 import { cn } from "@/lib/cn";
 
 interface ReaderPageProps {
@@ -74,13 +77,15 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
 
     const { id: bookId } = passage.book;
     const { chapterNumber: chapterNum } = passage.chapter;
-    const [bookmarks, highlights, notes] = user
+    const [bookmarks, highlights, notes, planContext] = user
         ? await Promise.all([
               getChapterBookmarkIds(bookId, chapterNum),
               getChapterHighlights(bookId, chapterNum),
               getChapterNotes(bookId, chapterNum),
+              // The plan bar is extra; the chapter still renders without it.
+              getPlanContext(passage.book.slug, chapterNum).catch(() => null),
           ])
-        : [{}, {}, {}];
+        : [{}, {}, {}, null];
 
     const reference = chapterReference(
         passage.book.name,
@@ -140,6 +145,7 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                 <h2 id="reader-heading" className="sr-only">
                     {reference} {passage.translation.name}
                 </h2>
+                {planContext && <PlanReadingBar context={planContext} />}
                 <VerseAnchorScroll
                     key={`${passage.book.slug}-${passage.chapter.chapterNumber}`}
                 />
@@ -184,6 +190,13 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                     )}
                 />
             </article>
+
+            {planContext && (
+                <PlanDayFooter
+                    context={planContext}
+                    naturalNext={passage.next}
+                />
+            )}
 
             <nav
                 aria-label="Adjacent chapters"
