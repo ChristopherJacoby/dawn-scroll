@@ -1,6 +1,11 @@
 import "server-only";
 import { getUser } from "@/lib/auth";
-import { nextDay, type PlanReading } from "@/lib/plan-progress";
+import {
+    chapterInDay,
+    nextDay,
+    type PlanChapter,
+    type PlanReading,
+} from "@/lib/plan-progress";
 import { fail, ok, type Result } from "@/lib/result";
 import { createClient } from "@/lib/supabase/server";
 
@@ -143,6 +148,94 @@ export async function getEnrolledPlans(): Promise<EnrolledPlan[]> {
             };
         }),
     );
+}
+
+/** How a chapter fits into one of the reader's plans, for the reader page. */
+export interface PlanChapterContext {
+    plan: { slug: string; name: string; durationDays: number };
+    day: number;
+    readings: PlanReading[];
+    /** 1-based position of the chapter in the day's reading. */
+    index: number;
+    total: number;
+    /** The day's next chapter after this one, or null on its last. */
+    nextInDay: PlanChapter | null;
+    /** Whether the day is already marked complete. */
+    completed: boolean;
+    /** Once the day is complete: the plan's next day and where it starts. */
+    nextDay: { day: number; start: PlanChapter } | null;
+    /** When each day was completed, for the streak. */
+    completedAt: string[];
+}
+
+/**
+ * The plan day a chapter belongs to, for a signed-in reader: their current
+ * day if it includes the chapter, otherwise the day they completed most
+ * recently (so finishing a day shows its confirmation in place).
+ */
+export async function getPlanContext(
+    bookSlug: string,
+    chapter: number,
+): Promise<PlanChapterContext | null> {
+    const enrolled = await getEnrolledPlans();
+    const base = (entry: EnrolledPlan) => ({
+        plan: {
+            slug: entry.plan.slug,
+            name: entry.plan.name,
+            durationDays: entry.plan.durationDays,
+        },
+        completedAt: entry.completed.map((c) => c.completedAt),
+    });
+
+    for (const entry of enrolled) {
+        if (!entry.currentDay) continue;
+        const found = chapterInDay(entry.readings, bookSlug, chapter);
+        if (found) {
+            return {
+                ...base(entry),
+                day: entry.currentDay,
+                readings: entry.readings,
+                index: found.index,
+                total: found.total,
+                nextInDay: found.next,
+                completed: false,
+                nextDay: null,
+            };
+        }
+    }
+
+    for (const entry of enrolled) {
+        const latest = entry.completed.reduce<CompletedDay | null>(
+            (a, c) => (!a || c.completedAt > a.completedAt ? c : a),
+            null,
+        );
+        if (!latest) continue;
+        const readings = await getDayReadings(entry.plan.id, latest.dayNumber);
+        const found = chapterInDay(readings, bookSlug, chapter);
+        if (!found) continue;
+        const start = entry.readings[0];
+        return {
+            ...base(entry),
+            day: latest.dayNumber,
+            readings,
+            index: found.index,
+            total: found.total,
+            nextInDay: found.next,
+            completed: true,
+            nextDay:
+                entry.currentDay && start
+                    ? {
+                          day: entry.currentDay,
+                          start: {
+                              bookSlug: start.bookSlug,
+                              bookName: start.bookName,
+                              chapter: start.startChapter,
+                          },
+                      }
+                    : null,
+        };
+    }
+    return null;
 }
 
 /** The user's progress in one plan (null when not enrolled). */
