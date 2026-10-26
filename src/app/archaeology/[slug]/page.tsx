@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, BookOpen, MapPin } from "lucide-react";
 import { CredibilityBadge } from "@/components/archaeology/CredibilityBadge";
 import { FindingFigure } from "@/components/archaeology/FindingPhoto";
+import { FindingVideo } from "@/components/archaeology/FindingVideo";
 import { CREDIBILITY } from "@/lib/archaeology/credibility";
 import { getFinding } from "@/lib/archaeology/queries";
 import { formatScriptureRef, scriptureRefHref } from "@/lib/archaeology/refs";
@@ -92,6 +93,23 @@ export default async function FindingPage({ params }: FindingPageProps) {
                             <p key={i}>{paragraph}</p>
                         ))}
                     </section>
+
+                    {finding.videos.length > 0 && (
+                        <section
+                            aria-labelledby="videos-heading"
+                            className="flex flex-col gap-4"
+                        >
+                            <h2 id="videos-heading" className={sectionHeading}>
+                                Watch
+                            </h2>
+                            {finding.videos.map((video) => (
+                                <FindingVideo
+                                    key={video.youtubeId}
+                                    video={video}
+                                />
+                            ))}
+                        </section>
+                    )}
 
                     <section
                         aria-labelledby="credibility-heading"

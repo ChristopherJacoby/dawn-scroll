@@ -46,6 +46,15 @@ export interface FindingImage {
     sourceUrl: string;
 }
 
+/** A YouTube video about a finding, credited to whoever made it. */
+export interface FindingVideo {
+    youtubeId: string;
+    title: string;
+    channel: string;
+    /** What it shows and whose view it presents. */
+    note: string;
+}
+
 /** What cards and the in-reader trigger need. */
 export interface FindingSummary {
     slug: string;
@@ -70,4 +79,5 @@ export interface Finding extends FindingSummary {
     reviewedOn: string;
     /** All photos, lead photo first. */
     images: FindingImage[];
+    videos: FindingVideo[];
 }

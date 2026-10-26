@@ -89,6 +89,7 @@ delete from public.finding_scripture_refs where finding_id in (select id from pu
 delete from public.finding_sources where finding_id in (select id from public.findings where slug in ('tall-el-hammam', 'exodus-route', 'red-sea-chariot-wheels', 'ark-of-the-covenant', 'jericho-walls', 'mesha-stele', 'tel-dan-stele', 'siege-of-lachish', 'hezekiahs-tunnel', 'cyrus-cylinder', 'caiaphas-ossuary', 'pilate-stone', 'pool-of-siloam'));
 delete from public.finding_timeline where finding_id in (select id from public.findings where slug in ('tall-el-hammam', 'exodus-route', 'red-sea-chariot-wheels', 'ark-of-the-covenant', 'jericho-walls', 'mesha-stele', 'tel-dan-stele', 'siege-of-lachish', 'hezekiahs-tunnel', 'cyrus-cylinder', 'caiaphas-ossuary', 'pilate-stone', 'pool-of-siloam'));
 delete from public.finding_images where finding_id in (select id from public.findings where slug in ('tall-el-hammam', 'exodus-route', 'red-sea-chariot-wheels', 'ark-of-the-covenant', 'jericho-walls', 'mesha-stele', 'tel-dan-stele', 'siege-of-lachish', 'hezekiahs-tunnel', 'cyrus-cylinder', 'caiaphas-ossuary', 'pilate-stone', 'pool-of-siloam'));
+delete from public.finding_videos where finding_id in (select id from public.findings where slug in ('tall-el-hammam', 'exodus-route', 'red-sea-chariot-wheels', 'ark-of-the-covenant', 'jericho-walls', 'mesha-stele', 'tel-dan-stele', 'siege-of-lachish', 'hezekiahs-tunnel', 'cyrus-cylinder', 'caiaphas-ossuary', 'pilate-stone', 'pool-of-siloam'));
 
 insert into public.finding_scripture_refs (finding_id, position, book_id, chapter_start, verse_start, chapter_end, verse_end)
 select f.id, v.position, b.id, v.cs, v.vs, v.ce, v.ve
@@ -310,4 +311,14 @@ from (values
   ('pilate-stone', 1, 'pilate-stone.jpg', 1600, 1066, 'A weathered limestone block bearing three partial lines of a Latin inscription', 'The Pilate Stone at the Israel Museum, Jerusalem.', 'BRBurton', 'CC0', 'https://creativecommons.org/publicdomain/zero/1.0/', 'https://commons.wikimedia.org/wiki/File:Pontius_Pilate_Inscription.JPG'),
   ('pool-of-siloam', 1, 'pool-of-siloam.jpg', 1600, 1177, 'A sepia photograph of a stone-walled pool below a terraced hillside, with a man on the path above', 'The small traditional Pool of Siloam, photographed by the Bonfils studio in the late 19th century, long before the 2004 discovery nearby.', 'Félix Bonfils', 'Public domain', null, 'https://commons.wikimedia.org/wiki/File:PikiWiki_Israel_71717_the_siloam_pool.jpg')
 ) as v (slug, position, path, width, height, alt, caption, credit, license, license_url, source_url)
+join public.findings f on f.slug = v.slug;
+
+insert into public.finding_videos (finding_id, position, youtube_id, title, channel, note)
+select f.id, v.position, v.youtube_id, v.title, v.channel, v.note
+from (values
+  ('tall-el-hammam', 1, 'R4Ui_MbDzMQ', 'The Search for Sodom & Gomorrah', 'Steven Collins', 'Dr. Steven Collins, who directed the excavation at Tall el-Hammam, introduces his case that the site is Sodom (2009).'),
+  ('tall-el-hammam', 2, 'sA7kiAIRdMo', 'Raw footage of brimstone burning: the sulfur balls of Sodom and Gomorrah', 'Noah''s Ark Scans', 'A sulfur ball from the Dead Sea basin burning. Ron Wyatt tied these sulfur nodules to the “brimstone” of Genesis 19; they come from the site he proposed, southwest of the Dead Sea, not from Tall el-Hammam.'),
+  ('red-sea-chariot-wheels', 1, 'AOIRLsCk-TM', 'The Exodus Explored: Chariots and Coral', 'The John 10:10 Project', 'Divers and a robotic camera search the seabed off Nuweiba for coral-covered chariot remains, as the claim’s proponents present it (2017).'),
+  ('red-sea-chariot-wheels', 2, 'ViuO8V6-Q4Q', 'Ron Wyatt and the Red Sea Crossing: Looking for Pharaoh’s Chariots (Part 2)', 'Noah''s Ark Scans', 'Pastor Jim Scudder Jr. and the InGrace team dive at Nuweiba, the crossing site Ron Wyatt proposed (2024, part 2 of 4).')
+) as v (slug, position, youtube_id, title, channel, note)
 join public.findings f on f.slug = v.slug;
