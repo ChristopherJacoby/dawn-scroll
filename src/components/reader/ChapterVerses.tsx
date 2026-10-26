@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { AskVerseAction } from "@/components/reader/AskVerseAction";
 import { BookmarkVerseAction } from "@/components/reader/BookmarkVerseAction";
 import { CopyVerseAction } from "@/components/reader/CopyVerseAction";
@@ -12,6 +12,7 @@ import { OriginalVerseAction } from "@/components/reader/OriginalVerseAction";
 import { VerseActionBar } from "@/components/reader/VerseActionBar";
 import { VerseText } from "@/components/reader/VerseText";
 import { useVerseAnnotations } from "@/components/reader/useVerseAnnotations";
+import { useVerseLayout } from "@/components/reader/useVerseLayout";
 import { useWordStudy } from "@/components/reader/useWordStudy";
 import {
     addBookmarkAction,
@@ -25,6 +26,7 @@ import { saveNoteAction } from "@/app/notes/actions";
 import { findingMarkers } from "@/lib/archaeology/refs";
 import type { FindingSummary } from "@/lib/archaeology/types";
 import { chapterReference } from "@/lib/bible/references";
+import { groupVerses, type LayoutMarks } from "@/lib/bible/verse-blocks";
 import type { HighlightColor } from "@/lib/highlight-colors";
 import type { VerseHighlight } from "@/lib/highlights";
 import type { VerseNote } from "@/lib/notes";
@@ -47,6 +49,8 @@ interface ChapterVersesProps {
     findings: FindingSummary[];
     /** Whether Scholar chat is available, for the Ask action. */
     aiEnabled: boolean;
+    /** Where paragraphs, poetry and stanzas fall, for paragraph layout. */
+    layout: LayoutMarks | null;
 }
 
 /**
@@ -65,7 +69,9 @@ export function ChapterVerses({
     notes: initialNotes,
     findings,
     aiEnabled,
+    layout,
 }: ChapterVersesProps) {
+    const verseLayout = useVerseLayout();
     const [selected, setSelected] = useState<number | null>(null);
     const bookmarks = useVerseAnnotations(initialBookmarks);
     const highlights = useVerseAnnotations(initialHighlights);
@@ -202,29 +208,83 @@ export function ChapterVerses({
         return () => document.removeEventListener("keydown", onKeyDown);
     });
 
+    const blocks =
+        verseLayout === "paragraphs" && layout
+            ? groupVerses(verses, layout)
+            : null;
+
+    function renderVerse(
+        verse: (typeof verses)[number],
+        variant: "block" | "inline" | "line",
+    ) {
+        return (
+            <VerseText
+                key={verse.number}
+                number={verse.number}
+                text={verse.text}
+                variant={variant}
+                selected={verse.number === selected}
+                bookmarked={bookmarks.get(verse.number) !== undefined}
+                highlight={highlights.get(verse.number)?.color ?? null}
+                hasNote={notes.get(verse.number) !== undefined}
+                study={wordStudy.render(verse.number, verse.text)}
+                dig={
+                    markers.has(verse.number) && (
+                        <DigDeeper findings={markers.get(verse.number)!} />
+                    )
+                }
+                onToggle={toggle}
+            />
+        );
+    }
+
     return (
         <>
             <div className="selection-reading reading-scale flex flex-col gap-4 font-serif text-reading-text">
-                {verses.map((verse) => (
-                    <VerseText
-                        key={verse.number}
-                        number={verse.number}
-                        text={verse.text}
-                        selected={verse.number === selected}
-                        bookmarked={bookmarks.get(verse.number) !== undefined}
-                        highlight={highlights.get(verse.number)?.color ?? null}
-                        hasNote={notes.get(verse.number) !== undefined}
-                        study={wordStudy.render(verse.number, verse.text)}
-                        dig={
-                            markers.has(verse.number) && (
-                                <DigDeeper
-                                    findings={markers.get(verse.number)!}
-                                />
-                            )
-                        }
-                        onToggle={toggle}
-                    />
-                ))}
+                {blocks
+                    ? blocks.map((block) => {
+                          const key = block.verses[0].number;
+                          if (block.kind === "poetry") {
+                              return (
+                                  <div
+                                      key={key}
+                                      className="flex flex-col gap-1"
+                                  >
+                                      {block.verses.map((v) =>
+                                          renderVerse(v, "line"),
+                                      )}
+                                  </div>
+                              );
+                          }
+                          // A verse in word study needs room beneath it.
+                          if (
+                              block.verses.some(
+                                  (v) => v.number === wordStudy.verse,
+                              )
+                          ) {
+                              return (
+                                  <div
+                                      key={key}
+                                      className="flex flex-col gap-4"
+                                  >
+                                      {block.verses.map((v) =>
+                                          renderVerse(v, "block"),
+                                      )}
+                                  </div>
+                              );
+                          }
+                          return (
+                              <p key={key}>
+                                  {block.verses.map((v, i) => (
+                                      <Fragment key={v.number}>
+                                          {i > 0 && " "}
+                                          {renderVerse(v, "inline")}
+                                      </Fragment>
+                                  ))}
+                              </p>
+                          );
+                      })
+                    : verses.map((verse) => renderVerse(verse, "block"))}
             </div>
             {selectedVerse && (
                 // Keyed per verse so each action's state (e.g. "Copied")

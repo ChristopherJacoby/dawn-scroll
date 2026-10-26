@@ -5,6 +5,7 @@ import { useOptimistic, useTransition, type ChangeEvent } from "react";
 import { setTranslationAction } from "@/app/read/actions";
 import type { BookWithChapters } from "@/lib/bible/types";
 import { cn } from "@/lib/cn";
+import { VerseLayoutToggle } from "./VerseLayoutToggle";
 import { useToast } from "@/context/toast";
 
 interface TranslationOption {
@@ -64,9 +65,10 @@ export function ReaderSelectors({
     }
 
     return (
-        // Book and chapter share a row until there's room for all three;
-        // the book column never shrinks below its longest name.
-        <div className="grid grid-cols-[minmax(0,1fr)_6rem] gap-3 lg:grid-cols-[minmax(10rem,1fr)_7rem_minmax(0,16rem)]">
+        // Book and chapter share a row until there's room for the rest;
+        // the book column never shrinks below its longest name. Layout
+        // gets its own row until xl.
+        <div className="grid grid-cols-[minmax(0,1fr)_6rem] gap-3 lg:grid-cols-[minmax(10rem,1fr)_7rem_minmax(0,16rem)] xl:grid-cols-[minmax(10rem,1fr)_6rem_minmax(0,15rem)_auto]">
             <label className="flex flex-col gap-1.5">
                 <span className="text-xs font-medium text-reading-text-muted">
                     Book
@@ -140,6 +142,12 @@ export function ReaderSelectors({
                     ))}
                 </select>
             </label>
+            <div className="col-span-2 flex flex-col gap-1.5 sm:max-w-xs lg:col-span-3 xl:col-span-1">
+                <span className="text-xs font-medium text-reading-text-muted">
+                    Layout
+                </span>
+                <VerseLayoutToggle />
+            </div>
         </div>
     );
 }
