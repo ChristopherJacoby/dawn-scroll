@@ -121,6 +121,15 @@ for (const f of findings) {
     tooLong(slug, "image credit", image.credit, 200);
     tooLong(slug, "image license", image.license, 60);
   }
+  for (const video of f.videos ?? []) {
+    if (!/^[A-Za-z0-9_-]{11}$/.test(video.youtubeId ?? "")) fail(slug, `bad YouTube id "${video.youtubeId}"`);
+    for (const field of ["title", "channel", "note"]) {
+      if (!nonEmpty(video[field])) fail(slug, `video ${video.youtubeId} is missing ${field}`);
+    }
+    tooLong(slug, "video title", video.title, 200);
+    tooLong(slug, "video channel", video.channel, 120);
+    tooLong(slug, "video note", video.note, 400);
+  }
 }
 
 if (errors.length) {
@@ -164,6 +173,7 @@ const out = [
   `delete from public.finding_sources where finding_id in (select id from public.findings where slug in (${slugList}));`,
   `delete from public.finding_timeline where finding_id in (select id from public.findings where slug in (${slugList}));`,
   `delete from public.finding_images where finding_id in (select id from public.findings where slug in (${slugList}));`,
+  `delete from public.finding_videos where finding_id in (select id from public.findings where slug in (${slugList}));`,
   "",
   "insert into public.finding_scripture_refs (finding_id, position, book_id, chapter_start, verse_start, chapter_end, verse_end)",
   "select f.id, v.position, b.id, v.cs, v.vs, v.ce, v.ve",
@@ -214,6 +224,21 @@ if (images.length) {
     "from (values",
     rows(images),
     ") as v (slug, position, path, width, height, alt, caption, credit, license, license_url, source_url)",
+    "join public.findings f on f.slug = v.slug;",
+    "",
+  );
+}
+
+const videos = findings.flatMap((f) =>
+  (f.videos ?? []).map((v, i) => [q(f.slug), i + 1, q(v.youtubeId), q(v.title), q(v.channel), q(v.note)]),
+);
+if (videos.length) {
+  out.push(
+    "insert into public.finding_videos (finding_id, position, youtube_id, title, channel, note)",
+    "select f.id, v.position, v.youtube_id, v.title, v.channel, v.note",
+    "from (values",
+    rows(videos),
+    ") as v (slug, position, youtube_id, title, channel, note)",
     "join public.findings f on f.slug = v.slug;",
     "",
   );

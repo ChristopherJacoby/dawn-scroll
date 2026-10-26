@@ -47,6 +47,12 @@ interface FindingRow extends SummaryRow {
     reviewed_on: string;
     finding_sources: { citation: string; url: string | null }[];
     finding_timeline: { year: number; label: string; event: string }[];
+    finding_videos: {
+        youtube_id: string;
+        title: string;
+        channel: string;
+        note: string;
+    }[];
 }
 
 const REFS =
@@ -209,13 +215,14 @@ export async function getFinding(slug: string): Promise<Finding | null> {
     const { data, error } = await createPublicClient()
         .from("findings")
         .select(
-            `${SUMMARY_COLUMNS}, description, credibility_note, reviewed_on, finding_sources(position, citation, url), finding_timeline(position, year, label, event)`,
+            `${SUMMARY_COLUMNS}, description, credibility_note, reviewed_on, finding_sources(position, citation, url), finding_timeline(position, year, label, event), finding_videos(position, youtube_id, title, channel, note)`,
         )
         .eq("slug", slug)
         .order("position", { referencedTable: "finding_scripture_refs" })
         .order("position", { referencedTable: "finding_images" })
         .order("position", { referencedTable: "finding_sources" })
         .order("position", { referencedTable: "finding_timeline" })
+        .order("position", { referencedTable: "finding_videos" })
         .maybeSingle();
     if (error) throw error;
     if (!data) return null;
@@ -226,6 +233,14 @@ export async function getFinding(slug: string): Promise<Finding | null> {
         credibilityNote: row.credibility_note,
         reviewedOn: row.reviewed_on,
         images: row.finding_images.map(mapImage),
+        videos: row.finding_videos.map(
+            ({ youtube_id, title, channel, note }) => ({
+                youtubeId: youtube_id,
+                title,
+                channel,
+                note,
+            }),
+        ),
         sources: row.finding_sources.map(({ citation, url }) => ({
             citation,
             url,
