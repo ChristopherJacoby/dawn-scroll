@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Check, Minus } from "lucide-react";
 import { CheckoutButton } from "@/components/pricing/CheckoutButton";
 import { buttonVariants } from "@/components/ui/Button";
+import { aiConfig } from "@/lib/ai/config";
 import { getUser } from "@/lib/auth";
 import { FEATURES, type FeatureKey } from "@/lib/premium/features";
 import {
@@ -18,7 +19,7 @@ import { cn } from "@/lib/cn";
 export const metadata: Metadata = {
     title: "Premium | Dawnscroll",
     description:
-        "Dawnscroll Premium: the full archaeology hub, Apostle mode and unlimited Scholar chat.",
+        "Dawnscroll Premium: the full archaeology hub, Apostle mode and more Scholar questions each day.",
 };
 
 export default async function PricingPage({
@@ -32,6 +33,7 @@ export default async function PricingPage({
         searchParams,
     ]);
     const checkoutAvailable = Boolean(process.env.STRIPE_SECRET_KEY);
+    const chatLimit = aiConfig().dailyLimit;
     const savings = annualSavings();
     const planCards: {
         plan: PlanKey;
@@ -117,8 +119,9 @@ export default async function PricingPage({
                     <p className="text-reading-text">
                         The Bible, its original languages, Roots and Hard
                         Questions stay free. Premium adds the full archaeology
-                        hub, Apostle mode and unlimited Scholar chat.{" "}
-                        {TRIAL_DAYS} days free; cancel anytime.
+                        hub, Apostle mode and up to {chatLimit.premium} Scholar
+                        questions a day, up from {chatLimit.free}. {TRIAL_DAYS}{" "}
+                        days free; cancel anytime.
                     </p>
                 </div>
 
