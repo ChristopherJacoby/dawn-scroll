@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { chapterReference } from "@/lib/bible/references";
 import type { SearchResult } from "@/lib/bible/types";
 import { saveSearchScrollPosition } from "@/lib/search-scroll";
 
@@ -56,8 +57,11 @@ export function SearchResults({
                                 className="flex flex-col gap-1.5 rounded-md border border-reading-border bg-reading-surface-raised px-4 py-3 transition-colors hover:bg-reading-bg-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-reading-focus focus-visible:ring-offset-2 focus-visible:ring-offset-reading-bg"
                             >
                                 <span className="text-xs font-medium uppercase tracking-wide text-reading-text-muted">
-                                    {result.bookName} {result.chapterNumber}:
-                                    {result.verseNumber} ·{" "}
+                                    {chapterReference(
+                                        result.bookName,
+                                        result.chapterNumber,
+                                    )}
+                                    :{result.verseNumber} ·{" "}
                                     {result.translationAbbreviation}
                                 </span>
                                 <span className="font-serif text-lg leading-7 text-reading-text">

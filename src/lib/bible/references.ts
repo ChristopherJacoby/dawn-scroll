@@ -147,6 +147,11 @@ export function chapterCount(slug: string): number {
     return CHAPTERS.get(slug) ?? 0;
 }
 
+/** "Psalm 23", not "Psalms 23": a single psalm takes the singular. */
+export function chapterReference(bookName: string, chapter: number): string {
+    return `${bookName === "Psalms" ? "Psalm" : bookName} ${chapter}`;
+}
+
 /** A book's display name, for showing a passage reference. */
 export function bookName(slug: string): string | null {
     return BOOKS.find(([s]) => s === slug)?.[1] ?? null;

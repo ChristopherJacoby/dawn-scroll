@@ -1,5 +1,6 @@
 import "server-only";
 import { getChapter } from "@/lib/bible/queries";
+import { chapterReference } from "@/lib/bible/references";
 import { getPreferredTranslation } from "@/lib/bible/translation-preference";
 import type { Verse } from "@/lib/bible/types";
 import type { PassageRef } from "./chat";
@@ -52,7 +53,7 @@ export async function passageContext(
     const verse = chapter.verses.some((v) => v.verseNumber === passage.verse)
         ? passage.verse
         : undefined;
-    const reference = `${chapter.book.name} ${passage.chapter}`;
+    const reference = chapterReference(chapter.book.name, passage.chapter);
     const verses = passageVerses(chapter.verses, verse);
     const excerpt =
         verses.length < chapter.verses.length

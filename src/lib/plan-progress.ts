@@ -2,6 +2,7 @@
  * Reading-plan progress math, shared by server and client. Plans are
  * self-paced: "today's reading" is the first day not yet completed.
  */
+import { chapterReference } from "@/lib/bible/references";
 
 export interface PlanReading {
     bookSlug: string;
@@ -10,12 +11,12 @@ export interface PlanReading {
     endChapter: number;
 }
 
-/** "Genesis 1–3", "Psalms 23". */
+/** "Genesis 1–3", "Psalm 23". */
 export function readingLabel(reading: PlanReading): string {
     const { bookName, startChapter, endChapter } = reading;
     return endChapter > startChapter
         ? `${bookName} ${startChapter}–${endChapter}`
-        : `${bookName} ${startChapter}`;
+        : chapterReference(bookName, startChapter);
 }
 
 /** The first day (1-based) not in `completedDays`, or null when all done. */
