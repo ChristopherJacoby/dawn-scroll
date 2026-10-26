@@ -45,7 +45,9 @@ export function FindingCard({
                     />
                 </div>
             )}
-            <div className="flex items-start justify-between gap-3">
+            {/* Badge above the title, so a narrow card gives the title its
+                full width (DOM keeps the heading first). */}
+            <div className="flex flex-col-reverse items-start gap-2">
                 <Heading
                     id={`finding-${finding.slug}`}
                     className="font-serif text-xl leading-snug text-reading-text"
