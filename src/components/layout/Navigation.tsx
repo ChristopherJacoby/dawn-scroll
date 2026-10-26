@@ -98,9 +98,12 @@ export function Navigation({ aiEnabled }: { aiEnabled: boolean }) {
         <>
             {/* ── Desktop sidebar (md+) ─────────────────────────────── */}
             <nav className="hidden md:flex print:hidden h-screen w-56 shrink-0 sticky top-0 flex-col gap-1 border-r border-reading-divider bg-reading-surface px-3 py-6">
-                <p className="mb-4 px-3 font-serif text-lg text-reading-text">
+                <Link
+                    href="/"
+                    className="mb-4 self-start rounded-md px-3 font-serif text-lg text-reading-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-reading-focus"
+                >
                     Dawnscroll
-                </p>
+                </Link>
                 {items.map((item) => (
                     <NavItem
                         key={item.href}
@@ -120,9 +123,12 @@ export function Navigation({ aiEnabled }: { aiEnabled: boolean }) {
                 >
                     <Menu size={20} />
                 </button>
-                <span className="font-serif text-lg text-reading-text">
+                <Link
+                    href="/"
+                    className="rounded-md font-serif text-lg text-reading-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-reading-focus"
+                >
                     Dawnscroll
-                </span>
+                </Link>
             </div>
 
             {/* ── Mobile overlay backdrop ───────────────────────────── */}
@@ -147,9 +153,13 @@ export function Navigation({ aiEnabled }: { aiEnabled: boolean }) {
                 )}
             >
                 <div className="mb-4 flex items-center justify-between px-3">
-                    <span className="font-serif text-lg text-reading-text">
+                    <Link
+                        href="/"
+                        onClick={() => setMobileOpen(false)}
+                        className="rounded-md font-serif text-lg text-reading-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-reading-focus"
+                    >
                         Dawnscroll
-                    </span>
+                    </Link>
                     <button
                         onClick={() => setMobileOpen(false)}
                         className="rounded-lg p-1.5 text-reading-text-muted transition-colors hover:bg-reading-bg-subtle hover:text-reading-text"
