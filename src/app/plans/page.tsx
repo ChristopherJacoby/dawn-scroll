@@ -59,7 +59,9 @@ export default async function PlansPage() {
                                 ? "More plans"
                                 : "Choose a plan"}
                         </h2>
-                        <div className="grid gap-4 sm:grid-cols-2">
+                        {/* One row of three once there's room, rather than
+                            two columns that strand the third plan. */}
+                        <div className="grid gap-4 lg:grid-cols-3">
                             {available.map((plan) => (
                                 <PlanCard
                                     key={plan.id}
