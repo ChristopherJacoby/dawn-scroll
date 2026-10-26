@@ -56,6 +56,47 @@
       ]
     },
     {
+      "slug": "exodus",
+      "title": "The Exodus to Mount Sinai",
+      "travelers": "Moses and the children of Israel, with their flocks and herds",
+      "summary": "Israel goes out of Egypt from Rameses, crosses the Red Sea on dry ground, and comes in the third month to Mount Sinai. Where they crossed and which mountain is Sinai are debated, so the map shows the two most-cited routes.",
+      "passage": { "book": "exodus", "from": "12:37", "to": "19:2" },
+      "scriptureTime": [
+        { "ref": "numbers 33:3", "text": "They left Rameses on the fifteenth day of the first month, the morning after the Passover." },
+        { "ref": "exodus 15:22", "text": "Three days in the wilderness without water after the crossing." },
+        { "ref": "exodus 16:1", "text": "At the wilderness of Sin on the fifteenth day of the second month." },
+        { "ref": "exodus 19:1", "text": "At the wilderness of Sinai in the third month." }
+      ],
+      "routes": [
+        {
+          "label": "Sinai Peninsula",
+          "note": "The traditional route: across the sea near the Bitter Lakes, south along the Gulf of Suez, and inland to Jebel Musa, where Christians have placed Mount Sinai since at least the 4th century.",
+          "finding": "exodus-route",
+          "stops": [
+            { "key": "Rameses", "name": "Rameses", "kjv": "Rameses", "ref": "exodus 12:37" },
+            { "key": "Succoth 2", "name": "Succoth", "kjv": "Succoth", "ref": "exodus 12:37", "by": "flocks" },
+            { "key": "Pi-hahiroth", "identification": "plain near Jabal Jinayfah", "name": "Pi-hahiroth (crossing the sea)", "kjv": "Pihahiroth", "ref": "exodus 14:2", "by": "flocks" },
+            { "key": "Marah", "name": "Marah", "kjv": "Marah", "ref": "exodus 15:23", "by": "flocks" },
+            { "key": "Elim", "name": "Elim", "kjv": "Elim", "ref": "exodus 15:27", "by": "flocks" },
+            { "key": "Sin", "name": "Wilderness of Sin", "kjv": "wilderness of Sin", "ref": "exodus 16:1", "by": "flocks" },
+            { "key": "Rephidim", "name": "Rephidim", "kjv": "Rephidim", "ref": "exodus 17:1", "by": "flocks" },
+            { "key": "Mount Sinai", "name": "Mount Sinai (Jebel Musa)", "kjv": "Sinai", "ref": "exodus 19:2", "by": "flocks" }
+          ]
+        },
+        {
+          "label": "Arabia",
+          "note": "Across the Sinai to the beach at Nuweiba, through the Gulf of Aqaba, and on to Jabal al-Lawz in Midian. Proponents point out that Moses was keeping the flock of Jethro, the priest of Midian, when he came to Horeb (Exodus 3:1), and that Paul places “mount Sinai in Arabia” (Galatians 4:25). They haven’t agreed on sites for Marah, Elim or Rephidim, so those aren’t marked.",
+          "finding": "red-sea-chariot-wheels",
+          "stops": [
+            { "key": "Rameses", "name": "Rameses", "kjv": "Rameses", "ref": "exodus 12:37" },
+            { "key": "Succoth 2", "name": "Succoth", "kjv": "Succoth", "ref": "exodus 12:37", "by": "flocks" },
+            { "at": { "lat": 29.034, "lng": 34.6591 }, "source": "Nuweiba from Wikidata (Q1011488)", "name": "Pi-hahiroth (Nuweiba beach)", "kjv": "Pihahiroth", "ref": "exodus 14:2", "by": "flocks" },
+            { "key": "Mount Sinai", "identification": "Jabal al Lawz", "name": "Mount Sinai (Jabal al-Lawz)", "kjv": "Sinai", "ref": "exodus 19:2", "by": "flocks" }
+          ]
+        }
+      ]
+    },
+    {
       "slug": "ruth-and-naomi",
       "title": "Ruth and Naomi go to Bethlehem",
       "travelers": "Naomi and Ruth",

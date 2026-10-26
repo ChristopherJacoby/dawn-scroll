@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
 import { Modal } from "@/components/ui/Modal";
-import type { Journey, JourneyStop } from "@/lib/bible/journeys";
+import type { Journey, JourneyRoute, JourneyStop } from "@/lib/bible/journeys";
 import {
     describeDistance,
     describeTravel,
@@ -24,19 +24,22 @@ const JourneyMap = dynamic(
     },
 );
 
-const isStop = (p: Journey["points"][number]): p is JourneyStop =>
+const isStop = (p: JourneyRoute["points"][number]): p is JourneyStop =>
     !("via" in p);
 
 /**
  * A small map marker beside a verse where a journey begins (or continues
  * into a new chapter); tapping it opens the journey's map, stops and
- * travel time.
+ * travel time. Where the route is disputed, a toggle switches between
+ * the proposed routes.
  */
 export function JourneyMarker({ journey }: { journey: Journey }) {
     const [open, setOpen] = useState(false);
-    const stops = journey.points.filter(isStop);
-    const vias = journey.points.filter((p) => "via" in p);
-    const estimate = estimateTravel(journey.legs);
+    const [routeIndex, setRouteIndex] = useState(0);
+    const route = journey.routes[routeIndex];
+    const stops = route.points.filter(isStop);
+    const vias = route.points.filter((p) => "via" in p);
+    const estimate = estimateTravel(route.legs);
 
     return (
         <>
@@ -72,7 +75,61 @@ export function JourneyMarker({ journey }: { journey: Journey }) {
                             Read {journey.passage.label}
                         </Link>
                     </div>
-                    {open && <JourneyMap journey={journey} />}
+                    {journey.routes.length > 1 && (
+                        <div className="flex flex-col gap-3">
+                            <div
+                                role="group"
+                                aria-label="Route"
+                                className="flex h-11 overflow-hidden rounded-md border border-reading-border-strong bg-reading-surface-raised"
+                            >
+                                {journey.routes.map((r, i) => (
+                                    <button
+                                        key={r.label}
+                                        type="button"
+                                        onClick={() => setRouteIndex(i)}
+                                        aria-pressed={i === routeIndex}
+                                        className={cn(
+                                            "flex flex-1 items-center justify-center px-3 text-sm transition-colors",
+                                            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-reading-focus",
+                                            i === routeIndex
+                                                ? "bg-reading-accent text-reading-accent-contrast"
+                                                : "text-reading-text hover:bg-reading-bg-subtle",
+                                        )}
+                                    >
+                                        {r.label}
+                                    </button>
+                                ))}
+                            </div>
+                            <p className="text-sm leading-relaxed text-reading-text">
+                                {route.note}
+                                {route.finding && (
+                                    <>
+                                        {" "}
+                                        See{" "}
+                                        <Link
+                                            href={`/archaeology/${route.finding.slug}`}
+                                            className="text-reading-link"
+                                        >
+                                            {route.finding.title}
+                                        </Link>
+                                        .
+                                    </>
+                                )}
+                            </p>
+                        </div>
+                    )}
+                    {/* Remounted per route, so each is fitted and labeled afresh. */}
+                    {open && (
+                        <JourneyMap
+                            key={routeIndex}
+                            title={
+                                route.label
+                                    ? `${journey.title}, ${route.label} route`
+                                    : journey.title
+                            }
+                            route={route}
+                        />
+                    )}
 
                     <dl className="grid gap-3 text-sm sm:grid-cols-2">
                         <div>
@@ -199,7 +256,13 @@ export function JourneyMarker({ journey }: { journey: Journey }) {
                         >
                             OpenBible.info
                         </a>{" "}
-                        (CC BY 4.0).
+                        (CC BY 4.0)
+                        {stops
+                            .flatMap((stop) =>
+                                stop.source ? [`; ${stop.source}`] : [],
+                            )
+                            .join("")}
+                        .
                     </p>
                 </div>
             </Modal>

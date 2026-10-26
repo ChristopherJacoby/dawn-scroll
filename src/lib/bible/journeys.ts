@@ -20,6 +20,8 @@ export interface JourneyStop {
     region: boolean;
     /** How the traveler reached this stop; absent on the first. */
     by?: TravelMode;
+    /** Where the location came from when it isn't OpenBible. */
+    source?: string;
 }
 
 /** A point that only shapes the drawn route (e.g. "by way of Damascus"). */
@@ -27,6 +29,19 @@ export interface JourneyVia {
     via: string;
     lat: number;
     lng: number;
+}
+
+/** One way the journey may have gone; most journeys have just one. */
+export interface JourneyRoute {
+    /** What the route is called, e.g. "Arabia"; empty when it's the only one. */
+    label: string;
+    /** Who proposes the route and why; empty when it's the only one. */
+    note: string;
+    /** The archaeology finding about this route, if there is one. */
+    finding?: { slug: string; title: string };
+    points: (JourneyStop | JourneyVia)[];
+    /** One per stop after the first, with its straight-line distance. */
+    legs: { km: number; by: TravelMode }[];
 }
 
 export interface Journey {
@@ -40,9 +55,8 @@ export interface Journey {
         to: { chapter: number; verse: number };
         label: string;
     };
-    points: (JourneyStop | JourneyVia)[];
-    /** One per stop after the first, with its straight-line distance. */
-    legs: { km: number; by: TravelMode }[];
+    /** The proposed routes where the way is disputed (the Exodus). */
+    routes: JourneyRoute[];
     /** Where Scripture itself gives the time or distance. */
     scriptureTime: { ref: string; text: string }[];
 }
@@ -52,7 +66,7 @@ const JOURNEYS = (data as unknown as { journeys: Journey[] }).journeys;
 /**
  * Journeys with a marker in this chapter, and the verse it goes on: the
  * passage's first verse in its first chapter, then the first stop named
- * in each later chapter.
+ * in each later chapter on any of its routes.
  */
 export function getChapterJourneys(
     bookSlug: string,
@@ -63,12 +77,17 @@ export function getChapterJourneys(
         if (book !== bookSlug || chapter < from.chapter || chapter > to.chapter)
             return [];
         if (chapter === from.chapter) return [{ verse: from.verse, journey }];
-        const stop = journey.points.find(
-            (p): p is JourneyStop =>
-                !("via" in p) &&
-                p.ref.book === bookSlug &&
-                p.ref.chapter === chapter,
-        );
-        return stop ? [{ verse: stop.ref.verse, journey }] : [];
+        const verses = journey.routes
+            .flatMap((route) => route.points)
+            .filter(
+                (p): p is JourneyStop =>
+                    !("via" in p) &&
+                    p.ref.book === bookSlug &&
+                    p.ref.chapter === chapter,
+            )
+            .map((stop) => stop.ref.verse);
+        return verses.length > 0
+            ? [{ verse: Math.min(...verses), journey }]
+            : [];
     });
 }
