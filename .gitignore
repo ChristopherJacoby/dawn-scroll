@@ -58,3 +58,4 @@ next-env.d.ts
 
 # Apostle mode red-team output (npm run red-team)
 red-team-report.md
+/data/layout/raw/

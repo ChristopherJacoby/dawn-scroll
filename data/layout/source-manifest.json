@@ -1,0 +1,13 @@
+{
+    "note": "Source for scripts/generate-verse-layout.mjs. sha256 is recorded on first download and verified after; eBible's zips are not versioned upstream, so a mismatch means the text changed and needs review.",
+    "source": {
+        "key": "ebible-engwebp-usfm",
+        "title": "World English Bible (USFM)",
+        "url": "https://ebible.org/Scriptures/engwebp_usfm.zip",
+        "catalogUrl": "https://ebible.org/details.php?id=engwebp",
+        "file": "engwebp_usfm.zip",
+        "license": "Public domain",
+        "attribution": "Paragraph and poetry breaks from the World English Bible, courtesy of eBible.org.",
+        "sha256": "d2a7c9640820003d8ed475ce6d92cc990b0447fe96ce72fd0df17c0dac9d95fe"
+    }
+}

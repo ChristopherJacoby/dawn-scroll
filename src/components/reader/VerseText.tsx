@@ -22,6 +22,12 @@ interface VerseTextProps {
     study?: { content: React.ReactNode; hint: string; below?: React.ReactNode };
     /** Marker for archaeological findings that start at this verse. */
     dig?: React.ReactNode;
+    /**
+     * "block": its own paragraph (verse-by-verse layout). "inline": a run
+     * inside a prose paragraph. "line": a line of poetry, wrapped lines
+     * indented under the first.
+     */
+    variant?: "block" | "inline" | "line";
     onToggle: (number: number, viaKeyboard: boolean) => void;
 }
 
@@ -39,9 +45,12 @@ export function VerseText({
     hasNote,
     study,
     dig,
+    variant = "block",
     onToggle,
 }: VerseTextProps) {
-    function handleVerseClick(event: React.MouseEvent<HTMLParagraphElement>) {
+    const Root = variant === "inline" ? "span" : "p";
+
+    function handleVerseClick(event: React.MouseEvent<HTMLElement>) {
         // React bubbles clicks out of portals (e.g. a word-study card) to
         // here; only clicks on the verse itself count.
         if (!event.currentTarget.contains(event.target as Node)) return;
@@ -57,12 +66,22 @@ export function VerseText({
 
     return (
         <>
-            <p
+            <Root
                 id={`verse-${number}`}
-                className="scroll-mt-24 cursor-pointer"
+                className={cn(
+                    "scroll-mt-24 cursor-pointer",
+                    variant === "line" && "pl-[1.5em] -indent-[1.5em]",
+                )}
                 onClick={handleVerseClick}
             >
-                <sup className="mr-2 align-super">
+                <sup
+                    className={cn(
+                        // leading-none keeps the raised number from
+                        // pushing its line apart from the others.
+                        "align-super leading-none",
+                        variant === "inline" ? "mr-1" : "mr-2",
+                    )}
+                >
                     <button
                         type="button"
                         data-verse-button={number}
@@ -121,7 +140,7 @@ export function VerseText({
                 >
                     {study?.content ?? text}
                 </span>
-            </p>
+            </Root>
             {study && (
                 <p className="-mt-3 font-sans text-xs text-reading-text-muted">
                     {study.hint}
