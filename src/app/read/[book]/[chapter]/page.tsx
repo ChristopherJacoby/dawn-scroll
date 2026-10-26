@@ -108,7 +108,7 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                                         className="h-4 w-4"
                                         aria-hidden="true"
                                     />
-                                    <span className="sr-only sm:not-sr-only">
+                                    <span className="sr-only whitespace-nowrap lg:not-sr-only">
                                         Ask about this passage
                                     </span>
                                 </Link>
