@@ -88,7 +88,42 @@
           "url": "https://www.jpost.com/archaeology/article-825786"
         }
       ],
-      "reviewedOn": "2026-10-25"
+      "reviewedOn": "2026-10-25",
+      "images": [
+        {
+          "path": "noahs-ark-durupinar.jpg",
+          "width": 875,
+          "height": 595,
+          "alt": "A long, boat-shaped ridge of earth on a hillside, with people standing along its top",
+          "caption": "The Durupınar formation near Doğubayazıt, with visitors standing on it for scale.",
+          "credit": "Rudolf Pohl, courtesy of Lorence G. Collins",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ark_structure.jpg"
+        },
+        {
+          "path": "noahs-ark-durupinar-2019.jpg",
+          "width": 1600,
+          "height": 1200,
+          "alt": "Green hills and eroded ridges below a rocky crest in eastern Turkey",
+          "caption": "The Durupınar site in July 2019, seen from the bluff by the visitor center.",
+          "credit": "Wikkiwooki",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Durupinar_site_in_July_2019.jpg"
+        },
+        {
+          "path": "noahs-ark-mount-ararat.jpg",
+          "width": 1600,
+          "height": 1066,
+          "alt": "The snow-capped cone of Mount Ararat rising above a green plain",
+          "caption": "Mount Ararat (Ağrı Dağı), 5,137 meters high, about 29 kilometers north of the Durupınar site.",
+          "credit": "W. Bulach",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:00_2399_Mount_Ararat,_Turkey.jpg"
+        }
+      ]
     },
     {
       "slug": "tall-el-hammam",
