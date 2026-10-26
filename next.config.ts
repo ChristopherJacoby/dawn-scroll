@@ -18,27 +18,17 @@ const nextConfig: NextConfig = {
     },
     images: {
         // Archaeology photos in the public "findings" storage bucket.
-        remotePatterns: [
-            ...(supabaseUrl
-                ? [
-                      {
-                          protocol: "https" as const,
-                          hostname: new URL(supabaseUrl).hostname,
-                          port: "",
-                          pathname: "/storage/v1/object/public/findings/**",
-                          search: "",
-                      },
-                  ]
-                : []),
-            // Thumbnails for finding videos, shown until a video is played.
-            {
-                protocol: "https",
-                hostname: "i.ytimg.com",
-                port: "",
-                pathname: "/vi/**",
-                search: "",
-            },
-        ],
+        remotePatterns: supabaseUrl
+            ? [
+                  {
+                      protocol: "https",
+                      hostname: new URL(supabaseUrl).hostname,
+                      port: "",
+                      pathname: "/storage/v1/object/public/findings/**",
+                      search: "",
+                  },
+              ]
+            : [],
     },
 };
 

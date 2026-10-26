@@ -1,6 +1,11 @@
 "use client";
 
-import { createContext, useContext, useSyncExternalStore } from "react";
+import {
+    createContext,
+    useContext,
+    useState,
+    useSyncExternalStore,
+} from "react";
 
 export type ReadingMode = "light" | "dark" | "sepia";
 
@@ -104,11 +109,25 @@ export function ReadingModeProvider({
         getSnapshot,
         getServerSnapshot,
     );
-    const prefs = account ?? local;
+    // The account's saved preferences arrive once, with the page; changes
+    // made since then win, or the controls would keep showing the saved
+    // mode after a reader picks another.
+    const [changed, setChanged] = useState<Partial<ReadingPreferences>>({});
+    const prefs = account ? { ...account, ...changed } : local;
 
     return (
         <ReadingModeContext.Provider
-            value={{ ...prefs, setMode, setFontScale }}
+            value={{
+                ...prefs,
+                setMode: (mode) => {
+                    setMode(mode);
+                    setChanged((c) => ({ ...c, mode }));
+                },
+                setFontScale: (fontScale) => {
+                    setFontScale(fontScale);
+                    setChanged((c) => ({ ...c, fontScale }));
+                },
+            }}
         >
             {children}
         </ReadingModeContext.Provider>
