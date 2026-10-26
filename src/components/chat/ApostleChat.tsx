@@ -40,7 +40,7 @@ export function ApostleChat({
                     ? "What did the apostles tell you about Jesus?"
                     : "What do you remember most about Jesus?",
             ]}
-            disclaimer={`An AI portrayal of ${apostle.name} based on Scripture and early church tradition. It isn't ${apostle.name}, and it isn't Scripture.`}
+            disclaimer={`An AI portrayal of ${apostle.name} based on Scripture and early church tradition. It isn't ${apostle.name}, and it isn't Scripture. Prayer and the leading of the Holy Spirit come first; this is here to help you study.`}
         />
     );
 }
