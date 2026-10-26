@@ -342,6 +342,10 @@ join public.findings f on f.slug = v.slug;
 insert into public.finding_videos (finding_id, position, youtube_id, title, channel, note)
 select f.id, v.position, v.youtube_id, v.title, v.channel, v.note
 from (values
+  ('noahs-ark-durupinar', 1, 'IB-BMawjUH0', 'Radar Uncovers Noah’s Ark: Scans Reveal Rooms Underground', 'Noah''s Ark Scans', 'Noah’s Ark Scans shows its ground-penetrating radar results from the formation, which the team reads as rooms below the surface (2020).'),
+  ('noahs-ark-durupinar', 2, 'y3pX2FIc8YQ', 'Drone tour of Noah’s ark with Ron Wyatt', 'Noah''s Ark Scans', 'Drone footage of the formation, narrated with Ron Wyatt’s own account of the site (2021).'),
+  ('noahs-ark-durupinar', 3, 'nqPs683Aiok', 'Could this be Noah’s Ark? Researchers probe massive formation in Turkey', 'Fox News', 'Fox News interviews Andrew Jones of Noah’s Ark Scans about the radar surveys and soil samples (October 2026).'),
+  ('noahs-ark-durupinar', 4, 'rAVgRpO92zQ', 'We Looked Inside Noah’s Ark: Ground-Penetrating Scans Reveal Hidden Rooms', 'Noah''s Ark Scans', 'A full lecture at the site’s visitor center walking through the team’s newest radar data, as its proponents present it (2026).'),
   ('tall-el-hammam', 1, 'R4Ui_MbDzMQ', 'The Search for Sodom & Gomorrah', 'Steven Collins', 'Dr. Steven Collins, who directed the excavation at Tall el-Hammam, introduces his case that the site is Sodom (2009).'),
   ('tall-el-hammam', 2, 'sA7kiAIRdMo', 'Raw footage of brimstone burning: the sulfur balls of Sodom and Gomorrah', 'Noah''s Ark Scans', 'A sulfur ball from the Dead Sea basin burning. Ron Wyatt tied these sulfur nodules to the “brimstone” of Genesis 19; they come from the site he proposed, southwest of the Dead Sea, not from Tall el-Hammam.'),
   ('red-sea-chariot-wheels', 1, 'AOIRLsCk-TM', 'The Exodus Explored: Chariots and Coral', 'The John 10:10 Project', 'Divers and a robotic camera search the seabed off Nuweiba for coral-covered chariot remains, as the claim’s proponents present it (2017).'),
