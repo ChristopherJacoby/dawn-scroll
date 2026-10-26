@@ -155,7 +155,8 @@ export function NoteEditor({
                     disabled={!savedContent && !text.trim()}
                     className="text-reading-danger"
                 >
-                    Delete note
+                    {/* Nothing is saved yet, so this only throws the draft away. */}
+                    {savedContent ? "Delete note" : "Discard"}
                 </Button>
                 <Button size="sm" onClick={() => onOpenChange(false)}>
                     Done

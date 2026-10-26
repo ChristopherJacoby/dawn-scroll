@@ -22,6 +22,7 @@ import {
     getEnrolledPlans,
     listPlans,
 } from "@/lib/reading-plans";
+import { cn } from "@/lib/cn";
 import { listTraditions } from "@/lib/roots/queries";
 
 export const metadata: Metadata = {
@@ -137,9 +138,11 @@ export default async function HomePage() {
                                 Reading plans
                             </Link>
                         </div>
-                        <p className="text-sm text-reading-text-muted">
-                            Free to read, no account needed.
-                        </p>
+                        {!user && (
+                            <p className="text-sm text-reading-text-muted">
+                                Free to read, no account needed.
+                            </p>
+                        )}
                     </div>
                     <HeroCollage study={study} finding={heroFinding} />
                 </div>
@@ -339,7 +342,10 @@ function TodaysReading({ entry }: { entry: EnrolledPlan }) {
             </div>
             <Link
                 href="/plans"
-                className={buttonVariants({ variant: "secondary", size: "sm" })}
+                className={cn(
+                    buttonVariants({ variant: "secondary", size: "sm" }),
+                    "shrink-0 self-start whitespace-nowrap sm:self-auto",
+                )}
             >
                 Open your plan
             </Link>

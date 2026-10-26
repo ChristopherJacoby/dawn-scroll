@@ -91,16 +91,19 @@ export function ActivePlanCard({ entry }: { entry: EnrolledPlan }) {
                         )}
                     </p>
                 </div>
-                <p
-                    className="flex items-center gap-1.5 text-sm font-medium text-reading-text"
-                    title="Consecutive days with a completed reading"
-                >
-                    <Flame
-                        className="h-4 w-4 text-reading-accent"
-                        aria-hidden="true"
-                    />
-                    {streak}-day streak
-                </p>
+                {/* A brand-new plan has no streak to show yet. */}
+                {streak > 0 && (
+                    <p
+                        className="flex items-center gap-1.5 text-sm font-medium text-reading-text"
+                        title="Consecutive days with a completed reading"
+                    >
+                        <Flame
+                            className="h-4 w-4 text-reading-accent"
+                            aria-hidden="true"
+                        />
+                        {streak}-day streak
+                    </p>
+                )}
             </div>
 
             <div className="flex flex-col gap-1.5">

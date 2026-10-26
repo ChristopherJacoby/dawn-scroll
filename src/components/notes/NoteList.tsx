@@ -71,6 +71,9 @@ export function NoteList({ initialNotes }: { initialNotes: Note[] }) {
                                 Edited <LocalDate iso={note.updatedAt} />
                             </span>
                         </span>
+                        <span className="line-clamp-2 border-l-2 border-reading-divider pl-3 font-serif text-sm text-reading-text-muted">
+                            {note.text}
+                        </span>
                         <span className="text-base text-reading-text">
                             {preview(note.content)}
                         </span>
