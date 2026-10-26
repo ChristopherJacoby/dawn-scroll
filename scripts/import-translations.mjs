@@ -11,7 +11,7 @@
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { compareVerseKeys, findMarkup, parseVpl, verseKey } from "../src/lib/bible/vpl.ts";
+import { compareVerseKeys, findMarkup, parseVpl, restoreChapterOpenings, verseKey } from "../src/lib/bible/vpl.ts";
 
 const ROOT = new URL("../", import.meta.url).pathname;
 const DIR = `${ROOT}data/translations`;
@@ -61,6 +61,18 @@ const DIFFERENCES = {
     ],
     extra: ["romans.14.24", "romans.14.25", "romans.14.26"],
   },
+  // The Reina-Valera divides these passages as Spanish Bibles do. eBible
+  // slots its text into KJV verse numbers, leaving these numbers empty: the
+  // text sits in the verse before (2 Samuel 20:25, Acts 19:40) or the chapter
+  // runs on Spanish numbering (Jonah 2:1 is the great fish, KJV 1:17).
+  rv1909: {
+    missing: [
+      "numbers.12.16", "numbers.29.40", "1-samuel.23.29", "2-samuel.20.26", "2-chronicles.33.25",
+      "job.35.16", "job.38.39", "job.38.40", "job.38.41", "job.40.20", "job.40.21", "job.40.22",
+      "job.40.23", "job.40.24", "hosea.11.12", "jonah.1.17", "acts.19.41", "2-corinthians.13.14",
+    ],
+    extra: [],
+  },
 };
 
 // Opening words of well-known verses, to catch book-code or offset mistakes.
@@ -83,6 +95,13 @@ const SPOT_CHECKS = {
     ["john.3.16", "For God so loved the world, that he gave his only born Son,"],
     ["romans.14.24", "Now to him who is able to establish you"],
     ["revelation.22.21", "The grace of the Lord Jesus Christ be with all the saints. Amen."],
+  ],
+  rv1909: [
+    ["genesis.1.1", "En el principio crió Dios los cielos y la tierra."],
+    ["psalms.23.1", "Salmo de David. Jehová es mi pastor; nada me faltará."],
+    ["jonah.2.1", "Mas Jehová había prevenido un gran pez que tragase á Jonás:"],
+    ["john.3.16", "Porque de tal manera amó Dios al mundo, que ha dado á su Hijo unigénito,"],
+    ["revelation.22.21", "La gracia de nuestro Señor Jesucristo sea con todos vosotros. Amén."],
   ],
 };
 
@@ -182,6 +201,7 @@ function build(manifest) {
   const rows = ["translation_slug,book_slug,chapter,verse,verse_text"];
   for (const { slug, source } of manifest.translations) {
     const parsed = parseVpl(readText(source), BOOK_BY_CODE);
+    if (source.capitalizedChapterOpenings) parsed.verses = restoreChapterOpenings(parsed.verses);
     const result = validate(slug, parsed, kjvKeys);
     report.translations[slug] = { source: { key: source.key, url: source.url, sha256: source.sha256 }, ...result };
     for (const v of parsed.verses) {

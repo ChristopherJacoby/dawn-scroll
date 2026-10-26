@@ -16,7 +16,16 @@ interface CompletedSearch {
     error: string | null;
 }
 
-export function SearchPageClient({ translation }: { translation: string }) {
+export function SearchPageClient({
+    translation,
+    translationName,
+    language,
+}: {
+    translation: string;
+    translationName: string;
+    /** The translation's language code, for its example searches. */
+    language: string;
+}) {
     const initialQuery = useSearchParams().get("q")?.trim() ?? "";
     const [value, setValue] = useState(initialQuery);
     const [query, setQuery] = useState(initialQuery);
@@ -114,6 +123,7 @@ export function SearchPageClient({ translation }: { translation: string }) {
     return (
         <div className="flex flex-col gap-6">
             <SearchInput
+                translationName={translationName}
                 value={value}
                 loading={loading}
                 onValueChange={setValue}
@@ -121,6 +131,7 @@ export function SearchPageClient({ translation }: { translation: string }) {
             />
             {query ? (
                 <SearchResults
+                    language={language}
                     query={query}
                     results={active?.results ?? []}
                     loading={loading}
@@ -130,6 +141,7 @@ export function SearchPageClient({ translation }: { translation: string }) {
                 <>
                     <RecentSearches onSelect={rerunSearch} />
                     <SearchResults
+                        language={language}
                         query={query}
                         results={[]}
                         loading={false}

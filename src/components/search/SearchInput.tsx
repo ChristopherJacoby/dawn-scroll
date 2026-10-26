@@ -7,6 +7,8 @@ import { cn } from "@/lib/cn";
 const DEBOUNCE_MS = 300;
 
 interface SearchInputProps {
+    /** Shown in the placeholder: "Search the King James Version…". */
+    translationName: string;
     value: string;
     loading?: boolean;
     onValueChange: (value: string) => void;
@@ -14,6 +16,7 @@ interface SearchInputProps {
 }
 
 export function SearchInput({
+    translationName,
     value,
     loading = false,
     onValueChange,
@@ -54,8 +57,8 @@ export function SearchInput({
                         clear();
                     }
                 }}
-                placeholder="Search the King James Version…"
-                aria-label="Search the King James Version"
+                placeholder={`Search the ${translationName}…`}
+                aria-label={`Search the ${translationName}`}
                 autoFocus
                 enterKeyHint="search"
                 className={cn(

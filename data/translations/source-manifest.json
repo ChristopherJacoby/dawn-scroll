@@ -54,6 +54,25 @@
         "attribution": "World English Bible, courtesy of eBible.org.",
         "sha256": "d681320dbaec25ba2b6ad7151cd71737c10efc24a6545ffe1aa50b5ef0ca4b8d"
       }
+    },
+    {
+      "slug": "rv1909",
+      "abbreviation": "RV1909",
+      "name": "Reina-Valera 1909",
+      "languageCode": "es",
+      "copyrightNotice": "Public domain",
+      "source": {
+        "key": "ebible-sparv1909",
+        "title": "Santa Biblia — Reina-Valera 1909",
+        "url": "https://ebible.org/Scriptures/spaRV1909_vpl.zip",
+        "catalogUrl": "https://ebible.org/details.php?id=spaRV1909",
+        "file": "spaRV1909_vpl.zip",
+        "textFile": "spaRV1909_vpl.txt",
+        "license": "Public domain",
+        "attribution": "Reina-Valera 1909, courtesy of eBible.org.",
+        "sha256": "c901a31a89421eafa54e82a0a2ad94962c6889e3c5556c2a0834529789c4ac76",
+        "capitalizedChapterOpenings": true
+      }
     }
   ]
 }

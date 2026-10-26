@@ -166,6 +166,7 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
                     translation={{
                         slug: passage.translation.slug,
                         abbreviation: passage.translation.abbreviation,
+                        languageCode: passage.translation.languageCode,
                     }}
                     verses={passage.verses.map((verse) => ({
                         number: verse.verseNumber,
