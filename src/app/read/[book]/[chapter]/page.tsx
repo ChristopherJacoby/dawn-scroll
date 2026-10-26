@@ -16,6 +16,7 @@ import {
     getChapter,
     getEnabledTranslations,
 } from "@/lib/bible/queries";
+import { chapterReference } from "@/lib/bible/references";
 import { getPreferredTranslation } from "@/lib/bible/translation-preference";
 import { getChapterBookmarkIds } from "@/lib/bookmarks";
 import { getChapterHighlights } from "@/lib/highlights";
@@ -46,8 +47,8 @@ export async function generateMetadata({
     if (!passage) return { title: "Passage unavailable | Dawnscroll" };
 
     return {
-        title: `${passage.book.name} ${passage.chapter.chapterNumber} ${passage.translation.abbreviation} | Dawnscroll`,
-        description: `Read ${passage.book.name} ${passage.chapter.chapterNumber} in the ${passage.translation.name}.`,
+        title: `${chapterReference(passage.book.name, passage.chapter.chapterNumber)} ${passage.translation.abbreviation} | Dawnscroll`,
+        description: `Read ${chapterReference(passage.book.name, passage.chapter.chapterNumber)} in the ${passage.translation.name}.`,
     };
 }
 
@@ -79,7 +80,10 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
           ])
         : [{}, {}, {}];
 
-    const reference = `${passage.book.name} ${passage.chapter.chapterNumber}`;
+    const reference = chapterReference(
+        passage.book.name,
+        passage.chapter.chapterNumber,
+    );
     const aiEnabled = isAiConfigured();
 
     return (
@@ -230,7 +234,7 @@ function ChapterNavLink({
                     {isPrevious ? "Previous" : "Next"}
                 </span>
                 <span className="font-medium">
-                    {item.bookName} {item.chapterNumber}
+                    {chapterReference(item.bookName, item.chapterNumber)}
                 </span>
             </span>
             {!isPrevious && <ChevronRight className="h-4 w-4 shrink-0" />}

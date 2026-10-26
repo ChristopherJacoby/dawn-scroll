@@ -15,6 +15,9 @@ export default function ApostlesPage() {
         <div className="flex min-h-full w-full flex-col bg-reading-bg">
             <header className="border-b border-t-4 border-reading-divider border-t-bronze bg-reading-surface">
                 <div className="mx-auto flex w-full max-w-5xl flex-col gap-2 px-5 py-6 md:px-10 md:py-8">
+                    <p className="text-xs font-medium uppercase tracking-wide text-reading-text-muted">
+                        Explore
+                    </p>
                     <h1 className="font-serif text-4xl leading-tight text-reading-text md:text-5xl">
                         Apostles
                     </h1>

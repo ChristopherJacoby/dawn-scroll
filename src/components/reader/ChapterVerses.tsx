@@ -24,6 +24,7 @@ import {
 import { saveNoteAction } from "@/app/notes/actions";
 import { findingMarkers } from "@/lib/archaeology/refs";
 import type { FindingSummary } from "@/lib/archaeology/types";
+import { chapterReference } from "@/lib/bible/references";
 import type { HighlightColor } from "@/lib/highlight-colors";
 import type { VerseHighlight } from "@/lib/highlights";
 import type { VerseNote } from "@/lib/notes";
@@ -91,7 +92,7 @@ export function ChapterVerses({
             : (verses.find((v) => v.number === noteVerse) ?? null);
 
     const reference = selectedVerse
-        ? `${bookName} ${chapterNumber}:${selectedVerse.number}`
+        ? `${chapterReference(bookName, chapterNumber)}:${selectedVerse.number}`
         : "";
 
     const verseRef = (verse: number) => ({
@@ -282,7 +283,7 @@ export function ChapterVerses({
                     key={`note-${noteTarget.number}`}
                     open={noteOpen}
                     onOpenChange={setNoteOpen}
-                    reference={`${bookName} ${chapterNumber}:${noteTarget.number}`}
+                    reference={`${chapterReference(bookName, chapterNumber)}:${noteTarget.number}`}
                     verseText={noteTarget.text}
                     savedContent={notes.get(noteTarget.number)?.content ?? ""}
                     saving={notes.isPending(noteTarget.number)}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { findVerseReferences } from "@/lib/bible/references";
+import { chapterReference, findVerseReferences } from "@/lib/bible/references";
 import { parseInline, parseMarkdown } from "./markdown";
 import { readNdjson } from "./ndjson";
 
@@ -48,6 +48,13 @@ describe("findVerseReferences", () => {
 
     it("skips chapters that don't exist and words that only look like books", () => {
         expect(hrefs("John 22:1, Johnson 3:1, 2 Johns 1")).toEqual([]);
+    });
+});
+
+describe("chapterReference", () => {
+    it("uses the singular for one psalm", () => {
+        expect(chapterReference("Psalms", 23)).toBe("Psalm 23");
+        expect(chapterReference("John", 3)).toBe("John 3");
     });
 });
 

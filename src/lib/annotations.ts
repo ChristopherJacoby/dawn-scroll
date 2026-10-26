@@ -4,6 +4,8 @@
  * its mapping. Each annotation table has the same verse columns and
  * foreign keys, so one select fragment serves them all.
  */
+import { chapterReference } from "@/lib/bible/references";
+
 export const VERSE_EMBED =
     "chapter_number, verse_number, books!inner(slug, name, book_order), translations(abbreviation), verses(verse_text)";
 
@@ -42,7 +44,7 @@ export function mapAnnotatedVerse(row: VerseEmbedRow): AnnotatedVerse | null {
 }
 
 export function verseReference(verse: AnnotatedVerse): string {
-    return `${verse.bookName} ${verse.chapterNumber}:${verse.verseNumber}`;
+    return `${chapterReference(verse.bookName, verse.chapterNumber)}:${verse.verseNumber}`;
 }
 
 type QueryResult = PromiseLike<{

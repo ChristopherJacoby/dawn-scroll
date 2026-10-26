@@ -6,6 +6,7 @@ import { removeHighlightAction } from "@/app/highlights/actions";
 import { useRemovableList } from "@/components/library/useRemovableList";
 import { verseReference } from "@/lib/annotations";
 import { cn } from "@/lib/cn";
+import { chapterReference } from "@/lib/bible/references";
 import { HIGHLIGHT_BG, HIGHLIGHT_LABELS } from "@/lib/highlight-colors";
 import type { Highlight } from "@/lib/highlights";
 import { verseHref } from "@/lib/verse-ref";
@@ -81,7 +82,7 @@ export function HighlightList({
                         id={`group-${group.key}`}
                         className="border-b border-reading-divider pb-2 font-serif text-2xl text-reading-text"
                     >
-                        {group.bookName} {group.chapterNumber}
+                        {chapterReference(group.bookName, group.chapterNumber)}
                     </h2>
                     <ul className="flex flex-col gap-2">
                         {group.highlights.map((highlight) => (

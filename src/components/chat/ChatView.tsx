@@ -6,14 +6,14 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import type { PassageRef } from "@/lib/ai/chat";
-import { bookName } from "@/lib/bible/references";
+import { bookName, chapterReference } from "@/lib/bible/references";
 import { cn } from "@/lib/cn";
 import { AIMessage, UserMessage } from "./ChatMessages";
 import { type Quota, useChat } from "./useChat";
 
 function passageLabel(passage: PassageRef): string {
     const name = bookName(passage.book) ?? passage.book;
-    return `${name} ${passage.chapter}${passage.verse ? `:${passage.verse}` : ""}`;
+    return `${chapterReference(name, passage.chapter)}${passage.verse ? `:${passage.verse}` : ""}`;
 }
 
 /**
