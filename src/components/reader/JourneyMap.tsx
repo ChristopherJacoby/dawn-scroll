@@ -45,19 +45,35 @@ function routeFeatures(journey: Journey) {
     return features;
 }
 
+/** A list qualifier, as in "Greece (probably Corinth)". */
+const QUALIFIER = /\s*\(.*\)$/;
+
 /**
  * The places the journey stops at, each with its stop numbers in order, so
- * a place visited twice gets one marker ("8 · 10") and one name.
+ * a place visited twice gets one marker ("8 · 10") and one name. The name
+ * drops list qualifiers, and prefers a stop named plainly: "Macedonia (by
+ * way of Philippi)" and a later stop at Philippi are named "Philippi".
  */
 function places(journey: Journey) {
-    const byPlace = new Map<string, { stop: JourneyStop; numbers: number[] }>();
+    const byPlace = new Map<
+        string,
+        { stop: JourneyStop; numbers: number[]; name: string }
+    >();
     journey.points.filter(isStop).forEach((stop, i) => {
         const key = `${stop.lng},${stop.lat}`;
         const place = byPlace.get(key);
-        if (place) place.numbers.push(i + 1);
-        else byPlace.set(key, { stop, numbers: [i + 1] });
+        if (!place) {
+            byPlace.set(key, { stop, numbers: [i + 1], name: stop.name });
+            return;
+        }
+        place.numbers.push(i + 1);
+        if (QUALIFIER.test(place.name) && !QUALIFIER.test(stop.name))
+            place.name = stop.name;
     });
-    return [...byPlace.values()];
+    return [...byPlace.values()].map((place) => ({
+        ...place,
+        name: place.name.replace(QUALIFIER, ""),
+    }));
 }
 
 // Stop names' size in px, and the gap kept between a name and its marker.
@@ -119,7 +135,7 @@ export function JourneyMap({ journey }: { journey: Journey }) {
                 "top-right",
             );
 
-            const markers = stops.map(({ stop, numbers }) => {
+            const markers = stops.map(({ stop, numbers, name }) => {
                 const element = document.createElement("span");
                 // MapLibre adds its own classes to marker elements, so ours are
                 // added alongside them.
@@ -132,7 +148,7 @@ export function JourneyMap({ journey }: { journey: Journey }) {
                     ).split(" "),
                 );
                 element.textContent = numbers.join(" · ");
-                element.title = stop.name;
+                element.title = name;
                 new maplibre.Marker({ element })
                     .setLngLat([stop.lng, stop.lat])
                     .addTo(map!);
@@ -198,11 +214,11 @@ export function JourneyMap({ journey }: { journey: Journey }) {
                     type: "geojson",
                     data: {
                         type: "FeatureCollection",
-                        features: stops.map(({ stop, numbers }, i) => ({
+                        features: stops.map(({ stop, numbers, name }, i) => ({
                             type: "Feature",
                             properties: {
                                 index: i,
-                                name: stop.name,
+                                name,
                                 // Where the journey starts and ends is named first.
                                 rank:
                                     numbers[0] === 1 || numbers.includes(count)
@@ -286,7 +302,7 @@ export function JourneyMap({ journey }: { journey: Journey }) {
     return (
         <div
             ref={container}
-            role="img"
+            role="region"
             aria-label={`Map of ${journey.title}`}
             className="h-64 w-full overflow-hidden rounded-md border border-reading-divider bg-[#efe7d4] sm:h-80"
         />

@@ -136,6 +136,12 @@ export function JourneyMarker({ journey }: { journey: Journey }) {
                                                 · by ship
                                             </span>
                                         )}
+                                        {stop.region && (
+                                            <span className="text-reading-text-muted">
+                                                {" "}
+                                                · region
+                                            </span>
+                                        )}
                                         {!stop.confident && (
                                             <span className="text-reading-text-muted">
                                                 {" "}
