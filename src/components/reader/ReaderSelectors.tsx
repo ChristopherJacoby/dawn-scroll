@@ -64,7 +64,9 @@ export function ReaderSelectors({
     }
 
     return (
-        <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_9rem_minmax(0,16rem)]">
+        // Book and chapter share a row until there's room for all three;
+        // the book column never shrinks below its longest name.
+        <div className="grid grid-cols-[minmax(0,1fr)_6rem] gap-3 lg:grid-cols-[minmax(10rem,1fr)_7rem_minmax(0,16rem)]">
             <label className="flex flex-col gap-1.5">
                 <span className="text-xs font-medium text-reading-text-muted">
                     Book
@@ -117,7 +119,7 @@ export function ReaderSelectors({
                 </select>
             </label>
 
-            <label className="flex flex-col gap-1.5">
+            <label className="col-span-2 flex flex-col gap-1.5 lg:col-span-1">
                 <span className="text-xs font-medium text-reading-text-muted">
                     Translation
                 </span>
