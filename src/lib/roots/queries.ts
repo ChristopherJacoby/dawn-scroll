@@ -3,8 +3,11 @@ import { createPublicClient } from "@/lib/supabase/public";
 import type { ClaimRating, Tradition, TraditionSummary } from "./types";
 
 interface TraditionRow extends TraditionSummary {
+    also_called: string | null;
     origin: string;
     early_church: string;
+    stance_heading: string | null;
+    stance: string | null;
     reviewed_on: string;
     tradition_claims: {
         claim: string;
@@ -40,7 +43,7 @@ export async function getTradition(slug: string): Promise<Tradition | null> {
     const { data, error } = await createPublicClient()
         .from("traditions")
         .select(
-            "slug, name, summary, origin, early_church, reviewed_on, tradition_claims(position, claim, rating, explanation), tradition_timeline(position, year, label, event), tradition_scripture_refs(position, chapter_start, verse_start, chapter_end, verse_end, note, books!inner(slug, name)), tradition_sources(position, citation, url)",
+            "slug, name, also_called, summary, origin, early_church, stance_heading, stance, reviewed_on, tradition_claims(position, claim, rating, explanation), tradition_timeline(position, year, label, event), tradition_scripture_refs(position, chapter_start, verse_start, chapter_end, verse_end, note, books!inner(slug, name)), tradition_sources(position, citation, url)",
         )
         .eq("slug", slug)
         .order("position", { referencedTable: "tradition_claims" })
@@ -54,7 +57,15 @@ export async function getTradition(slug: string): Promise<Tradition | null> {
     return {
         slug: row.slug,
         name: row.name,
+        alsoCalled: row.also_called,
         summary: row.summary,
+        stance:
+            row.stance_heading && row.stance
+                ? {
+                      heading: row.stance_heading,
+                      paragraphs: paragraphs(row.stance),
+                  }
+                : null,
         origin: paragraphs(row.origin),
         earlyChurch: paragraphs(row.early_church),
         claims: row.tradition_claims.map(({ claim, rating, explanation }) => ({

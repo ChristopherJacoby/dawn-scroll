@@ -61,7 +61,9 @@ describe("chapterReference", () => {
 describe("parseInline", () => {
     it("parses emphasis, code and safe links", () => {
         expect(
-            parseInline("**Bold** and *it* and `x` and [page](/roots/easter)"),
+            parseInline(
+                "**Bold** and *it* and `x` and [page](/roots/resurrection-day)",
+            ),
         ).toEqual([
             { type: "strong", children: [{ type: "text", text: "Bold" }] },
             { type: "text", text: " and " },
@@ -71,7 +73,7 @@ describe("parseInline", () => {
             { type: "text", text: " and " },
             {
                 type: "link",
-                href: "/roots/easter",
+                href: "/roots/resurrection-day",
                 children: [{ type: "text", text: "page" }],
             },
         ]);

@@ -34,6 +34,10 @@ export interface TraditionScriptureRef extends FindingScriptureRef {
 
 /** A tradition with everything its detail page shows. */
 export interface Tradition extends TraditionSummary {
+    /** Another name it goes by, e.g. "Called Easter in English". */
+    alsoCalled: string | null;
+    /** Our position on keeping it; paragraphs may cite as [n]. */
+    stance: { heading: string; paragraphs: string[] } | null;
     /** Paragraphs, in order; may cite sources inline as [n]. */
     origin: string[];
     /** What the sources show for AD 30–100; may cite as [n]. */

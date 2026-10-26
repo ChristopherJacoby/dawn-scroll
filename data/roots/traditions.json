@@ -140,7 +140,15 @@
           "url": "https://reaktionbooks.co.uk/work/trick-or-treat"
         }
       ],
-      "reviewedOn": "2026-10-25"
+      "reviewedOn": "2026-10-25",
+      "stance": {
+        "heading": "Should Christians keep Halloween?",
+        "paragraphs": [
+          "Halloween’s name is Christian: it is the eve of All Saints. Whether its customs go back to Samhain, historians still debate [1][2]. But as far back as its folk customs are recorded, the night has centered on the dead and on telling the future [1]. Burns’s “Halloween” is a catalog of fortune-telling charms [4], and today’s Halloween still trades in ghosts, witches and fear [10].",
+          "God told Israel, “There shall not be found among you any one that . . . useth divination, or an observer of times, or an enchanter, or a witch” (Deuteronomy 18:10). Paul wrote, “have no fellowship with the unfruitful works of darkness, but rather reprove them” (Ephesians 5:11), and “Abstain from all appearance of evil” (1 Thessalonians 5:22).",
+          "So we don’t keep Halloween, and we encourage believers to set the night aside. Paul also tells believers not to judge one another over days (Romans 14:5–6), so we offer this as a conviction to weigh, not a test of anyone’s faith."
+        ]
+      }
     },
     {
       "slug": "christmas",
@@ -153,7 +161,7 @@
         "Later Christians disputed the feast as well. Puritan reformers objected that it had no warrant in Scripture; England’s Parliament abolished its observance in 1647 [9], and Massachusetts fined anyone caught keeping it from 1659 to 1681 [6]. In the United States, Christmas became a federal holiday in 1870 [10]."
       ],
       "earlyChurch": [
-        "There is no record of Christians celebrating Jesus’ birth before AD 100. The New Testament centers on his death and resurrection, and Paul’s letters mention the birth only in passing (Galatians 4:4) [2]. The earliest Christian observances known are the weekly gathering on the first day of the week and the yearly Pascha, or Easter [2]."
+        "There is no record of Christians celebrating Jesus’ birth before AD 100. The New Testament centers on his death and resurrection, and Paul’s letters mention the birth only in passing (Galatians 4:4) [2]. The earliest Christian observances known are the weekly gathering on the first day of the week and the yearly Pascha, the feast of the resurrection [2]."
       ],
       "claims": [
         {
@@ -287,17 +295,26 @@
           "url": null
         }
       ],
-      "reviewedOn": "2026-10-25"
+      "reviewedOn": "2026-10-25",
+      "stance": {
+        "heading": "Should Christians keep Christmas?",
+        "paragraphs": [
+          "Scripture gives no feast of Jesus’ birth. The apostles preached his death and resurrection, Paul mentions the birth only in passing (Galatians 4:4), and for three centuries the church kept no feast of the nativity [2]. The first evidence of a feast on December 25 comes from Rome in 336, in a collection whose calendar marks the same day as the birthday of the Unconquered Sun [3][4].",
+          "God told Israel not to worship him the way the nations worshiped their gods: “enquire not after their gods, saying, How did these nations serve their gods? even so will I do likewise” (Deuteronomy 12:30). “What thing soever I command you, observe to do it: thou shalt not add thereto” (Deuteronomy 12:32). Jesus warned against “teaching for doctrines the commandments of men” (Mark 7:7).",
+          "Christians have reached this conclusion before. Puritan reformers objected that the feast had no warrant in Scripture; England’s Parliament abolished it in 1647 [9], and Massachusetts fined anyone caught keeping it from 1659 to 1681 [6].",
+          "So we don’t keep Christmas. We remember Christ’s coming every day, and keep the feast Scripture does give: “Christ our passover is sacrificed for us: Therefore let us keep the feast” (1 Corinthians 5:7–8). Paul also tells believers not to judge one another over days (Romans 14:5–6), so we offer this as a conviction to weigh, not a test of anyone’s faith."
+        ]
+      }
     },
     {
-      "slug": "easter",
-      "name": "Easter",
-      "summary": "The yearly feast of Christ’s death and resurrection, kept since at least the second century. Its English name, unlike the Pascha of most languages, comes from an Anglo-Saxon month.",
+      "slug": "resurrection-day",
+      "name": "Resurrection Day",
+      "summary": "The yearly feast of Christ’s death and resurrection, kept since at least the second century as Pascha, Passover. Its English name, Easter, comes from an Anglo-Saxon month.",
       "origin": [
         "Christians in most languages call the feast by a form of the Greek pascha, from the Hebrew pesach, Passover: Pâques in French, Pascua in Spanish, Pasqua in Italian. Jesus was crucified at Passover, and around AD 54 Paul wrote that “Christ our passover is sacrificed for us” (1 Corinthians 5:7).",
         "By the second century, churches disagreed about when to keep the feast. The churches of the Roman province of Asia, citing a tradition from the apostle John, kept it on the fourteenth day of the Jewish month Nisan, whatever day of the week that fell; they were later called Quartodecimans, from the Latin for “fourteenth.” Rome and most other churches kept it on a Sunday [2]. Around 155, Bishops Polycarp of Smyrna and Anicetus of Rome discussed the difference without settling it, each holding to the custom of those before him; Irenaeus later wrote that the earlier Roman bishops “neither observed it” themselves, which some historians read as meaning Rome kept no yearly Pascha before about 165 [2]. Around 190, Bishop Victor of Rome tried to cut the Asian churches off over the date [2]. A homily On Pascha by Melito of Sardis, from about 165, shows how one Quartodeciman church preached the feast, centered on Christ’s passion [7].",
-        "In 325 the Council of Nicaea agreed that all churches should keep Easter on the same Sunday, independently of the Jewish calendar; the decision is known from Constantine’s letter to the churches [3]. It did not fix a method of calculation, disagreements persisted, and since the Gregorian calendar reform of 1582, Western and Eastern churches have usually celebrated on different dates.",
-        "The English name has a different history. The monk Bede, writing in 725, explained that the Anglo-Saxons called April Eosturmonath after a goddess, Eostre, once honored in that month, and that the name had passed to the Christian feast [1]. Bede is the only ancient witness to this goddess [4]. The German Ostern shares the root.",
+        "In 325 the Council of Nicaea agreed that all churches should keep Pascha on the same Sunday, independently of the Jewish calendar; the decision is known from Constantine’s letter to the churches [3]. It did not fix a method of calculation, disagreements persisted, and since the Gregorian calendar reform of 1582, Western and Eastern churches have usually celebrated on different dates.",
+        "The English name, Easter, has a different history. The monk Bede, writing in 725, explained that the Anglo-Saxons called April Eosturmonath after a goddess, Eostre, once honored in that month, and that the name had passed to the Christian feast [1]. Bede is the only ancient witness to this goddess [4]. The German Ostern shares the root.",
         "Eggs and hares came later. Eggs were forbidden during the Lenten fast in medieval Europe and became part of the celebration that ended it [5], and the egg-bringing Easter hare is first described in German lands in 1682 [8]."
       ],
       "earlyChurch": [
@@ -431,7 +448,15 @@
           "url": "https://litpress.org/Products/6075/The-Origins-of-the-Liturgical-Year"
         }
       ],
-      "reviewedOn": "2026-10-25"
+      "reviewedOn": "2026-10-25",
+      "alsoCalled": "Called Easter in English",
+      "stance": {
+        "heading": "Why not “Easter”?",
+        "paragraphs": [
+          "The New Testament never calls this day Easter. The early church called it Pascha, Passover, because “Christ our passover is sacrificed for us” (1 Corinthians 5:7), and most of the world still does: Pascua, Pâques, Pasqua. “Easter” is an English and German name. The one time it appears in the King James Bible, Acts 12:4, it translates pascha, the word rendered “passover” everywhere else.",
+          "Bede, writing in 725, said the name came from a goddess, Eostre [1]; historians still debate that [4]. Whatever its origin, the name says nothing about what the day is for. So we call it Resurrection Day."
+        ]
+      }
     },
     {
       "slug": "sunday-worship",
