@@ -185,6 +185,20 @@
 @utility border-reading-danger {
     border-color: var(--reading-danger);
 }
+@utility border-reading-text {
+    border-color: var(--reading-text);
+}
+@utility bg-reading-text-muted {
+    background-color: var(--reading-text-muted);
+}
+@utility decoration-reading-border-strong {
+    text-decoration-color: var(--reading-border-strong);
+}
+@utility divide-reading-divider {
+    :where(& > :not(:last-child)) {
+        border-color: var(--reading-divider);
+    }
+}
 @utility bg-highlight-yellow {
     background-color: var(--highlight-yellow);
 }
@@ -202,6 +216,14 @@
 }
 @utility ring-reading-focus {
     --tw-ring-color: var(--reading-focus);
+}
+@utility ring-reading-border {
+    --tw-ring-color: var(--reading-border);
+}
+/* The gap between a focus ring and its control: without this it falls
+   back to white, a bright halo in dark and sepia modes. */
+@utility ring-offset-reading-bg {
+    --tw-ring-offset-color: var(--reading-bg);
 }
 @utility outline-reading-focus {
     outline-color: var(--reading-focus);

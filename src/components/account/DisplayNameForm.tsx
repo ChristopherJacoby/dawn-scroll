@@ -14,14 +14,18 @@ export function DisplayNameForm({
 }) {
     const [editing, setEditing] = useState(false);
     const [state, action, pending] = useActionState<DisplayNameState, FormData>(
-        updateDisplayName,
+        async (prev, formData) => {
+            const result = await updateDisplayName(prev, formData);
+            // A changed name remounts this form (it's keyed on the name),
+            // which closes the editor. An unchanged one keeps this
+            // instance, so close it here; Edit can then open it again.
+            if (result.saved) setEditing(false);
+            return result;
+        },
         {},
     );
 
-    // After a save the page re-renders and this form remounts (keyed on the
-    // name), so the editor closes on its own. Only an unchanged save needs
-    // closing by hand.
-    if (!editing || (state.saved && !state.error)) {
+    if (!editing) {
         return (
             <div className="flex items-center justify-between gap-4">
                 <div className="flex flex-col gap-1">

@@ -39,7 +39,9 @@ export function rejectUntrustedMutation(
         const host =
             request.headers.get("x-forwarded-host") ??
             request.headers.get("host");
-        if (URL.canParse(origin) && new URL(origin).host !== host) {
+        // An Origin that isn't a URL ("null", from a sandboxed frame) is
+        // never this site.
+        if (!URL.canParse(origin) || new URL(origin).host !== host) {
             return jsonError("Cross-origin requests aren't allowed.", 403);
         }
     }

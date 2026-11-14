@@ -48,6 +48,9 @@ describe("findVerseReferences", () => {
 
     it("skips chapters that don't exist and words that only look like books", () => {
         expect(hrefs("John 22:1, Johnson 3:1, 2 Johns 1")).toEqual([]);
+        // A one-chapter book has no chapter 2, though "Jude 25" is a verse.
+        expect(hrefs("Jude 2:3 and Philemon 3:1")).toEqual([]);
+        expect(hrefs("Jude 25")).toEqual(["/read/jude/1#verse-25"]);
     });
 });
 
