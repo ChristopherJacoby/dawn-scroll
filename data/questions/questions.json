@@ -22,7 +22,7 @@
       ],
       "standing": [
         "ID has not been accepted as science by the major scientific organizations, and the Kitzmiller ruling barred teaching it in that district’s public-school science classes [3][5]. Its proponents point to work they have published in peer-reviewed journals and monographs [1], and argue that its rejection reflects a definition of science that excludes design in advance. A few philosophers who are not theists, such as Bradley Monton, have argued that ID deserves a hearing as science even if its conclusions turn out to be false [7].",
-        "Whether nature shows evidence of design is one of the oldest questions in philosophy, and the arguments remain under active discussion [6]. Whether ID’s particular arguments count as science, philosophy or theology is itself contested [6], including among Christians, many of whom accept evolution and see God’s purposes at work through natural processes."
+        "Whether nature shows evidence of design is one of the oldest questions in philosophy, and the arguments remain under active discussion [6]. Whether ID’s particular arguments count as science, philosophy or theology is itself contested [6], including among Christians, many of whom accept evolution and see God’s purposes at work through natural processes [8]."
       ],
       "claims": [
         {
@@ -94,6 +94,10 @@
         {
           "citation": "Monton, Bradley. Seeking God in Science: An Atheist Defends Intelligent Design. Peterborough, ON: Broadview Press, 2009.",
           "url": null
+        },
+        {
+          "citation": "Pew Research Center. “The Evolution of Pew Research Center’s Survey Questions About the Origins and Development of Life on Earth.” February 6, 2019.",
+          "url": "https://www.pewresearch.org/religion/2019/02/06/the-evolution-of-pew-research-centers-survey-questions-about-the-origins-and-development-of-life-on-earth/"
         }
       ],
       "reviewedOn": "2026-11-14"
@@ -343,11 +347,6 @@
           "claim": "Most Cambrian phyla lack identifiable Precambrian ancestors.",
           "rating": "supported",
           "explanation": "Ediacaran organisms and animal burrows precede the radiation [5], but most phyla have no clear Precambrian forerunners in the fossil record; for arthropods, a search of Ediacaran lagerstätten found none [4]. Molecular clocks suggest deeper origins that have left no recognized fossils [5]."
-        },
-        {
-          "claim": "Undirected evolution could not produce the Cambrian body plans in the time available.",
-          "rating": "unverified",
-          "explanation": "This is Meyer’s central scientific claim, argued from published estimates of protein rarity and of the time new mutations take to arise [2][8]. No published study has confirmed it: Lee and colleagues estimated Cambrian rates of change and found them consistent with natural selection [7], and Marshall argues the information problem is overstated because body plans were built largely by rewiring genes that already existed [3]."
         },
         {
           "claim": "The Cambrian explosion is best explained by intelligent design.",
