@@ -53,8 +53,14 @@ export const metadata: Metadata = {
 async function accountPreferences(): Promise<ReadingPreferences | null> {
     const user = await getUser();
     if (!user) return null;
-    const settings = await getUserSettings(user.id);
-    return { mode: settings.readingMode, fontScale: settings.fontScale };
+    try {
+        const settings = await getUserSettings(user.id);
+        return { mode: settings.readingMode, fontScale: settings.fontScale };
+    } catch {
+        // Preferences are extra: every page still renders without them,
+        // using what this device remembers.
+        return null;
+    }
 }
 
 export default async function RootLayout({

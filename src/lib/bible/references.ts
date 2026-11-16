@@ -122,7 +122,13 @@ export function findVerseReferences(text: string): VerseReference[] {
         const slug = FULL_NAMES.get(book) ?? ABBREVIATIONS.get(book);
         const chapter = Number(chapterText);
         const chapters = slug ? (CHAPTERS.get(slug) ?? 0) : 0;
-        if (!slug || chapter < 1 || (chapters > 1 && chapter > chapters))
+        // A bare number in a one-chapter book is a verse ("Jude 3"), so the
+        // chapter bound only applies there when a verse follows.
+        if (
+            !slug ||
+            chapter < 1 ||
+            ((chapters > 1 || verseText) && chapter > chapters)
+        )
             continue;
         if (!verseText && !isFullName) continue;
         // In a one-chapter book, "Jude 3" means verse 3.

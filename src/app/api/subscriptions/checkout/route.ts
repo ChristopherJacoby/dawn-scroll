@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import {
     jsonError,
     readJson,
@@ -9,15 +8,12 @@ import { getUser } from "@/lib/auth";
 import { checkoutSessionParams } from "@/lib/premium/checkout";
 import { isPlanKey } from "@/lib/premium/plans";
 import { getSubscriptionRecord } from "@/lib/premium/subscription";
+import { siteOrigin } from "@/lib/site-url";
 import { getPriceId, getStripe } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
 
-async function siteOrigin() {
-    const h = await headers();
-    const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
-    const proto = h.get("x-forwarded-proto") ?? "http";
-    return `${proto}://${host}`;
-}
+/** Statuses of a subscription that exists but whose payment is failing. */
+const NEEDS_PAYMENT_FIX = new Set(["past_due", "unpaid", "paused"]);
 
 /**
  * POST /api/subscriptions/checkout — `{ plan: "monthly" | "annual" }`.
@@ -45,6 +41,15 @@ export async function POST(request: Request) {
         if (current.isPremium) {
             return jsonError("You already have Premium.", 409);
         }
+        // Stripe is still retrying this subscription's payment. A second
+        // checkout would start a second subscription, and both would bill
+        // once the retry succeeds.
+        if (NEEDS_PAYMENT_FIX.has(current.status)) {
+            return jsonError(
+                "Your subscription has a payment problem. Update your payment method from your account's subscription page.",
+                409,
+            );
+        }
         const priceId = await getPriceId(stripe, plan);
         if (!priceId)
             return jsonError("Subscriptions aren't available yet.", 503);
@@ -59,10 +64,17 @@ export async function POST(request: Request) {
         if (error) throw error;
         let customerId: string | null = row?.stripe_customer_id ?? null;
         if (!customerId) {
-            const customer = await stripe.customers.create({
-                email: user.email,
-                metadata: { user_id: user.id },
-            });
+            // Keyed per user, so two checkouts started at once get the
+            // same customer. Otherwise the row keeps one customer while
+            // the user may pay as the other, and the webhook can't match
+            // that payment to anyone.
+            const customer = await stripe.customers.create(
+                {
+                    email: user.email,
+                    metadata: { user_id: user.id },
+                },
+                { idempotencyKey: `customer-${user.id}` },
+            );
             customerId = customer.id;
             const { error: saveError } = await admin
                 .from("subscriptions")

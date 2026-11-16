@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
 import type { ReadingMode } from "@/context/reading-mode";
 import { updateOwnDisplayName } from "@/lib/profiles";
 import {
@@ -10,6 +9,7 @@ import {
     FONT_SCALE_MIN,
     saveUserSettings,
 } from "@/lib/settings";
+import { siteOrigin } from "@/lib/site-url";
 import { createClient } from "@/lib/supabase/server";
 import {
     DISPLAY_NAME_MAX_LENGTH,
@@ -24,13 +24,6 @@ import {
 export interface SignUpState {
     errors?: FieldErrors<"email" | "password" | "confirmPassword" | "form">;
     values?: { email: string };
-}
-
-async function siteOrigin() {
-    const h = await headers();
-    const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
-    const proto = h.get("x-forwarded-proto") ?? "http";
-    return `${proto}://${host}`;
 }
 
 export async function signUp(

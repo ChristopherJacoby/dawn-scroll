@@ -31,7 +31,12 @@ function subscribe(listener: () => void) {
     return () => listeners.delete(listener);
 }
 
+/** Choices storage refused to keep; they still apply for this visit. */
+const unsaved = new Map<string, string>();
+
 function readStorage(key: string): string | null {
+    const kept = unsaved.get(key);
+    if (kept !== undefined) return kept;
     try {
         return window.localStorage.getItem(key);
     } catch {
@@ -42,8 +47,10 @@ function readStorage(key: string): string | null {
 function writeStorage(key: string, value: string) {
     try {
         window.localStorage.setItem(key, value);
+        unsaved.delete(key);
     } catch {
-        // Private browsing or blocked storage — still applies this visit.
+        // Private browsing or blocked storage.
+        unsaved.set(key, value);
     }
 }
 
@@ -84,15 +91,15 @@ function applyToDocument(prefs: ReadingPreferences) {
     );
 }
 
-function setMode(mode: ReadingMode) {
-    writeStorage(READING_MODE_STORAGE_KEY, mode);
-    applyToDocument(getSnapshot());
-    for (const listener of listeners) listener();
-}
-
-function setFontScale(scale: number) {
-    writeStorage(FONT_SCALE_STORAGE_KEY, String(scale));
-    applyToDocument(getSnapshot());
+/**
+ * Remembers one preference on this device and shows `next` on the page.
+ * `next` is everything now in effect, not what this device has stored: a
+ * signed-in reader's other preference comes from their account, and
+ * re-reading storage here would reset it.
+ */
+function commit(key: string, value: string, next: ReadingPreferences) {
+    writeStorage(key, value);
+    applyToDocument(next);
     for (const listener of listeners) listener();
 }
 
@@ -120,11 +127,14 @@ export function ReadingModeProvider({
             value={{
                 ...prefs,
                 setMode: (mode) => {
-                    setMode(mode);
+                    commit(READING_MODE_STORAGE_KEY, mode, { ...prefs, mode });
                     setChanged((c) => ({ ...c, mode }));
                 },
                 setFontScale: (fontScale) => {
-                    setFontScale(fontScale);
+                    commit(FONT_SCALE_STORAGE_KEY, String(fontScale), {
+                        ...prefs,
+                        fontScale,
+                    });
                     setChanged((c) => ({ ...c, fontScale }));
                 },
             }}

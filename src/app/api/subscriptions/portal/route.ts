@@ -1,6 +1,6 @@
-import { headers } from "next/headers";
 import { jsonError, rejectUntrustedMutation, unauthorized } from "@/lib/api";
 import { getUser } from "@/lib/auth";
+import { siteOrigin } from "@/lib/site-url";
 import { getStripe } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -26,13 +26,9 @@ export async function POST(request: Request) {
         if (!data?.stripe_customer_id)
             return jsonError("You don't have a subscription yet.", 404);
 
-        const h = await headers();
-        const host =
-            h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
-        const proto = h.get("x-forwarded-proto") ?? "http";
         const session = await stripe.billingPortal.sessions.create({
             customer: data.stripe_customer_id,
-            return_url: `${proto}://${host}/account/subscription`,
+            return_url: `${await siteOrigin()}/account/subscription`,
         });
         return Response.json({ url: session.url });
     } catch {
